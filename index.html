@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EmuHub Simple Template</title>
+  <meta name="description" content="A simple hub-style template for curated links and emulator resources." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="#top" aria-label="Homepage">
+        <span class="brand-mark" aria-hidden="true">E</span>
+        <span class="brand-text">EmuHub Lite</span>
+      </a>
+
+      <nav class="nav" aria-label="Primary navigation">
+        <a href="#categories">Categories</a>
+        <a href="#featured">Featured</a>
+        <a href="#about">About</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero section" id="top">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow">Curated • Simple • Fast</p>
+          <h1>A simple hub template for clean link directories.</h1>
+          <p class="hero-text">
+            Start with a lightweight homepage, clear categories, and curated resource cards.
+            Good for emulator links, tools, guides, or any legal download directory.
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#categories">Browse categories</a>
+            <a class="btn btn-secondary" href="#featured">See featured links</a>
+          </div>
+        </div>
+
+        <aside class="hero-panel" aria-label="Site overview">
+          <div class="panel-stat">
+            <strong>4</strong>
+            <span>Starter categories</span>
+          </div>
+          <div class="panel-stat">
+            <strong>12</strong>
+            <span>Demo resource cards</span>
+          </div>
+          <div class="panel-stat">
+            <strong>100%</strong>
+            <span>Static HTML + CSS</span>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="categories">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow">Categories</p>
+          <h2>Start small, expand later.</h2>
+          <p>These blocks are enough for a first version and can become separate pages later.</p>
+        </div>
+
+        <div class="category-grid">
+          <article class="category-card">
+            <span class="category-icon">🎮</span>
+            <h3>Emulators</h3>
+            <p>Official emulator apps, GitHub releases, and legal project pages.</p>
+            <a href="#featured">Open category</a>
+          </article>
+
+          <article class="category-card">
+            <span class="category-icon">🧰</span>
+            <h3>Tools</h3>
+            <p>Frontend helpers, file tools, patchers, and utility apps you trust.</p>
+            <a href="#featured">Open category</a>
+          </article>
+
+          <article class="category-card">
+            <span class="category-icon">📱</span>
+            <h3>Android</h3>
+            <p>Play Store links, APK sources from official maintainers, and setup notes.</p>
+            <a href="#featured">Open category</a>
+          </article>
+
+          <article class="category-card">
+            <span class="category-icon">📚</span>
+            <h3>Guides</h3>
+            <p>Short setup guides, compatibility notes, and recommended configurations.</p>
+            <a href="#featured">Open category</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="featured">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow">Featured links</p>
+          <h2>Resource cards that are easy to scan.</h2>
+          <p>Each card can show category, short description, and a clear source button.</p>
+        </div>
+
+        <div class="link-grid">
+          <article class="link-card">
+            <div class="card-top">
+              <span class="badge">Emulator</span>
+              <span class="meta">Android</span>
+            </div>
+            <h3>Example Emulator One</h3>
+            <p>Use this space for a short note about the app, platform, or maintainer.</p>
+            <div class="card-actions">
+              <a class="text-link" href="https://example.com" target="_blank" rel="noopener noreferrer">Official site</a>
+            </div>
+          </article>
+
+          <article class="link-card">
+            <div class="card-top">
+              <span class="badge">Tool</span>
+              <span class="meta">Windows</span>
+            </div>
+            <h3>Example Tool Two</h3>
+            <p>Good for download pages, repositories, utility apps, or maintenance tools.</p>
+            <div class="card-actions">
+              <a class="text-link" href="https://example.com" target="_blank" rel="noopener noreferrer">GitHub repo</a>
+            </div>
+          </article>
+
+          <article class="link-card">
+            <div class="card-top">
+              <span class="badge">Guide</span>
+              <span class="meta">Beginner</span>
+            </div>
+            <h3>Starter Setup Guide</h3>
+            <p>Explain how to install, configure, or choose the correct app version.</p>
+            <div class="card-actions">
+              <a class="text-link" href="https://example.com" target="_blank" rel="noopener noreferrer">Read guide</a>
+            </div>
+          </article>
+
+          <article class="link-card">
+            <div class="card-top">
+              <span class="badge">Android</span>
+              <span class="meta">Play Store</span>
+            </div>
+            <h3>Example App Four</h3>
+            <p>This layout also works for games, launchers, frontends, or helper apps.</p>
+            <div class="card-actions">
+              <a class="text-link" href="https://example.com" target="_blank" rel="noopener noreferrer">Open source</a>
+            </div>
+          </article>
+
+          <article class="link-card">
+            <div class="card-top">
+              <span class="badge">Emulator</span>
+              <span class="meta">Linux</span>
+            </div>
+            <h3>Desktop Emulator Five</h3>
+            <p>Add supported systems, release status, or a one-line compatibility note.</p>
+            <div class="card-actions">
+              <a class="text-link" href="https://example.com" target="_blank" rel="noopener noreferrer">Project page</a>
+            </div>
+          </article>
+
+          <article class="link-card">
+            <div class="card-top">
+              <span class="badge">Tool</span>
+              <span class="meta">Cross-platform</span>
+            </div>
+            <h3>Library or Helper Six</h3>
+            <p>Use more cards here until you know which categories deserve their own page.</p>
+            <div class="card-actions">
+              <a class="text-link" href="https://example.com" target="_blank" rel="noopener noreferrer">Visit link</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-soft" id="about">
+      <div class="container about-grid">
+        <div>
+          <p class="eyebrow">About this layout</p>
+          <h2>Made for GitHub Pages and easy editing.</h2>
+          <p>
+            You can edit the cards manually first, then later split them into category pages like
+            <code>/emulator/</code> or <code>/tools/</code>.
+          </p>
+        </div>
+
+        <div class="notes-card">
+          <h3>Good next steps</h3>
+          <ul>
+            <li>Replace demo links with official sources.</li>
+            <li>Duplicate cards as needed.</li>
+            <li>Add separate category pages after the homepage feels stable.</li>
+            <li>Keep descriptions short so the grid stays tidy.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-wrap">
+      <p>Built as a clean starter template for curated directories.</p>
+      <a href="#top">Back to top</a>
+    </div>
+  </footer>
+</body>
+</html>
