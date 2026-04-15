@@ -45,17 +45,6 @@
       </div>
     </section>
 
-    <section class="mobile-topbar" aria-label="Mobile quick navigation">
-      <div class="container mobile-topbar-inner">
-        <nav class="mobile-menu-links" aria-label="Mobile section links">
-          <a href="#categories">Categories</a>
-          <a href="#resources">Resources</a>
-          <a href="#about">About</a>
-        </nav>
-        <a class="back-top" href="#top">Back to top</a>
-      </div>
-    </section>
-
     <section class="section" id="categories">
       <div class="container">
         <div class="section-head">
@@ -92,7 +81,7 @@
       <div class="container">
         <div class="section-head">
           <h2>Resources</h2>
-          <p>Each card is now informational only, and only the source buttons are clickable.</p>
+          <p>Each card is informational only, and only the source buttons are clickable.</p>
         </div>
 
         <div class="card-grid">
@@ -198,20 +187,25 @@
     <section class="section muted-section" id="about">
       <div class="container about-box">
         <h2>About this template</h2>
-        <p>This version uses a menu button in the header, keeps the hero text left aligned, and makes only the source buttons clickable inside each resource card.</p>
+        <p>This version keeps the hero content left aligned, removes duplicate navigation, and only shows Back to top after the page has been scrolled down.</p>
       </div>
     </section>
   </main>
 
+  <a class="back-top-floating" href="#top" aria-label="Back to top">Back to top</a>
+
   <script>
     const toggle = document.querySelector('.menu-toggle');
     const menu = document.getElementById('header-menu');
+    const backTop = document.querySelector('.back-top-floating');
+
     if (toggle && menu) {
       toggle.addEventListener('click', () => {
         const expanded = toggle.getAttribute('aria-expanded') === 'true';
         toggle.setAttribute('aria-expanded', String(!expanded));
         menu.hidden = expanded;
       });
+
       menu.querySelectorAll('a').forEach(link => {
         link.addEventListener('click', () => {
           toggle.setAttribute('aria-expanded', 'false');
@@ -219,6 +213,18 @@
         });
       });
     }
+
+    const updateBackTop = () => {
+      if (!backTop) return;
+      if (window.scrollY > 280) {
+        backTop.classList.add('is-visible');
+      } else {
+        backTop.classList.remove('is-visible');
+      }
+    };
+
+    updateBackTop();
+    window.addEventListener('scroll', updateBackTop, { passive: true });
   </script>
 </body>
 </html>
