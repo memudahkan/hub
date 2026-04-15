@@ -20,19 +20,32 @@
         <span>Link Hub</span>
       </a>
 
-      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="header-menu" aria-label="Open navigation menu">
+      <nav class="desktop-nav" aria-label="Primary navigation">
+        <a href="#categories">Categories</a>
+        <a href="#resources">Resources</a>
+        <a href="#about">About</a>
+      </nav>
+
+      <form class="desktop-search" role="search">
+        <label class="sr-only" for="desktop-search-input">Search</label>
+        <input id="desktop-search-input" type="search" placeholder="Search links..." />
+      </form>
+
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open navigation menu">
         <span></span>
         <span></span>
         <span></span>
       </button>
     </div>
 
-    <div class="container header-menu-wrap" id="header-menu" hidden>
-      <nav class="menu" aria-label="Primary navigation">
-        <a href="#categories">Categories</a>
-        <a href="#resources">Resources</a>
-        <a href="#about">About</a>
-      </nav>
+    <div class="container mobile-menu-shell">
+      <div class="mobile-menu" id="mobile-menu">
+        <nav class="mobile-nav" aria-label="Mobile navigation">
+          <a href="#categories">Categories</a>
+          <a href="#resources">Resources</a>
+          <a href="#about">About</a>
+        </nav>
+      </div>
     </div>
   </header>
 
@@ -187,7 +200,7 @@
     <section class="section muted-section" id="about">
       <div class="container about-box">
         <h2>About this template</h2>
-        <p>This version keeps the hero content left aligned, removes duplicate navigation, and only shows Back to top after the page has been scrolled down.</p>
+        <p>This version aligns the hero content with the same container rhythm as the other sections, adds animated mobile navigation, shows desktop navigation and search, and keeps search hidden on mobile. </p>
       </div>
     </section>
   </main>
@@ -196,20 +209,20 @@
 
   <script>
     const toggle = document.querySelector('.menu-toggle');
-    const menu = document.getElementById('header-menu');
+    const menu = document.getElementById('mobile-menu');
     const backTop = document.querySelector('.back-top-floating');
 
     if (toggle && menu) {
       toggle.addEventListener('click', () => {
         const expanded = toggle.getAttribute('aria-expanded') === 'true';
         toggle.setAttribute('aria-expanded', String(!expanded));
-        menu.hidden = expanded;
+        menu.classList.toggle('is-open', !expanded);
       });
 
       menu.querySelectorAll('a').forEach(link => {
         link.addEventListener('click', () => {
           toggle.setAttribute('aria-expanded', 'false');
-          menu.hidden = true;
+          menu.classList.remove('is-open');
         });
       });
     }
