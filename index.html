@@ -15,10 +15,25 @@
 
   <header class="site-header">
     <div class="container topbar">
-      <a class="brand" href="#top" aria-label="Link Hub home">
-        <span class="brand-mark" aria-hidden="true">L</span>
-        <span>Link Hub</span>
-      </a>
+      <div class="header-left">
+        <a class="brand" href="#top" aria-label="Link Hub home">
+          <span class="brand-mark" aria-hidden="true">L</span>
+          <span>Link Hub</span>
+        </a>
+        <p class="header-note">Simple curated links for apps, tools, and guides.</p>
+      </div>
+
+      <div class="header-logo" aria-label="Link Hub logo">
+        <svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <rect x="10" y="12" width="18" height="18" rx="6"></rect>
+          <rect x="36" y="12" width="18" height="18" rx="6"></rect>
+          <rect x="23" y="34" width="18" height="18" rx="6"></rect>
+          <path d="M28 21h8M28 43h8M23 30l-5 6m28-6l-5 6" />
+        </svg>
+      </div>
+    </div>
+
+    <div class="container desktop-nav-row">
       <nav class="menu" aria-label="Primary navigation">
         <a href="#categories">Categories</a>
         <a href="#resources">Resources</a>
@@ -32,7 +47,7 @@
       <div class="container hero-inner">
         <p class="eyebrow">Simple curated links</p>
         <h1>Clean link directory for apps, tools, and guides.</h1>
-        <p class="lead">A lighter homepage with visible navigation, compact categories, and resource cards that can point to Play Store, GitHub, official sites, and other trusted sources.</p>
+        <p class="lead">A lighter homepage with compact categories, simple cards, and separate source buttons for Play Store, GitHub, official websites, and docs.</p>
       </div>
     </section>
 
@@ -45,18 +60,22 @@
 
         <div class="category-grid">
           <a class="category-card" href="#resources">
+            <span class="category-emoji" aria-hidden="true">🎮</span>
             <strong>Emulators</strong>
             <span>Official apps and project pages.</span>
           </a>
           <a class="category-card" href="#resources">
+            <span class="category-emoji" aria-hidden="true">🧰</span>
             <strong>Tools</strong>
             <span>Utilities, helpers, and companion apps.</span>
           </a>
           <a class="category-card" href="#resources">
+            <span class="category-emoji" aria-hidden="true">📱</span>
             <strong>Android</strong>
             <span>Play Store links and mobile-friendly resources.</span>
           </a>
           <a class="category-card" href="#resources">
+            <span class="category-emoji" aria-hidden="true">📚</span>
             <strong>Guides</strong>
             <span>Quick setup notes and compatibility tips.</span>
           </a>
@@ -68,93 +87,105 @@
       <div class="container">
         <div class="section-head">
           <h2>Resources</h2>
-          <p>Each full card is clickable, while the small buttons inside can point to different sources.</p>
+          <p>The card body stays clickable as a main link, while the source buttons remain separate links with valid HTML structure.</p>
         </div>
 
         <div class="card-grid">
-          <a class="resource-card" href="https://example.com" target="_blank" rel="noopener noreferrer">
-            <div class="card-head">
-              <span class="badge">Emulator</span>
-              <span class="meta">Android</span>
+          <article class="resource-card">
+            <a class="card-main-link" href="https://example.com" target="_blank" rel="noopener noreferrer">
+              <div class="card-head">
+                <span class="badge">Emulator</span>
+                <span class="meta">Android</span>
+              </div>
+              <h3>Example Emulator One</h3>
+              <p>Short description for the emulator, what it supports, and why you recommend it.</p>
+            </a>
+            <div class="sub-links" aria-label="Source links">
+              <a class="mini-link" href="https://play.google.com/store" target="_blank" rel="noopener noreferrer">Play Store</a>
+              <a class="mini-link" href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
+              <a class="mini-link" href="https://example.com" target="_blank" rel="noopener noreferrer">Website</a>
             </div>
-            <h3>Example Emulator One</h3>
-            <p>Short description for the emulator, what it supports, and why you recommend it.</p>
-            <div class="sub-links">
-              <span class="mini-link">Play Store</span>
-              <span class="mini-link">GitHub</span>
-              <span class="mini-link">Website</span>
-            </div>
-          </a>
+          </article>
 
-          <a class="resource-card" href="https://example.com" target="_blank" rel="noopener noreferrer">
-            <div class="card-head">
-              <span class="badge">Tool</span>
-              <span class="meta">Cross-platform</span>
+          <article class="resource-card">
+            <a class="card-main-link" href="https://example.com" target="_blank" rel="noopener noreferrer">
+              <div class="card-head">
+                <span class="badge">Tool</span>
+                <span class="meta">Cross-platform</span>
+              </div>
+              <h3>Example Tool Two</h3>
+              <p>Use this layout for frontends, patches, launchers, or helper apps.</p>
+            </a>
+            <div class="sub-links" aria-label="Source links">
+              <a class="mini-link" href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
+              <a class="mini-link" href="https://example.com/docs" target="_blank" rel="noopener noreferrer">Docs</a>
+              <a class="mini-link" href="https://example.com/release" target="_blank" rel="noopener noreferrer">Release</a>
             </div>
-            <h3>Example Tool Two</h3>
-            <p>Use this layout for frontends, patches, launchers, or helper apps.</p>
-            <div class="sub-links">
-              <span class="mini-link">GitHub</span>
-              <span class="mini-link">Docs</span>
-              <span class="mini-link">Release</span>
-            </div>
-          </a>
+          </article>
 
-          <a class="resource-card" href="https://example.com" target="_blank" rel="noopener noreferrer">
-            <div class="card-head">
-              <span class="badge">Guide</span>
-              <span class="meta">Beginner</span>
+          <article class="resource-card">
+            <a class="card-main-link" href="https://example.com" target="_blank" rel="noopener noreferrer">
+              <div class="card-head">
+                <span class="badge">Guide</span>
+                <span class="meta">Beginner</span>
+              </div>
+              <h3>Starter Setup Guide</h3>
+              <p>Good for short guides, notes, or curated explainers that support the main links.</p>
+            </a>
+            <div class="sub-links" aria-label="Source links">
+              <a class="mini-link" href="https://example.com/article" target="_blank" rel="noopener noreferrer">Article</a>
+              <a class="mini-link" href="https://youtube.com" target="_blank" rel="noopener noreferrer">Video</a>
+              <a class="mini-link" href="https://example.com/source" target="_blank" rel="noopener noreferrer">Source</a>
             </div>
-            <h3>Starter Setup Guide</h3>
-            <p>Good for short guides, notes, or curated explainers that support the main links.</p>
-            <div class="sub-links">
-              <span class="mini-link">Article</span>
-              <span class="mini-link">Video</span>
-              <span class="mini-link">Source</span>
-            </div>
-          </a>
+          </article>
 
-          <a class="resource-card" href="https://example.com" target="_blank" rel="noopener noreferrer">
-            <div class="card-head">
-              <span class="badge">Android</span>
-              <span class="meta">Mobile</span>
+          <article class="resource-card">
+            <a class="card-main-link" href="https://example.com" target="_blank" rel="noopener noreferrer">
+              <div class="card-head">
+                <span class="badge">Android</span>
+                <span class="meta">Mobile</span>
+              </div>
+              <h3>Example App Four</h3>
+              <p>A compact card works well when you only need a title, note, and a few source buttons.</p>
+            </a>
+            <div class="sub-links" aria-label="Source links">
+              <a class="mini-link" href="https://play.google.com/store" target="_blank" rel="noopener noreferrer">Play Store</a>
+              <a class="mini-link" href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
+              <a class="mini-link" href="https://example.com/mirror" target="_blank" rel="noopener noreferrer">Mirror</a>
             </div>
-            <h3>Example App Four</h3>
-            <p>A compact card works well when you only need a title, note, and a few source buttons.</p>
-            <div class="sub-links">
-              <span class="mini-link">Play Store</span>
-              <span class="mini-link">GitHub</span>
-              <span class="mini-link">Mirror</span>
-            </div>
-          </a>
+          </article>
 
-          <a class="resource-card" href="https://example.com" target="_blank" rel="noopener noreferrer">
-            <div class="card-head">
-              <span class="badge">Emulator</span>
-              <span class="meta">Desktop</span>
+          <article class="resource-card">
+            <a class="card-main-link" href="https://example.com" target="_blank" rel="noopener noreferrer">
+              <div class="card-head">
+                <span class="badge">Emulator</span>
+                <span class="meta">Desktop</span>
+              </div>
+              <h3>Desktop Emulator Five</h3>
+              <p>Add platform support, maintainer status, or a quick compatibility note here.</p>
+            </a>
+            <div class="sub-links" aria-label="Source links">
+              <a class="mini-link" href="https://example.com/windows" target="_blank" rel="noopener noreferrer">Windows</a>
+              <a class="mini-link" href="https://example.com/linux" target="_blank" rel="noopener noreferrer">Linux</a>
+              <a class="mini-link" href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
             </div>
-            <h3>Desktop Emulator Five</h3>
-            <p>Add platform support, maintainer status, or a quick compatibility note here.</p>
-            <div class="sub-links">
-              <span class="mini-link">Windows</span>
-              <span class="mini-link">Linux</span>
-              <span class="mini-link">GitHub</span>
-            </div>
-          </a>
+          </article>
 
-          <a class="resource-card" href="https://example.com" target="_blank" rel="noopener noreferrer">
-            <div class="card-head">
-              <span class="badge">Tool</span>
-              <span class="meta">Utility</span>
+          <article class="resource-card">
+            <a class="card-main-link" href="https://example.com" target="_blank" rel="noopener noreferrer">
+              <div class="card-head">
+                <span class="badge">Tool</span>
+                <span class="meta">Utility</span>
+              </div>
+              <h3>Helper Utility Six</h3>
+              <p>Use the same structure for small utilities, launchers, or supporting downloads.</p>
+            </a>
+            <div class="sub-links" aria-label="Source links">
+              <a class="mini-link" href="https://example.com/download" target="_blank" rel="noopener noreferrer">Download</a>
+              <a class="mini-link" href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
+              <a class="mini-link" href="https://example.com/docs" target="_blank" rel="noopener noreferrer">Docs</a>
             </div>
-            <h3>Helper Utility Six</h3>
-            <p>Use the same structure for small utilities, launchers, or supporting downloads.</p>
-            <div class="sub-links">
-              <span class="mini-link">Download</span>
-              <span class="mini-link">GitHub</span>
-              <span class="mini-link">Docs</span>
-            </div>
-          </a>
+          </article>
         </div>
       </div>
     </section>
@@ -162,9 +193,18 @@
     <section class="section muted-section" id="about">
       <div class="container about-box">
         <h2>About this template</h2>
-        <p>This version removes the oversized header look, keeps the menu visible on mobile, and uses simpler cards so the content feels lighter.</p>
+        <p>This version keeps the layout cleaner, adds a simple right-side logo, uses emoji markers on category cards, and shows a sticky mobile bar with menu on the left and back-to-top on the right.</p>
       </div>
     </section>
   </main>
+
+  <div class="mobile-bar" aria-label="Mobile quick navigation">
+    <nav class="mobile-menu-links" aria-label="Mobile section links">
+      <a href="#categories">Categories</a>
+      <a href="#resources">Resources</a>
+      <a href="#about">About</a>
+    </nav>
+    <a class="back-top" href="#top">Back to top</a>
+  </div>
 </body>
 </html>
