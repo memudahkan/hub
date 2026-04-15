@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="hub.css" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -40,6 +40,10 @@
 
     <div class="container mobile-menu-shell">
       <div class="mobile-menu" id="mobile-menu">
+        <form class="mobile-search" role="search">
+          <label class="sr-only" for="mobile-search-input">Search</label>
+          <input id="mobile-search-input" type="search" placeholder="Search links..." />
+        </form>
         <nav class="mobile-nav" aria-label="Mobile navigation">
           <a href="#categories">Categories</a>
           <a href="#resources">Resources</a>
