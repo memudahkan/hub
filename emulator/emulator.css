@@ -199,7 +199,7 @@ input, button { font: inherit; }
   padding: 10px 0 12px;
 }
 
-.hero { padding: 28px 0 10px; }
+.hero { padding: 34px 0 14px; }
 .hero-inner { max-width: var(--max); margin-inline: auto; }
 .eyebrow {
   display: inline-block;
