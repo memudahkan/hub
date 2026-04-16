@@ -21,7 +21,7 @@
       </a>
 
       <nav class="desktop-nav" aria-label="Primary navigation">
-        <a href="../index.html">Home</a>
+        <a href="/hub">Home</a>
         <a href="#android">Android</a>
         <a href="#desktop">Desktop</a>
         <a href="#frontend">Frontend</a>
@@ -46,9 +46,8 @@
           <label class="sr-only" for="mobile-search-input">Cari emulator</label>
           <input id="mobile-search-input" type="search" placeholder="Cari emulator..." />
         </form>
-
         <nav class="mobile-nav" aria-label="Mobile navigation">
-          <a href="../index.html">Home</a>
+          <a href="/">Home</a>
           <a href="#android">Android</a>
           <a href="#desktop">Desktop</a>
           <a href="#frontend">Frontend</a>
@@ -63,10 +62,7 @@
       <div class="container hero-inner">
         <p class="eyebrow">Kategori</p>
         <h1>Emulator</h1>
-        <p class="lead">
-          Emulator aman dan valid dari sumber resmi. Fokus utama halaman ini adalah Android,
-          lalu platform lain disusun di bawahnya agar tetap mudah dipindai di mobile.
-        </p>
+        <p class="lead">Emulator aman dan valid dari sumber resmi. Fokus utama halaman ini adalah Android, lalu platform lain diletakkan di bawah agar tetap nyaman dibaca di mobile.</p>
       </div>
     </section>
 
@@ -79,38 +75,55 @@
       </div>
     </section>
 
-    <section class="section highlight-section">
+    <section class="section" id="featured">
       <div class="container">
         <div class="section-head">
           <h2>Sorotan</h2>
-          <p>Bagian ini tetap ada, tetapi dibuat sebagai list teks singkat, bukan kartu.</p>
+          <p>Tiga kartu unggulan di atas, lalu sisanya tetap berupa daftar teks padat seperti gaya wiki/list.</p>
         </div>
 
-        <ul class="highlight-list">
-          <li>
-            <strong>PPSSPP</strong> — Emulator PSP ringan dan stabil untuk Android.
-            <span class="inline-links">
-              <a href="https://www.ppsspp.org/" target="_blank" rel="noopener noreferrer">Website</a>
-              <a href="https://play.google.com/store" target="_blank" rel="noopener noreferrer">Play Store</a>
-              <a href="https://github.com/hrydgard/ppsspp" target="_blank" rel="noopener noreferrer">GitHub</a>
-            </span>
-          </li>
-          <li>
-            <strong>Dolphin</strong> — Emulator GameCube dan Wii untuk berbagai platform.
-            <span class="inline-links">
-              <a href="https://dolphin-emu.org/" target="_blank" rel="noopener noreferrer">Website</a>
-              <a href="https://github.com/dolphin-emu/dolphin" target="_blank" rel="noopener noreferrer">GitHub</a>
-              <a href="https://dolphin-emu.org/docs/" target="_blank" rel="noopener noreferrer">Docs</a>
-            </span>
-          </li>
-          <li>
-            <strong>NetherSX2</strong> — Pilihan Android untuk PS2 dengan panduan setup tambahan.
-            <span class="inline-links">
-              <a href="https://github.com/" target="_blank" rel="noopener noreferrer">GitHub</a>
-              <a href="#guides">Guide</a>
-            </span>
-          </li>
-        </ul>
+        <div class="featured-grid">
+          <article class="featured-card">
+            <div class="card-head">
+              <span class="badge">Android</span>
+              <span class="meta">PSP</span>
+            </div>
+            <h3>PPSSPP</h3>
+            <p>Emulator PSP ringan dan stabil, cocok dijadikan rujukan utama untuk Android.</p>
+            <div class="sub-links">
+              <a class="mini-link" href="https://www.ppsspp.org/" target="_blank" rel="noopener noreferrer">Website</a>
+              <a class="mini-link" href="https://play.google.com/store" target="_blank" rel="noopener noreferrer">Play Store</a>
+              <a class="mini-link" href="https://github.com/hrydgard/ppsspp" target="_blank" rel="noopener noreferrer">GitHub</a>
+            </div>
+          </article>
+
+          <article class="featured-card">
+            <div class="card-head">
+              <span class="badge">Desktop</span>
+              <span class="meta">GC / Wii</span>
+            </div>
+            <h3>Dolphin</h3>
+            <p>Emulator GameCube dan Wii dengan situs resmi, dokumentasi, dan repositori yang jelas.</p>
+            <div class="sub-links">
+              <a class="mini-link" href="https://dolphin-emu.org/" target="_blank" rel="noopener noreferrer">Website</a>
+              <a class="mini-link" href="https://github.com/dolphin-emu/dolphin" target="_blank" rel="noopener noreferrer">GitHub</a>
+              <a class="mini-link" href="https://dolphin-emu.org/docs/" target="_blank" rel="noopener noreferrer">Docs</a>
+            </div>
+          </article>
+
+          <article class="featured-card">
+            <div class="card-head">
+              <span class="badge">Android</span>
+              <span class="meta">PS2</span>
+            </div>
+            <h3>NetherSX2</h3>
+            <p>Pilihan PS2 Android yang cocok diletakkan sebagai sorotan dengan guide tambahan.</p>
+            <div class="sub-links">
+              <a class="mini-link" href="https://github.com/" target="_blank" rel="noopener noreferrer">GitHub</a>
+              <a class="mini-link" href="#guides">Guide</a>
+            </div>
+          </article>
+        </div>
       </div>
     </section>
 
