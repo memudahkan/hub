@@ -17,13 +17,14 @@
     <div class="container topbar">
       <a class="brand" href="/hub" aria-label="M2D Link Hub home">
         <span class="brand-mark" aria-hidden="true">L</span>
-        <span>Link Hub</span>
+        <span>M2D Link Hub</span>
       </a>
 
       <nav class="desktop-nav" aria-label="Primary navigation">
         <a href="/hub">Home</a>
-        <a href="#android">Android</a>
-        <a href="#desktop">Desktop</a>
+        <a href="#playstation">PlayStation</a>
+        <a href="#nintendo">Nintendo</a>
+        <a href="#multisystem">Multi-system</a>
         <a href="#frontend">Frontend</a>
         <a href="#guides">Guide</a>
       </nav>
@@ -48,8 +49,9 @@
         </form>
         <nav class="mobile-nav" aria-label="Mobile navigation">
           <a href="/">Home</a>
-          <a href="#android">Android</a>
-          <a href="#desktop">Desktop</a>
+          <a href="#playstation">PlayStation</a>
+          <a href="#nintendo">Nintendo</a>
+          <a href="#multisystem">Multi-system</a>
           <a href="#frontend">Frontend</a>
           <a href="#guides">Guide</a>
         </nav>
@@ -62,14 +64,15 @@
       <div class="container hero-inner">
         <p class="eyebrow">Kategori</p>
         <h1>Emulator</h1>
-        <p class="lead">Emulator aman dan valid dari sumber resmi. Fokus utama halaman ini adalah Android, lalu platform lain diletakkan di bawah agar tetap nyaman dibaca di mobile.</p>
+        <p class="lead">Emulator aman dan valid dari sumber resmi. Sorotan tetap fokus ke Android, tetapi daftar utama sekarang dikelompokkan berdasarkan keluarga konsol atau handheld agar lebih mudah dipindai.</p>
       </div>
     </section>
 
     <section class="section quick-nav">
       <div class="container quick-nav-row">
-        <a href="#android">Android</a>
-        <a href="#desktop">Desktop</a>
+        <a href="#playstation">PlayStation</a>
+        <a href="#nintendo">Nintendo</a>
+        <a href="#multisystem">Multi-system</a>
         <a href="#frontend">Frontend</a>
         <a href="#guides">Guide</a>
       </div>
@@ -126,25 +129,57 @@
       </div>
     </section>
 
-    <section class="section" id="android">
+    <section class="section" id="playstation">
       <div class="container list-section">
         <div class="section-head">
-          <h2>Android</h2>
-          <p>Bagian utama diletakkan paling atas karena halaman ini dibuat mobile-first.</p>
+          <h2>PlayStation</h2>
+          <p>Kelompok PlayStation berisi emulator untuk PS1, PS2, dan PSP dari sumber resmi.</p>
         </div>
 
         <ul class="resource-list">
           <li>
-            <a class="primary-link" href="https://www.duckstation.org/" target="_blank" rel="noopener noreferrer">DuckStation Android</a> — Emulator PlayStation 1 untuk perangkat tertentu.
+            <a class="primary-link" href="https://play.google.com/store/apps/details?id=com.github.stenzek.duckstation" target="_blank" rel="noopener noreferrer">DuckStation</a> — Emulator PlayStation 1 yang cepat dan rapi.
             <span class="inline-links">
-              <span class="sep" aria-hidden="true">·</span>
+              <span class="sep" aria-hidden="true">/</span>
+              <a href="https://www.duckstation.org/" target="_blank" rel="noopener noreferrer">Website</a>
+              <span class="sep" aria-hidden="true">/</span>
               <a href="https://github.com/stenzek/duckstation" target="_blank" rel="noopener noreferrer">GitHub</a>
+            </span>
+          </li>
+          <li>
+            <a class="primary-link" href="https://pcsx2.net/" target="_blank" rel="noopener noreferrer">PCSX2</a> — Emulator PlayStation 2 untuk desktop.
+            <span class="inline-links">
+              <span class="sep" aria-hidden="true">/</span>
+              <a href="https://github.com/PCSX2/pcsx2" target="_blank" rel="noopener noreferrer">GitHub</a>
+            </span>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section" id="nintendo">
+      <div class="container list-section">
+        <div class="section-head">
+          <h2>Nintendo</h2>
+          <p>Masukkan emulator Nintendo berdasarkan konsol target, bukan sekadar platform aplikasinya.</p>
+        </div>
+
+        <ul class="resource-list">
+          <li>
+            <a class="primary-link" href="https://play.google.com/store/apps/details?id=org.dolphinemu.dolphinemu" target="_blank" rel="noopener noreferrer">Dolphin</a> — Emulator GameCube dan Wii yang juga tersedia di Android.
+            <span class="inline-links">
+              <span class="sep" aria-hidden="true">/</span>
+              <a href="https://dolphin-emu.org/" target="_blank" rel="noopener noreferrer">Website</a>
+              <span class="sep" aria-hidden="true">/</span>
+              <a href="https://github.com/dolphin-emu/dolphin" target="_blank" rel="noopener noreferrer">GitHub</a>
+              <span class="sep" aria-hidden="true">/</span>
+              <a href="https://dolphin-emu.org/docs/" target="_blank" rel="noopener noreferrer">Docs</a>
             </span>
           </li>
           <li>
             <a class="primary-link" href="https://play.google.com/store" target="_blank" rel="noopener noreferrer">M64Plus FZ</a> — Emulator Nintendo 64 yang umum dipakai di Android.
             <span class="inline-links">
-              <span class="sep" aria-hidden="true">·</span>
+              <span class="sep" aria-hidden="true">/</span>
               <a href="#guides">Guide</a>
             </span>
           </li>
@@ -152,35 +187,21 @@
       </div>
     </section>
 
-    <section class="section" id="desktop">
+    <section class="section" id="multisystem">
       <div class="container list-section">
         <div class="section-head">
-          <h2>Desktop</h2>
-          <p>Emulator untuk Windows, Linux, atau macOS.</p>
+          <h2>Multi-system</h2>
+          <p>Bagian ini cocok untuk emulator all-in-one yang mencakup banyak sistem sekaligus.</p>
         </div>
 
         <ul class="resource-list">
           <li>
-            <a class="primary-link" href="https://dolphin-emu.org/" target="_blank" rel="noopener noreferrer">Dolphin</a> — Emulator GameCube dan Wii.
+            <a class="primary-link" href="https://play.google.com/store/apps/details?id=com.swordfish.lemuroid" target="_blank" rel="noopener noreferrer">Lemuroid</a> — Emulator multi-system sederhana untuk Android.
             <span class="inline-links">
-              <span class="sep" aria-hidden="true">·</span>
-              <a href="https://github.com/dolphin-emu/dolphin" target="_blank" rel="noopener noreferrer">GitHub</a>
-              <span class="sep" aria-hidden="true">·</span>
-              <a href="https://dolphin-emu.org/docs/" target="_blank" rel="noopener noreferrer">Docs</a>
-            </span>
-          </li>
-          <li>
-            <a class="primary-link" href="https://www.duckstation.org/" target="_blank" rel="noopener noreferrer">DuckStation</a> — Emulator PlayStation 1 yang cepat dan rapi.
-            <span class="inline-links">
-              <span class="sep" aria-hidden="true">·</span>
-              <a href="https://github.com/stenzek/duckstation" target="_blank" rel="noopener noreferrer">GitHub</a>
-            </span>
-          </li>
-          <li>
-            <a class="primary-link" href="https://pcsx2.net/" target="_blank" rel="noopener noreferrer">PCSX2</a> — Emulator PlayStation 2 untuk desktop.
-            <span class="inline-links">
-              <span class="sep" aria-hidden="true">·</span>
-              <a href="https://github.com/PCSX2/pcsx2" target="_blank" rel="noopener noreferrer">GitHub</a>
+              <span class="sep" aria-hidden="true">/</span>
+              <a href="https://lemuroid.com" target="_blank" rel="noopener noreferrer">Website</a>
+              <span class="sep" aria-hidden="true">/</span>
+              <a href="https://github.com/Swordfish90/Lemuroid" target="_blank" rel="noopener noreferrer">GitHub</a>
             </span>
           </li>
         </ul>
@@ -198,9 +219,9 @@
           <li>
             <a class="primary-link" href="https://www.retroarch.com/" target="_blank" rel="noopener noreferrer">RetroArch</a> — Frontend multi-core untuk banyak sistem.
             <span class="inline-links">
-              <span class="sep" aria-hidden="true">·</span>
+              <span class="sep" aria-hidden="true">/</span>
               <a href="https://github.com/libretro/RetroArch" target="_blank" rel="noopener noreferrer">GitHub</a>
-              <span class="sep" aria-hidden="true">·</span>
+              <span class="sep" aria-hidden="true">/</span>
               <a href="https://docs.libretro.com/" target="_blank" rel="noopener noreferrer">Docs</a>
             </span>
           </li>
