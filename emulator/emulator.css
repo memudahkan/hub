@@ -7,6 +7,7 @@
   --muted: #5f7183;
   --accent: #2fa36f;
   --accent-soft: rgba(47, 163, 111, 0.12);
+  --accent-contrast: #ffffff;
   --radius: 10px;
   --radius-sm: 8px;
   --max: 1040px;
@@ -22,6 +23,7 @@
     --muted: #9fb0ba;
     --accent: #3ed29f;
     --accent-soft: rgba(62, 210, 159, 0.12);
+    --accent-contrast: #0b1114;
   }
 }
 
@@ -291,7 +293,7 @@ input, button { font: inherit; }
 }
 .mini-link:hover,
 .mini-link:focus-visible {
-  color: white;
+  color: var(--accent-contrast);
   background: var(--accent);
   border-color: var(--accent);
 }
