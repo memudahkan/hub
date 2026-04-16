@@ -306,6 +306,14 @@ input, button { font: inherit; }
   border-top: 1px solid var(--line);
 }
 .resource-list li:first-child { border-top: 0; }
+.primary-link {
+  color: var(--accent);
+  font-weight: 700;
+}
+.primary-link:hover,
+.primary-link:focus-visible {
+  text-decoration: underline;
+}
 .inline-links {
   display: inline-flex;
   flex-wrap: wrap;
