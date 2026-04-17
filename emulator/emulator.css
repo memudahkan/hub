@@ -230,10 +230,13 @@ input, button { font: inherit; }
 .meta { color: var(--muted); }
 .lead { margin: 14px 0 0; max-width: 64ch; }
 .section { padding: 20px 0 16px; }
-.section-head { margin-bottom: 32px; }
+.section-head { margin-bottom: 12px; }
 .section-head h2 {
   font-size: clamp(1.2rem, 2vw, 1.6rem);
   margin-bottom: 4px;
+}
+.section-head + .resource-group {
+  margin-top: 32px;
 }
 .quick-nav-row {
   display: flex;
