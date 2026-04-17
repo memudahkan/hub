@@ -376,6 +376,10 @@ input, button { font: inherit; }
   padding-left: 20px;
 }
 
+.link-flag {
+  white-space: nowrap;
+}
+
 @media (max-width: 920px) {
   .featured-grid { grid-template-columns: 1fr; }
 }
