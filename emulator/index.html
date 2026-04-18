@@ -569,7 +569,7 @@
 <script>
   const toggle = document.querySelector('.menu-toggle');
   const menu = document.getElementById('mobile-menu');
-  const backTop = document.querySelector('.back-top-floating');
+  const backTops = document.querySelectorAll('.back-top-floating');
   const siteHeader = document.querySelector('.site-header');
 
   let lastScrollY = window.scrollY;
@@ -601,12 +601,15 @@
   }
 
   const updateBackTop = () => {
-    if (!backTop) return;
-    if (window.scrollY > 280) {
-      backTop.classList.add('is-visible');
-    } else {
-      backTop.classList.remove('is-visible');
-    }
+    if (!backTops.length) return;
+
+    backTops.forEach(btn => {
+      if (window.scrollY > 280) {
+        btn.classList.add('is-visible');
+      } else {
+        btn.classList.remove('is-visible');
+      }
+    });
   };
 
   const updateHeader = () => {
