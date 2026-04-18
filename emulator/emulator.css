@@ -422,10 +422,16 @@ input, button { font: inherit; }
 }
 
 mark.search-hit {
-  background: rgba(255, 229, 138, 0.72);
   color: inherit;
   padding: 0 2px;
   border-radius: 3px;
+  background: rgba(255, 229, 138, 0.72);
+}
+
+@media (prefers-color-scheme: dark) {
+  mark.search-hit {
+    background: rgba(255, 255, 255, 0.12);
+  }
 }
 
 @media (max-width: 920px) {
