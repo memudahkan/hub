@@ -532,12 +532,19 @@ mark.search-hit {
   background: rgba(255, 229, 138, 0.72);
 }
 
-.emoji-legend-list-block {
-  margin: 4px 0 12px;
+.emoji-legend-section {
+  padding: 4px 0 0;
+}
+
+.emoji-legend-card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  padding: 14px 16px;
 }
 
 .emoji-legend-title {
-  margin: 0 0 6px;
+  margin: 0 0 8px;
   color: var(--muted);
   font-size: 0.78rem;
   font-weight: 700;
@@ -546,19 +553,23 @@ mark.search-hit {
 }
 
 .emoji-legend-list {
+  list-style: none;
   margin: 0;
-  padding-left: 18px;
+  padding: 0;
   color: var(--muted);
 }
 
 .emoji-legend-list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   padding: 2px 0;
   border: 0;
 }
 
 .emoji-legend-list li span {
-  display: inline-block;
-  width: 1.4em;
+  flex: 0 0 1.25rem;
+  text-align: center;
 }
 
 @media (prefers-color-scheme: dark) {
