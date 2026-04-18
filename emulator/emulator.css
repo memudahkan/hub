@@ -533,6 +533,9 @@ mark.search-hit {
 }
 
 .emoji-legend-inline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
   margin: 2px 0 10px;
   color: var(--muted);
   font-size: 0.92rem;
@@ -542,6 +545,18 @@ mark.search-hit {
 .emoji-legend-inline .legend-label {
   color: var(--text);
   font-weight: 600;
+}
+
+.emoji-legend-inline .legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.emoji-legend-inline .legend-item::before {
+  content: "/";
+  margin: 0 8px;
+  color: var(--muted);
 }
 
 @media (prefers-color-scheme: dark) {
