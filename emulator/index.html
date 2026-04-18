@@ -624,7 +624,7 @@
     const topbar = document.querySelector('.topbar');
     const hashLinks = document.querySelectorAll('a[href^="#"]');
     const featuredSection = document.getElementById('featured-section');
-
+    const heroSection = document.querySelector('.hero');
     const desktopSearchForm = document.querySelector('.desktop-search');
     const mobileSearchForm = document.getElementById('mobile-search-form');
     const desktopSearchInput = document.getElementById('desktop-search-input');
@@ -885,6 +885,10 @@
     const runSearch = (rawQuery) => {
       const query = normalizeQuery(rawQuery);
       let matchCount = 0;
+
+  if (heroSection) {
+    heroSection.hidden = !!query;
+  }
 
       if (featuredSection) {
         featuredSection.hidden = !!query;
