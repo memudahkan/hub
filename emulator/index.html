@@ -766,10 +766,17 @@
     });
 
     document.querySelectorAll('.section').forEach((section) => {
-      const visibleGroups = Array.from(section.querySelectorAll('.resource-group'))
-        .some((group) => !group.hidden);
+      const hasLists = !!section.querySelector('.resource-list');
 
-      section.hidden = !visibleGroups;
+      if (!hasLists) {
+        section.hidden = false;
+        return;
+      }
+
+      const visibleItems = Array.from(section.querySelectorAll('.resource-list li'))
+        .some((item) => !item.hidden);
+
+      section.hidden = !visibleItems;
     });
 
     updateSearchUI(query, query ? matchCount : 0);
