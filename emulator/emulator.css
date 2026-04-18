@@ -532,6 +532,15 @@ mark.search-hit {
   background: rgba(255, 229, 138, 0.72);
 }
 
+@media (prefers-color-scheme: dark) {
+  mark.search-hit {
+    background: rgba(245, 171, 50, 0.24);
+  }
+}
+
+.emoji-legend-section {
+  padding: 4px 0 0;
+}
 
 .emoji-legend-card {
   border: 1px solid var(--line);
@@ -569,9 +578,22 @@ mark.search-hit {
   text-align: center;
 }
 
-@media (prefers-color-scheme: dark) {
-  mark.search-hit {
-    background: rgba(245, 171, 50, 0.24);
+@media (min-width: 641px) {
+  .emoji-legend-list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .emoji-legend-list li {
+    display: inline-flex;
+    padding: 0;
+  }
+
+  .emoji-legend-list li + li::before {
+    content: "/";
+    margin: 0 10px 0 2px;
+    color: var(--muted);
   }
 }
 
