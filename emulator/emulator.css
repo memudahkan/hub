@@ -539,14 +539,14 @@ mark.search-hit {
 }
 
 .emoji-legend-section {
-  padding: 4px 0 0;
+  padding: 14px 0 0;
 }
 
 .emoji-legend-card {
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: var(--surface);
-  padding: 14px 16px;
+  padding: 12px 16px;
 }
 
 .emoji-legend-title {
@@ -583,17 +583,20 @@ mark.search-hit {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
+    row-gap: 6px;
   }
 
   .emoji-legend-list li {
     display: inline-flex;
+    align-items: center;
+    gap: 8px;
     padding: 0;
   }
 
   .emoji-legend-list li + li::before {
     content: "/";
-    margin: 0 10px 0 2px;
-    color: var(--muted);
+    margin: 0 12px;
+    color: color-mix(in srgb, var(--muted) 82%, transparent);
   }
 }
 
