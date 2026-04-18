@@ -76,7 +76,7 @@
   <p>Tidak ada hasil yang cocok.</p>
 </div>
 
-    <section class="section" id="featured">
+    <section class="section" id="featured-section">
       <div class="container">
         <div class="section-head">
           <h2>Sorotan</h2>
@@ -581,6 +581,7 @@
   const siteHeader = document.querySelector('.site-header');
   const topbar = document.querySelector('.topbar');
   const hashLinks = document.querySelectorAll('a[href^="#"]');
+  const featuredSection = document.getElementById('featured-section');
 
   const desktopSearchForm = document.getElementById('desktop-search-form');
   const mobileSearchForm = document.getElementById('mobile-search-form');
@@ -752,6 +753,10 @@
     const query = normalizeQuery(rawQuery);
     let matchCount = 0;
 
+    if (featuredSection) {
+      featuredSection.hidden = !!query;
+    }
+
     searchableItems.forEach(({ item, searchableText }) => {
       const matched = !query || searchableText.includes(query);
       item.hidden = !matched;
@@ -766,6 +771,10 @@
     });
 
     document.querySelectorAll('.section').forEach((section) => {
+      if (featuredSection && section === featuredSection) {
+        return;
+      }
+
       const hasLists = !!section.querySelector('.resource-list');
 
       if (!hasLists) {
