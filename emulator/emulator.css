@@ -539,7 +539,7 @@ mark.search-hit {
 }
 
 .emoji-legend-section {
-  padding: 14px 0 0;
+  padding: 14px 0 40px;
 }
 
 .emoji-legend-card {
@@ -595,7 +595,7 @@ mark.search-hit {
 
   .emoji-legend-list li + li::before {
     content: "/";
-    margin: 0 12px;
+    margin: 0 5px;
     color: color-mix(in srgb, var(--muted) 82%, transparent);
   }
 }
