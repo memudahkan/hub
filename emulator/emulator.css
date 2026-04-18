@@ -532,9 +532,6 @@ mark.search-hit {
   background: rgba(255, 229, 138, 0.72);
 }
 
-.emoji-legend-section {
-  padding: 4px 0 0;
-}
 
 .emoji-legend-card {
   border: 1px solid var(--line);
