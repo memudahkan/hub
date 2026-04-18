@@ -595,7 +595,7 @@ mark.search-hit {
 
   .emoji-legend-list li + li::before {
     content: "/";
-    margin: 0 5px;
+    margin: 0 0 0 8px;
     color: color-mix(in srgb, var(--muted) 82%, transparent);
   }
 }
