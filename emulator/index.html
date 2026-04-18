@@ -582,6 +582,14 @@
   const topbar = document.querySelector('.topbar');
   const hashLinks = document.querySelectorAll('a[href^="#"]');
 
+  const desktopSearchForm = document.getElementById('desktop-search-form');
+  const mobileSearchForm = document.getElementById('mobile-search-form');
+  const desktopSearchInput = document.getElementById('desktop-search-input');
+  const mobileSearchInput = document.getElementById('mobile-search-input');
+  const searchStatusWrap = document.getElementById('search-status-wrap');
+  const searchStatus = document.getElementById('search-status');
+  const noResults = document.getElementById('no-results');
+
   let lastScrollY = window.scrollY;
   let ticking = false;
   let isAnchoring = false;
@@ -708,34 +716,6 @@
     lastScrollY = currentScrollY;
   };
 
-  const onScroll = () => {
-    updateBackTop();
-
-    if (isAnchoring) {
-      scheduleAnchorUnlock();
-    }
-
-    if (!ticking) {
-      window.requestAnimationFrame(() => {
-        updateHeader();
-        ticking = false;
-      });
-      ticking = true;
-    }
-  };
-
-  updateBackTop();
-  updateHeader();
-  window.addEventListener('scroll', onScroll, { passive: true });
-</script>
-
-<script>
-  const desktopSearchInput = document.getElementById('desktop-search-input');
-  const mobileSearchInput = document.getElementById('mobile-search-input');
-  const searchStatusWrap = document.getElementById('search-status-wrap');
-  const searchStatus = document.getElementById('search-status');
-  const noResults = document.getElementById('no-results');
-
   const searchableItems = Array.from(document.querySelectorAll('.resource-list li')).map((item) => {
     const group = item.closest('.resource-group');
     const section = item.closest('.section');
@@ -810,13 +790,64 @@
     runSearch(value);
   };
 
+  const handleSearchSubmit = (event) => {
+    event.preventDefault();
+
+    const form = event.currentTarget;
+    const input = form.querySelector('input[type="search"]');
+    const value = input ? input.value : '';
+
+    syncSearchInputs(input, value);
+    runSearch(value);
+  };
+
+  const preventEnterKeySubmit = (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      const value = event.target.value || '';
+      syncSearchInputs(event.target, value);
+      runSearch(value);
+    }
+  };
+
   if (desktopSearchInput) {
     desktopSearchInput.addEventListener('input', handleSearchInput);
+    desktopSearchInput.addEventListener('keydown', preventEnterKeySubmit);
   }
 
   if (mobileSearchInput) {
     mobileSearchInput.addEventListener('input', handleSearchInput);
+    mobileSearchInput.addEventListener('keydown', preventEnterKeySubmit);
   }
+
+  if (desktopSearchForm) {
+    desktopSearchForm.addEventListener('submit', handleSearchSubmit);
+  }
+
+  if (mobileSearchForm) {
+    mobileSearchForm.addEventListener('submit', handleSearchSubmit);
+  }
+
+  const onScroll = () => {
+    updateBackTop();
+
+    if (isAnchoring) {
+      scheduleAnchorUnlock();
+    }
+
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        updateHeader();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  };
+
+  updateBackTop();
+  updateHeader();
+  runSearch('');
+  window.addEventListener('scroll', onScroll, { passive: true });
 </script>
 
 </body>
