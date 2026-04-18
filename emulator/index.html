@@ -30,7 +30,7 @@
       </nav>
 
       <form class="desktop-search" role="search">
-        <label class="sr-only" for="desktop-search-input">Cari emulator</label>
+        <label class="sr-only" for="desktop-search-input" id="desktop-search-form">Cari emulator</label>
         <input id="desktop-search-input" type="search" placeholder="Cari emulator..." />
       </form>
 
@@ -43,7 +43,7 @@
 
     <div class="container mobile-menu-shell">
       <div class="mobile-menu" id="mobile-menu">
-        <form class="mobile-search" role="search">
+        <form class="mobile-search" role="search" id="mobile-search-form">
           <label class="sr-only" for="mobile-search-input">Cari emulator</label>
           <input id="mobile-search-input" type="search" placeholder="Cari emulator..." />
         </form>
@@ -59,6 +59,10 @@
     </div>
   </header>
 
+<div class="container search-status-wrap" id="search-status-wrap" hidden>
+  <p class="search-status" id="search-status" aria-live="polite"></p>
+</div>
+
   <main id="main">
     <section class="hero" id="top">
       <div class="container hero-inner">
@@ -67,6 +71,10 @@
         <p class="lead">Temukan berbagai emulator game populer di sini, download dari Play Store, GitHub, atau website resminya.</p>
       </div>
     </section>
+
+<div class="container no-results" id="no-results" hidden>
+  <p>Tidak ada hasil yang cocok.</p>
+</div>
 
     <section class="section" id="featured">
       <div class="container">
@@ -719,6 +727,96 @@
   updateBackTop();
   updateHeader();
   window.addEventListener('scroll', onScroll, { passive: true });
+</script>
+
+<script>
+  const desktopSearchInput = document.getElementById('desktop-search-input');
+  const mobileSearchInput = document.getElementById('mobile-search-input');
+  const searchStatusWrap = document.getElementById('search-status-wrap');
+  const searchStatus = document.getElementById('search-status');
+  const noResults = document.getElementById('no-results');
+
+  const searchableItems = Array.from(document.querySelectorAll('.resource-list li')).map((item) => {
+    const group = item.closest('.resource-group');
+    const section = item.closest('.section');
+    const subtitle = group ? group.querySelector('.resource-subtitle') : null;
+    const sectionTitle = section ? section.querySelector('.section-head h2') : null;
+
+    const searchableText = [
+      item.textContent,
+      subtitle ? subtitle.textContent : '',
+      sectionTitle ? sectionTitle.textContent : ''
+    ].join(' ').toLowerCase();
+
+    return { item, group, section, searchableText };
+  });
+
+  const normalizeQuery = (value) =>
+    value.toLowerCase().trim().replace(/\s+/g, ' ');
+
+  const updateSearchUI = (query, matchCount) => {
+    if (!searchStatusWrap || !searchStatus || !noResults) return;
+
+    if (!query) {
+      searchStatusWrap.hidden = true;
+      noResults.hidden = true;
+      return;
+    }
+
+    searchStatusWrap.hidden = false;
+    searchStatus.textContent = `${matchCount} hasil untuk "${query}"`;
+    noResults.hidden = matchCount !== 0;
+  };
+
+  const runSearch = (rawQuery) => {
+    const query = normalizeQuery(rawQuery);
+    let matchCount = 0;
+
+    searchableItems.forEach(({ item, searchableText }) => {
+      const matched = !query || searchableText.includes(query);
+      item.hidden = !matched;
+      if (matched) matchCount++;
+    });
+
+    document.querySelectorAll('.resource-group').forEach((group) => {
+      const visibleItems = Array.from(group.querySelectorAll('.resource-list li'))
+        .some((item) => !item.hidden);
+
+      group.hidden = !visibleItems;
+    });
+
+    document.querySelectorAll('.section').forEach((section) => {
+      const visibleGroups = Array.from(section.querySelectorAll('.resource-group'))
+        .some((group) => !group.hidden);
+
+      section.hidden = !visibleGroups;
+    });
+
+    updateSearchUI(query, query ? matchCount : 0);
+  };
+
+  const syncSearchInputs = (source, value) => {
+    if (source !== desktopSearchInput && desktopSearchInput) {
+      desktopSearchInput.value = value;
+    }
+    if (source !== mobileSearchInput && mobileSearchInput) {
+      mobileSearchInput.value = value;
+    }
+  };
+
+  const handleSearchInput = (event) => {
+    const value = event.target.value || '';
+    syncSearchInputs(event.target, value);
+    runSearch(value);
+  };
+
+  if (desktopSearchInput) {
+    desktopSearchInput.addEventListener('input', handleSearchInput);
+  }
+
+  if (mobileSearchInput) {
+    mobileSearchInput.addEventListener('input', handleSearchInput);
+  }
 </script>
 
 </body>
