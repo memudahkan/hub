@@ -657,11 +657,22 @@
     };
 
     const closeMobileSearch = () => {
-      if (!searchToggle || !searchBar) return;
-      searchToggle.setAttribute('aria-expanded', 'false');
-      searchBar.classList.remove('is-open');
-      body.classList.remove('mobile-search-open');
-    };
+  if (!searchToggle || !searchBar) return;
+
+  searchToggle.setAttribute('aria-expanded', 'false');
+  searchBar.classList.remove('is-open');
+  body.classList.remove('mobile-search-open');
+
+  if (desktopSearchInput) {
+    desktopSearchInput.value = '';
+  }
+
+  if (mobileSearchInput) {
+    mobileSearchInput.value = '';
+  }
+
+  runSearch('');
+};
 
     const lockHeaderForAnchor = () => {
       if (!siteHeader) return;
