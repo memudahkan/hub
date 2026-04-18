@@ -390,6 +390,14 @@ input, button { font: inherit; }
   white-space: nowrap;
 }
 
+html {
+  scroll-padding-top: 88px;
+}
+
+section[id] {
+  scroll-margin-top: 88px;
+}
+
 @media (max-width: 920px) {
   .featured-grid { grid-template-columns: 1fr; }
 }
