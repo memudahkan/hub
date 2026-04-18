@@ -587,9 +587,9 @@ mark.search-hit {
   }
 
   .emoji-legend-list li {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 5px;
     padding: 0;
   }
 
