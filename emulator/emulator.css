@@ -532,31 +532,33 @@ mark.search-hit {
   background: rgba(255, 229, 138, 0.72);
 }
 
-.emoji-legend-inline {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0;
-  margin: 2px 0 10px;
+.emoji-legend-list-block {
+  margin: 4px 0 12px;
+}
+
+.emoji-legend-title {
+  margin: 0 0 6px;
   color: var(--muted);
-  font-size: 0.92rem;
-  line-height: 1.6;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
-.emoji-legend-inline .legend-label {
-  color: var(--text);
-  font-weight: 600;
-}
-
-.emoji-legend-inline .legend-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.emoji-legend-inline .legend-item::before {
-  content: "/";
-  margin: 0 8px;
+.emoji-legend-list {
+  margin: 0;
+  padding-left: 18px;
   color: var(--muted);
+}
+
+.emoji-legend-list li {
+  padding: 2px 0;
+  border: 0;
+}
+
+.emoji-legend-list li span {
+  display: inline-block;
+  width: 1.4em;
 }
 
 @media (prefers-color-scheme: dark) {
