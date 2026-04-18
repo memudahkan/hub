@@ -571,15 +571,25 @@
   const menu = document.getElementById('mobile-menu');
   const backTops = document.querySelectorAll('.back-top-floating');
   const siteHeader = document.querySelector('.site-header');
+  const topbar = document.querySelector('.topbar');
   const hashLinks = document.querySelectorAll('a[href^="#"]');
 
   let lastScrollY = window.scrollY;
   let ticking = false;
   let isAnchoring = false;
+  let anchorUnlockTimer = null;
+
   const threshold = 10;
   const revealOffset = 80;
-  const anchorGap = 12;
-  const anchorDuration = 500;
+  const mobileMenuDelay = 320;
+
+  const getHeaderOffset = () => {
+    return topbar ? topbar.offsetHeight : (siteHeader ? siteHeader.offsetHeight : 0);
+  };
+
+  const getAnchorGap = () => {
+    return window.matchMedia('(max-width: 640px)').matches ? 8 : 12;
+  };
 
   const closeMobileMenu = () => {
     if (!toggle || !menu) return;
@@ -592,13 +602,19 @@
     isAnchoring = true;
     siteHeader.classList.remove('is-hidden');
     siteHeader.classList.add('is-anchoring');
+    clearTimeout(anchorUnlockTimer);
+  };
 
-    window.setTimeout(() => {
+  const scheduleAnchorUnlock = () => {
+    clearTimeout(anchorUnlockTimer);
+    anchorUnlockTimer = setTimeout(() => {
       isAnchoring = false;
-      siteHeader.classList.remove('is-anchoring');
+      if (siteHeader) {
+        siteHeader.classList.remove('is-anchoring');
+      }
       lastScrollY = window.scrollY;
       updateHeader();
-    }, anchorDuration);
+    }, 140);
   };
 
   const scrollToHashTarget = (hash) => {
@@ -607,8 +623,9 @@
 
     lockHeaderForAnchor();
 
-    const headerHeight = siteHeader ? siteHeader.offsetHeight : 0;
-    const top = target.getBoundingClientRect().top + window.scrollY - headerHeight - anchorGap;
+    const headerOffset = getHeaderOffset();
+    const extraGap = getAnchorGap();
+    const top = target.getBoundingClientRect().top + window.scrollY - headerOffset - extraGap;
 
     window.scrollTo({
       top: Math.max(0, top),
@@ -620,6 +637,8 @@
     } else {
       window.location.hash = hash;
     }
+
+    scheduleAnchorUnlock();
   };
 
   if (toggle && menu) {
@@ -643,9 +662,9 @@
 
       if (menu && menu.contains(link)) {
         closeMobileMenu();
-        window.setTimeout(() => {
+        setTimeout(() => {
           scrollToHashTarget(href);
-        }, 280);
+        }, mobileMenuDelay);
       } else {
         scrollToHashTarget(href);
       }
@@ -683,6 +702,10 @@
 
   const onScroll = () => {
     updateBackTop();
+
+    if (isAnchoring) {
+      scheduleAnchorUnlock();
+    }
 
     if (!ticking) {
       window.requestAnimationFrame(() => {
