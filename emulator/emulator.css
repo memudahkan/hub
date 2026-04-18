@@ -390,7 +390,9 @@ input, button { font: inherit; }
   white-space: nowrap;
 }
 
-
+.site-header.is-anchoring {
+  transform: translateY(0) !important;
+}
 
 @media (max-width: 920px) {
   .featured-grid { grid-template-columns: 1fr; }
