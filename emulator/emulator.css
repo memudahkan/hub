@@ -430,7 +430,7 @@ mark.search-hit {
 
 @media (prefers-color-scheme: dark) {
   mark.search-hit {
-    background: rgba(255, 255, 255, 0.12);
+    background: rgba(168, 218, 220, 0.22);
   }
 }
 
