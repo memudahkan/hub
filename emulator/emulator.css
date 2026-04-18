@@ -351,15 +351,40 @@ input, button { font: inherit; }
   right: 16px;
   bottom: 16px;
   z-index: 10;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 8px 10px;
   border: 1px solid var(--line);
-  background: color-mix(in srgb, var(--surface) 94%, transparent);
-  backdrop-filter: blur(10px);
+  border-radius: var(--radius-sm);
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.94);
   opacity: 0;
   pointer-events: none;
   transform: translateY(8px);
   transition: opacity 0.2s ease, transform 0.2s ease, background 0.2s ease;
 }
-.back-top-floating.is-visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+
+@media (prefers-color-scheme: dark) {
+  .back-top-floating {
+    background: rgba(23, 29, 34, 0.94);
+  }
+}
+
+@supports ((-webkit-backdrop-filter: blur(10px)) or (backdrop-filter: blur(10px))) {
+  .back-top-floating {
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+  }
+}
+
+.back-top-floating.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
 
 .resource-group + .resource-group {
   margin-top: 18px;
