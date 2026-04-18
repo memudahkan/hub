@@ -34,19 +34,50 @@
         <input id="desktop-search-input" type="search" placeholder="Cari emulator..." />
       </form>
 
-      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open navigation menu">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
+      <div class="mobile-actions">
+        <button
+          class="icon-btn search-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="mobile-search-form"
+          aria-label="Buka pencarian">
+          <svg viewBox="0 0 24 24" class="icon" aria-hidden="true" focusable="false">
+            <circle cx="11" cy="11" r="6.5"></circle>
+            <path d="M16 16l4 4"></path>
+          </svg>
+        </button>
+
+        <button
+          class="icon-btn menu-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="mobile-menu"
+          aria-label="Open navigation menu">
+          <svg viewBox="0 0 24 24" class="icon" aria-hidden="true" focusable="false">
+            <path d="M4 7h16"></path>
+            <path d="M4 12h16"></path>
+            <path d="M4 17h16"></path>
+          </svg>
+        </button>
+      </div>
+
+      <form class="mobile-searchbar" role="search" id="mobile-search-form">
+        <label class="sr-only" for="mobile-search-input">Cari emulator</label>
+        <input id="mobile-search-input" type="search" placeholder="Cari emulator..." />
+        <button
+          type="button"
+          class="icon-btn search-close"
+          aria-label="Tutup pencarian">
+          <svg viewBox="0 0 24 24" class="icon" aria-hidden="true" focusable="false">
+            <path d="M6 6l12 12"></path>
+            <path d="M18 6l-12 12"></path>
+          </svg>
+        </button>
+      </form>
     </div>
 
     <div class="container mobile-menu-shell">
       <div class="mobile-menu" id="mobile-menu">
-        <form class="mobile-search" role="search" id="mobile-search-form">
-          <label class="sr-only" for="mobile-search-input">Cari emulator</label>
-          <input id="mobile-search-input" type="search" placeholder="Cari emulator..." />
-        </form>
         <nav class="mobile-nav" aria-label="Mobile navigation">
           <a href="/">Home</a>
           <a href="#playstation">PlayStation</a>
@@ -59,9 +90,9 @@
     </div>
   </header>
 
-<div class="container search-status-wrap" id="search-status-wrap" hidden>
-  <p class="search-status" id="search-status" aria-live="polite"></p>
-</div>
+  <div class="container search-status-wrap" id="search-status-wrap" hidden>
+    <p class="search-status" id="search-status" aria-live="polite"></p>
+  </div>
 
   <main id="main">
     <section class="hero" id="top">
@@ -72,9 +103,9 @@
       </div>
     </section>
 
-<div class="container no-results" id="no-results" hidden>
-  <p>Tidak ada hasil yang cocok.</p>
-</div>
+    <div class="container no-results" id="no-results" hidden>
+      <p>Tidak ada hasil yang cocok.</p>
+    </div>
 
     <section class="section" id="featured-section">
       <div class="container">
@@ -89,7 +120,7 @@
               <span class="badge">PSP</span>
               <span class="meta">#1</span>
             </div>
-          <a class="primary-link" href="https://www.ppsspp.org/" target="_blank" rel="noopener noreferrer"><h3>PPSSPP</h3></a>
+            <a class="primary-link" href="https://www.ppsspp.org/" target="_blank" rel="noopener noreferrer"><h3>PPSSPP</h3></a>
             <p>Emulator PSP ringan, stabil, dan paling aktif dikembangkan.</p>
             <div class="sub-links">
               <a class="mini-link" href="https://play.google.com/store/apps/details?id=org.ppsspp.ppsspp" target="_blank" rel="noopener noreferrer">Play Store</a>
@@ -125,344 +156,350 @@
       </div>
     </section>
 
-<section class="section" id="playstation">
-  <div class="container list-section">
-    <div class="section-head">
-      <h2>PlayStation</h2>
-      <p>Platform gaming legendaris Sony dengan segudang game ikonik yang masih seru dimainkan sampai sekarang.</p>
-    </div>
+    <section class="section" id="playstation">
+      <div class="container list-section">
+        <div class="section-head">
+          <h2>PlayStation</h2>
+          <p>Platform gaming legendaris Sony dengan segudang game ikonik yang masih seru dimainkan sampai sekarang.</p>
+        </div>
 
-    <div class="resource-group">
-      <h3 class="resource-subtitle">PS1</h3>
-      <ul class="resource-list">
-        <li>
-          <a class="primary-link" href="https://www.duckstation.org/" target="_blank" rel="noopener noreferrer">DuckStation</a> — Emulator PS1 kaya fitur untuk mobile dan desktop.
-          <span class="inline-links">
-            <a href="https://play.google.com/store/apps/details?id=com.github.stenzek.duckstation" target="_blank" rel="noopener noreferrer">Play Store</a>
-            <span class="sep" aria-hidden="true">/</span>
-            <a href="https://github.com/stenzek/duckstation" target="_blank" rel="noopener noreferrer">GitHub</a>
-          </span>
-        </li>
-        <li>
-          <a class="primary-link" href="https://epsxe.com/" target="_blank" rel="noopener noreferrer">ePSXe</a> — Emulator PS1 klasik, lebih ramah untuk device lawas.
-          <span class="inline-links">
-            <a href="https://play.google.com/store/apps/details?id=com.epsxe.ePSXe" target="_blank" rel="noopener noreferrer">Play Store</a>
-          </span>
-        </li>
-      </ul>
-    </div>
+        <div class="resource-group">
+          <h3 class="resource-subtitle">PS1</h3>
+          <ul class="resource-list">
+            <li>
+              <a class="primary-link" href="https://www.duckstation.org/" target="_blank" rel="noopener noreferrer">DuckStation</a> — Emulator PS1 kaya fitur untuk mobile dan desktop.
+              <span class="inline-links">
+                <a href="https://play.google.com/store/apps/details?id=com.github.stenzek.duckstation" target="_blank" rel="noopener noreferrer">Play Store</a>
+                <span class="sep" aria-hidden="true">/</span>
+                <a href="https://github.com/stenzek/duckstation" target="_blank" rel="noopener noreferrer">GitHub</a>
+              </span>
+            </li>
+            <li>
+              <a class="primary-link" href="https://epsxe.com/" target="_blank" rel="noopener noreferrer">ePSXe</a> — Emulator PS1 klasik, lebih ramah untuk device lawas.
+              <span class="inline-links">
+                <a href="https://play.google.com/store/apps/details?id=com.epsxe.ePSXe" target="_blank" rel="noopener noreferrer">Play Store</a>
+              </span>
+            </li>
+          </ul>
+        </div>
 
-    <div class="resource-group">
-      <h3 class="resource-subtitle">PS2</h3>
-      <ul class="resource-list">
-        <li>
-          <a class="primary-link" href="https://github.com/Trixarian/NetherSX2-classic" target="_blank" rel="noopener noreferrer">NetherSX2</a> — Emulator PS2 penerus AetherSX2.
-        </li>
-        <li>
-          <a class="primary-link" href="https://pcsx2.net/" target="_blank" rel="noopener noreferrer">PCSX2</a> — Emulator PS2 untuk desktop.
-          <span class="inline-links">
-            <a href="https://github.com/PCSX2/pcsx2" target="_blank" rel="noopener noreferrer">GitHub</a>
-          </span>
-        </li>
-      </ul>
-    </div>
+        <div class="resource-group">
+          <h3 class="resource-subtitle">PS2</h3>
+          <ul class="resource-list">
+            <li>
+              <a class="primary-link" href="https://github.com/Trixarian/NetherSX2-classic" target="_blank" rel="noopener noreferrer">NetherSX2</a> — Emulator PS2 penerus AetherSX2.
+            </li>
+            <li>
+              <a class="primary-link" href="https://pcsx2.net/" target="_blank" rel="noopener noreferrer">PCSX2</a> — Emulator PS2 untuk desktop.
+              <span class="inline-links">
+                <a href="https://github.com/PCSX2/pcsx2" target="_blank" rel="noopener noreferrer">GitHub</a>
+              </span>
+            </li>
+          </ul>
+        </div>
 
-    <div class="resource-group">
-  <h3 class="resource-subtitle">PSP</h3>
-  <ul class="resource-list">
-    <li>
-      <a class="primary-link" href="https://www.ppsspp.org" target="_blank" rel="noopener noreferrer">PPSSPP</a>
-      — Emulator PSP untuk Android dan desktop.
-      <span class="inline-links">
-        <a href="https://play.google.com/store/apps/details?id=org.ppsspp.ppsspp" target="_blank" rel="noopener noreferrer">Play Store</a>
-        <span class="sep" aria-hidden="true">/</span>
-        <a href="https://github.com/hrydgard/ppsspp" target="_blank" rel="noopener noreferrer">GitHub</a>
-      </span>
-    </li>
-  </ul>
-</div>
+        <div class="resource-group">
+          <h3 class="resource-subtitle">PSP</h3>
+          <ul class="resource-list">
+            <li>
+              <a class="primary-link" href="https://www.ppsspp.org" target="_blank" rel="noopener noreferrer">PPSSPP</a>
+              — Emulator PSP untuk Android dan desktop.
+              <span class="inline-links">
+                <a href="https://play.google.com/store/apps/details?id=org.ppsspp.ppsspp" target="_blank" rel="noopener noreferrer">Play Store</a>
+                <span class="sep" aria-hidden="true">/</span>
+                <a href="https://github.com/hrydgard/ppsspp" target="_blank" rel="noopener noreferrer">GitHub</a>
+              </span>
+            </li>
+          </ul>
+        </div>
 
-<div class="resource-group">
-  <h3 class="resource-subtitle">PS3</h3>
-  <ul class="resource-list">
-    <li>
-      <a class="primary-link" href="https://rpcs3.net/" target="_blank" rel="noopener noreferrer">RPCS3</a>
-      — Emulator PS3 open-source untuk Windows, Linux, macOS, dan FreeBSD.
-      <span class="inline-links">
-        <a href="https://github.com/RPCS3/rpcs3" target="_blank" rel="noopener noreferrer">GitHub</a>
-      </span>
-    </li>
-        <li>
-      <span class="link-flag" aria-label="Early-stage" title="Early-stage">🌱    
-      <a class="primary-link" href="https://aenu.cc/aps3e/" target="_blank" rel="noopener noreferrer">aPS3e</a></span>
-      — Emulator PS3 native untuk Android, masih early-stage.
-      <span class="inline-links">
-        <a href="https://play.google.com/store/apps/details?id=aenu.aps3e" target="_blank" rel="noopener noreferrer">Play Store</a>
-        <span class="sep" aria-hidden="true">/</span>
-        <a href="https://github.com/aenu1/aps3e" target="_blank" rel="noopener noreferrer">GitHub</a>
-      </span>
-    </li>
-    <li>
-      <span class="link-flag" aria-label="Early-stage" title="Early-stage">🌱
-      <a class="primary-link" href="https://github.com/RPCSX/rpcsx-ui-android" target="_blank" rel="noopener noreferrer">RPCSX UI Android</a></span>
-      — Emulator PS3 eksperimental untuk Android, early-stage juga.
-    </li>
-  </ul>
-</div>
+        <div class="resource-group">
+          <h3 class="resource-subtitle">PS3</h3>
+          <ul class="resource-list">
+            <li>
+              <a class="primary-link" href="https://rpcs3.net/" target="_blank" rel="noopener noreferrer">RPCS3</a>
+              — Emulator PS3 open-source untuk Windows, Linux, macOS, dan FreeBSD.
+              <span class="inline-links">
+                <a href="https://github.com/RPCS3/rpcs3" target="_blank" rel="noopener noreferrer">GitHub</a>
+              </span>
+            </li>
+            <li>
+              <span class="link-flag" aria-label="Early-stage" title="Early-stage">🌱
+                <a class="primary-link" href="https://aenu.cc/aps3e/" target="_blank" rel="noopener noreferrer">aPS3e</a>
+              </span>
+              — Emulator PS3 native untuk Android, masih early-stage.
+              <span class="inline-links">
+                <a href="https://play.google.com/store/apps/details?id=aenu.aps3e" target="_blank" rel="noopener noreferrer">Play Store</a>
+                <span class="sep" aria-hidden="true">/</span>
+                <a href="https://github.com/aenu1/aps3e" target="_blank" rel="noopener noreferrer">GitHub</a>
+              </span>
+            </li>
+            <li>
+              <span class="link-flag" aria-label="Early-stage" title="Early-stage">🌱
+                <a class="primary-link" href="https://github.com/RPCSX/rpcsx-ui-android" target="_blank" rel="noopener noreferrer">RPCSX UI Android</a>
+              </span>
+              — Emulator PS3 eksperimental untuk Android, early-stage juga.
+            </li>
+          </ul>
+        </div>
 
-    <div class="resource-group">
-      <h3 class="resource-subtitle">PS Vita</h3>
-      <ul class="resource-list">
-        <li>
-          <span class="link-flag" aria-label="Early-stage" title="Early-stage">🌱
-          <a class="primary-link" href="https://vita3k.org" target="_blank" rel="noopener noreferrer">Vita3K</a></span>
-      — Emulator PS Vita open-source untuk Android dan desktop, eksperimental.
-            <span class="inline-links">
-              <a href="https://github.com/Vita3K/Vita3K" target="_blank" rel="noopener noreferrer">GitHub</a>
-            <span class="sep" aria-hidden="true">/</span>
-              <a href="https://github.com/Vita3K/Vita3K-Android/releases/" target="_blank" rel="noopener noreferrer">Rilis Android</a>
-            </span>
-        </li>
-  </ul>
-</div>
+        <div class="resource-group">
+          <h3 class="resource-subtitle">PS Vita</h3>
+          <ul class="resource-list">
+            <li>
+              <span class="link-flag" aria-label="Early-stage" title="Early-stage">🌱
+                <a class="primary-link" href="https://vita3k.org" target="_blank" rel="noopener noreferrer">Vita3K</a>
+              </span>
+              — Emulator PS Vita open-source untuk Android dan desktop, eksperimental.
+              <span class="inline-links">
+                <a href="https://github.com/Vita3K/Vita3K" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <span class="sep" aria-hidden="true">/</span>
+                <a href="https://github.com/Vita3K/Vita3K-Android/releases/" target="_blank" rel="noopener noreferrer">Rilis Android</a>
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
 
+    <section class="section" id="nintendo">
+      <div class="container list-section">
+        <div class="section-head">
+          <h2>Nintendo</h2>
+          <p>Identik dengan game yang fun, inovatif, dan punya karakter populer macam Mario dan Zelda.</p>
+        </div>
 
-  </div>
-</section>
+        <div class="resource-group">
+          <h3 class="resource-subtitle">NES</h3>
+          <ul class="resource-list">
+            <li>
+              <a class="primary-link" href="https://www.explusalpha.com/contents/nes-emu" target="_blank" rel="noopener noreferrer">NES.emu</a> — Emulator NES berbayar di Play Store, tapi gratis di GitHub.
+              <span class="inline-links">
+                <a href="https://play.google.com/store/apps/details?id=com.explusalpha.NesEmu" target="_blank" rel="noopener noreferrer">Play Store</a>
+                <span class="sep" aria-hidden="true">/</span>
+                <span class="link-flag" aria-label="Gratis" title="Gratis">🆓
+                  <a href="https://github.com/Rakashazi/emu-ex-plus-alpha" target="_blank" rel="noopener noreferrer">GitHub</a>
+                </span>
+              </span>
+            </li>
+          </ul>
+        </div>
 
-<section class="section" id="nintendo">
-  <div class="container list-section">
-    <div class="section-head">
-      <h2>Nintendo</h2>
-      <p>Identik dengan game yang fun, inovatif, dan punya karakter populer macam Mario dan Zelda.</p>
-    </div>
+        <div class="resource-group">
+          <h3 class="resource-subtitle">SNES</h3>
+          <ul class="resource-list">
+            <li>
+              <a class="primary-link" href="https://www.explusalpha.com/contents/snes9x-ex-plus-alpha" target="_blank" rel="noopener noreferrer">Snes9x EX+</a> — Cocok buat yang ingin emulator SNES klasik dengan kontrol responsif dan tampilan yang tidak ribet.
+              <span class="inline-links">
+                <a href="https://play.google.com/store/apps/details?id=com.explusalpha.Snes9xPlus" target="_blank" rel="noopener noreferrer">Play Store</a>
+                <span class="sep" aria-hidden="true">/</span>
+                <a href="https://github.com/Rakashazi/emu-ex-plus-alpha" target="_blank" rel="noopener noreferrer">GitHub</a>
+              </span>
+            </li>
+          </ul>
+        </div>
 
-    <div class="resource-group">
-      <h3 class="resource-subtitle">NES</h3>
-      <ul class="resource-list">
-        <li>
-          <a class="primary-link" href="https://www.explusalpha.com/contents/nes-emu" target="_blank" rel="noopener noreferrer">NES.emu</a> — Emulator NES berbayar di Play Store, tapi gratis di GitHub.
-          <span class="inline-links">
-            <a href="https://play.google.com/store/apps/details?id=com.explusalpha.NesEmu" target="_blank" rel="noopener noreferrer">Play Store</a>
-            <span class="sep" aria-hidden="true">/</span>
-            <span class="link-flag" aria-label="Gratis" title="Gratis">🆓
-            <a href="https://github.com/Rakashazi/emu-ex-plus-alpha" target="_blank" rel="noopener noreferrer">GitHub</a></span>
-          </span>
-        </li>
-      </ul>
-    </div>
+        <div class="resource-group">
+          <h3 class="resource-subtitle">Game Boy / Game Boy Color</h3>
+          <ul class="resource-list">
+            <li>
+              <a class="primary-link" href="https://play.google.com/store/apps/details?id=it.dbtecno.pizzaboy" target="_blank" rel="noopener noreferrer">Pizza Boy C</a> — Emulator Android dengan fokus pada skin, tampilan visual, dan nuansa handheld yang lebih modern.
+            </li>
+            <li>
+              <a class="primary-link" href="https://www.explusalpha.com/contents/gbc-emu" target="_blank" rel="noopener noreferrer">GBC.emu</a> — Alternatif yang lebih minimalis dan konsisten dengan keluarga EX untuk Game Boy dan Game Boy Color.
+              <span class="inline-links">
+                <a href="https://play.google.com/store/apps/details?id=com.explusalpha.GbcEmu" target="_blank" rel="noopener noreferrer">Play Store</a>
+                <span class="sep" aria-hidden="true">/</span>
+                <span class="link-flag" aria-label="Gratis" title="Gratis">🆓
+                  <a href="https://github.com/Rakashazi/emu-ex-plus-alpha" target="_blank" rel="noopener noreferrer">GitHub</a>
+                </span>
+              </span>
+            </li>
+          </ul>
+        </div>
 
-    <div class="resource-group">
-      <h3 class="resource-subtitle">SNES</h3>
-      <ul class="resource-list">
-        <li>
-          <a class="primary-link" href="https://www.explusalpha.com/contents/snes9x-ex-plus-alpha" target="_blank" rel="noopener noreferrer">Snes9x EX+</a> — Cocok buat yang ingin emulator SNES klasik dengan kontrol responsif dan tampilan yang tidak ribet.
-          <span class="inline-links">
-            <a href="https://play.google.com/store/apps/details?id=com.explusalpha.Snes9xPlus" target="_blank" rel="noopener noreferrer">Play Store</a>
-            <span class="sep" aria-hidden="true">/</span>
-            <a href="https://github.com/Rakashazi/emu-ex-plus-alpha" target="_blank" rel="noopener noreferrer">GitHub</a>
-          </span>
-        </li>
-      </ul>
-    </div>
+        <div class="resource-group">
+          <h3 class="resource-subtitle">Game Boy Advance</h3>
+          <ul class="resource-list">
+            <li>
+              <a class="primary-link" href="https://play.google.com/store/apps/details?id=it.dbtecno.pizzaboygba" target="_blank" rel="noopener noreferrer">Pizza Boy A</a> — Cocok untuk pengguna yang suka emulator polished, fleksibel, dan enak dikustomisasi.
+            </li>
+            <li>
+              <a class="primary-link" href="https://www.explusalpha.com/contents/gba-emu" target="_blank" rel="noopener noreferrer">GBA.emu</a> — Pilihan yang lebih simpel dengan pendekatan klasik dan satu keluarga dengan emulator EX lain.
+              <span class="inline-links">
+                <a href="https://play.google.com/store/apps/details?id=com.explusalpha.GbaEmu" target="_blank" rel="noopener noreferrer">Play Store</a>
+                <span class="sep" aria-hidden="true">/</span>
+                <span class="link-flag" aria-label="Gratis" title="Gratis">🆓
+                  <a href="https://github.com/Rakashazi/emu-ex-plus-alpha" target="_blank" rel="noopener noreferrer">GitHub</a>
+                </span>
+              </span>
+            </li>
+          </ul>
+        </div>
 
-    <div class="resource-group">
-      <h3 class="resource-subtitle">Game Boy / Game Boy Color</h3>
-      <ul class="resource-list">
-        <li>
-          <a class="primary-link" href="https://play.google.com/store/apps/details?id=it.dbtecno.pizzaboy" target="_blank" rel="noopener noreferrer">Pizza Boy C</a> — Emulator Android dengan fokus pada skin, tampilan visual, dan nuansa handheld yang lebih modern.
-        </li>
-        <li>
-          <a class="primary-link" href="https://www.explusalpha.com/contents/gbc-emu" target="_blank" rel="noopener noreferrer">GBC.emu</a> — Alternatif yang lebih minimalis dan konsisten dengan keluarga EX untuk Game Boy dan Game Boy Color.
-          <span class="inline-links">
-            <a href="https://play.google.com/store/apps/details?id=com.explusalpha.GbcEmu" target="_blank" rel="noopener noreferrer">Play Store</a>
-            <span class="sep" aria-hidden="true">/</span>
-            <span class="link-flag" aria-label="Gratis" title="Gratis">🆓
-            <a href="https://github.com/Rakashazi/emu-ex-plus-alpha" target="_blank" rel="noopener noreferrer">GitHub</a></span>
-          </span>
-        </li>
-      </ul>
-    </div>
+        <div class="resource-group">
+          <h3 class="resource-subtitle">N64</h3>
+          <ul class="resource-list">
+            <li>
+              <a class="primary-link" href="https://www.zurita.me" target="_blank" rel="noopener noreferrer">M64Plus FZ</a> — Salah satu opsi Android yang paling dikenal untuk Nintendo 64, terutama kalau butuh pengaturan yang lebih lengkap.
+              <span class="inline-links">
+                <a href="https://play.google.com/store/apps/details?id=org.mupen64plusae.v3.fzurita" target="_blank" rel="noopener noreferrer">Play Store</a>
+              </span>
+            </li>
+          </ul>
+        </div>
 
-    <div class="resource-group">
-      <h3 class="resource-subtitle">Game Boy Advance</h3>
-      <ul class="resource-list">
-        <li>
-          <a class="primary-link" href="https://play.google.com/store/apps/details?id=it.dbtecno.pizzaboygba" target="_blank" rel="noopener noreferrer">Pizza Boy A</a> — Cocok untuk pengguna yang suka emulator polished, fleksibel, dan enak dikustomisasi.
-        </li>
-        <li>
-          <a class="primary-link" href="https://www.explusalpha.com/contents/gba-emu" target="_blank" rel="noopener noreferrer">GBA.emu</a> — Pilihan yang lebih simpel dengan pendekatan klasik dan satu keluarga dengan emulator EX lain.
-          <span class="inline-links">
-            <a href="https://play.google.com/store/apps/details?id=com.explusalpha.GbaEmu" target="_blank" rel="noopener noreferrer">Play Store</a>
-            <span class="sep" aria-hidden="true">/</span>
-            <span class="link-flag" aria-label="Gratis" title="Gratis">🆓
-            <a href="https://github.com/Rakashazi/emu-ex-plus-alpha" target="_blank" rel="noopener noreferrer">GitHub</a></span>
-          </span>
-        </li>
-      </ul>
-    </div>
+        <div class="resource-group">
+          <h3 class="resource-subtitle">Nintendo DS</h3>
+          <ul class="resource-list">
+            <li>
+              <a class="primary-link" href="https://melonds.kuribo64.net" target="_blank" rel="noopener noreferrer">melonDS</a> — Opsi DS yang cukup jelas jalur proyeknya dan nyaman dipakai.
+              <span class="inline-links">
+                <a href="https://github.com/melonDS-emu/melonDS" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <span class="sep" aria-hidden="true">/</span>
+                <a href="https://github.com/rafaelvcaetano/melonDS-android" target="_blank" rel="noopener noreferrer">Android Port</a>
+                <span class="sep" aria-hidden="true">/</span>
+                <span class="link-flag" aria-label="Unofficial" title="Unofficial">🔀
+                  <a href="https://play.google.com/store/apps/details?id=me.magnum.melonds" target="_blank" rel="noopener noreferrer">Play Store</a>
+                </span>
+              </span>
+            </li>
+          </ul>
+        </div>
 
-    <div class="resource-group">
-      <h3 class="resource-subtitle">N64</h3>
-      <ul class="resource-list">
-        <li>
-          <a class="primary-link" href="https://www.zurita.me" target="_blank" rel="noopener noreferrer">M64Plus FZ</a> — Salah satu opsi Android yang paling dikenal untuk Nintendo 64, terutama kalau butuh pengaturan yang lebih lengkap.
-          <span class="inline-links">
-            <a href="https://play.google.com/store/apps/details?id=org.mupen64plusae.v3.fzurita" target="_blank" rel="noopener noreferrer">Play Store</a>
-          </span>
-        </li>
-      </ul>
-    </div>
+        <div class="resource-group">
+          <h3 class="resource-subtitle">Nintendo 3DS</h3>
+          <ul class="resource-list">
+            <li>
+              <a class="primary-link" href="https://azahar-emu.org/" target="_blank" rel="noopener noreferrer">Azahar</a> — Proyek penerus Citra yang masih relevan untuk emulasi 3DS modern.
+              <span class="inline-links">
+                <a href="https://play.google.com/store/apps/details?id=io.github.lime3ds.android" target="_blank" rel="noopener noreferrer">Play Store</a>
+                <span class="sep" aria-hidden="true">/</span>
+                <a href="https://github.com/azahar-emu/azahar" target="_blank" rel="noopener noreferrer">GitHub</a>
+              </span>
+            </li>
+          </ul>
+        </div>
 
-    <div class="resource-group">
-      <h3 class="resource-subtitle">Nintendo DS</h3>
-      <ul class="resource-list">
-        <li>
-          <a class="primary-link" href="https://melonds.kuribo64.net" target="_blank" rel="noopener noreferrer">melonDS</a> — Opsi DS yang cukup jelas jalur proyeknya dan nyaman dipakai.
-          <span class="inline-links">
-            <a href="https://github.com/melonDS-emu/melonDS" target="_blank" rel="noopener noreferrer">GitHub</a>
-            <span class="sep" aria-hidden="true">/</span>
-            <a href="https://github.com/rafaelvcaetano/melonDS-android" target="_blank" rel="noopener noreferrer">Android Port</a>
-            <span class="sep" aria-hidden="true">/</span>
-            <span class="link-flag" aria-label="Unofficial" title="Unofficial">🔀
-            <a href="https://play.google.com/store/apps/details?id=me.magnum.melonds" target="_blank" rel="noopener noreferrer">Play Store</a>
-            </span>
-          </span>
-        </li>
-      </ul>
-    </div>
+        <div class="resource-group">
+          <h3 class="resource-subtitle">Wii U</h3>
+          <ul class="resource-list">
+            <li>
+              <a class="primary-link" href="https://cemu.info" target="_blank" rel="noopener noreferrer">Cemu</a> — Emulator Wii U desktop yang paling bisa diandalkan.
+              <span class="inline-links">
+                <a href="https://github.com/cemu-project/Cemu" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <span class="sep" aria-hidden="true">/</span>
+                <span class="link-flag" aria-label="Early-stage" title="Early-stage">🌱
+                  <a href="https://github.com/SSimco/Cemu" target="_blank" rel="noopener noreferrer">Android fork</a>
+                </span>
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
 
-    <div class="resource-group">
-      <h3 class="resource-subtitle">Nintendo 3DS</h3>
-      <ul class="resource-list">
-        <li>
-          <a class="primary-link" href="https://azahar-emu.org/" target="_blank" rel="noopener noreferrer">Azahar</a> — Proyek penerus Citra yang masih relevan untuk emulasi 3DS modern.
-          <span class="inline-links">
-            <a href="https://play.google.com/store/apps/details?id=io.github.lime3ds.android" target="_blank" rel="noopener noreferrer">Play Store</a>
-            <span class="sep" aria-hidden="true">/</span>
-            <a href="https://github.com/azahar-emu/azahar" target="_blank" rel="noopener noreferrer">GitHub</a>
-          </span>
-        </li>
-      </ul>
-    </div>
+    <section class="section" id="sega">
+      <div class="container list-section">
+        <div class="section-head">
+          <h2>Sega</h2>
+          <p>Rumah bagi game klasik dengan nuansa arcade yang kuat dan evergreen.</p>
+        </div>
 
-    <div class="resource-group">
-      <h3 class="resource-subtitle">Wii U</h3>
-      <ul class="resource-list">
-        <li>
-          <a class="primary-link" href="https://cemu.info" target="_blank" rel="noopener noreferrer">Cemu</a> — Emulator Wii U desktop yang paling bisa diandalkan.
-          <span class="inline-links">
-            <a href="https://github.com/cemu-project/Cemu" target="_blank" rel="noopener noreferrer">GitHub</a>
-            <span class="sep" aria-hidden="true">/</span>
-            <span class="link-flag" aria-label="Early-stage" title="Early-stage">🌱
-            <a href="https://github.com/SSimco/Cemu" target="_blank" rel="noopener noreferrer">Android fork</a></span>
-          </span>
-        </li>
-      </ul>
-    </div>
-  </div>
-</section>
+        <div class="resource-group">
+          <h3 class="resource-subtitle">Mega Drive / Master System</h3>
+          <ul class="resource-list">
+            <li>
+              <a class="primary-link" href="https://www.explusalpha.com/contents/md-emu" target="_blank" rel="noopener noreferrer">MD.emu</a>
+              — Emulator Sega Genesis/Mega Drive, Sega CD, dan Master System, dari developer yang sama dengan NES.emu.
+              <span class="inline-links">
+                <a href="https://play.google.com/store/apps/details?id=com.explusalpha.MdEmu" target="_blank" rel="noopener noreferrer">Play Store</a>
+                <span class="sep" aria-hidden="true">/</span>
+                <span class="link-flag" aria-label="Gratis" title="Gratis">🆓
+                  <a href="https://github.com/Rakashazi/emu-ex-plus-alpha" target="_blank" rel="noopener noreferrer">GitHub</a>
+                </span>
+              </span>
+            </li>
+          </ul>
+        </div>
 
+        <div class="resource-group">
+          <h3 class="resource-subtitle">Saturn</h3>
+          <ul class="resource-list">
+            <li>
+              <a class="primary-link" href="https://www.yabasanshiro.com/" target="_blank" rel="noopener noreferrer">Yaba Sanshiro 2</a>
+              — Emulator Sega Saturn untuk Android.
+              <span class="inline-links">
+                <a href="https://play.google.com/store/apps/details?id=org.devmiyax.yabasanshioro2" target="_blank" rel="noopener noreferrer">Play Store</a>
+                <span class="sep" aria-hidden="true">/</span>
+                <a href="https://github.com/devmiyax/yabause" target="_blank" rel="noopener noreferrer">GitHub</a>
+              </span>
+            </li>
+          </ul>
+        </div>
 
-<section class="section" id="sega">
-  <div class="container list-section">
-    <div class="section-head">
-      <h2>Sega</h2>
-      <p>Rumah bagi game klasik dengan nuansa arcade yang kuat dan evergreen.</p>
-    </div>
-<div class="resource-group">
-  <h3 class="resource-subtitle">Mega Drive / Master System</h3>
-  <ul class="resource-list">
-    <li>
-      <a class="primary-link" href="https://www.explusalpha.com/contents/md-emu" target="_blank" rel="noopener noreferrer">MD.emu</a>
-      — Emulator Sega Genesis/Mega Drive, Sega CD, dan Master System, dari developer yang sama dengan NES.emu.
-      <span class="inline-links">
-        <a href="https://play.google.com/store/apps/details?id=com.explusalpha.MdEmu" target="_blank" rel="noopener noreferrer">Play Store</a>
-        <span class="sep" aria-hidden="true">/</span>
-        <span class="link-flag" aria-label="Gratis" title="Gratis">🆓
-        <a href="https://github.com/Rakashazi/emu-ex-plus-alpha" target="_blank" rel="noopener noreferrer">GitHub</a></span>
-      </span>
-    </li>
-  </ul>
-</div>
+        <div class="resource-group">
+          <h3 class="resource-subtitle">Dreamcast</h3>
+          <ul class="resource-list">
+            <li>
+              <a class="primary-link" href="https://github.com/flyinghead/flycast" target="_blank" rel="noopener noreferrer">Flycast</a>
+              — Emulator Dreamcast, Naomi, Naomi 2, dan Atomiswave untuk Android dan desktop.
+              <span class="inline-links">
+                <a href="https://play.google.com/store/apps/details?id=com.flycast.emulator" target="_blank" rel="noopener noreferrer">Play Store</a>
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
 
-<div class="resource-group">
-  <h3 class="resource-subtitle">Saturn</h3>
-  <ul class="resource-list">
-    <li>
-      <a class="primary-link" href="https://www.yabasanshiro.com/" target="_blank" rel="noopener noreferrer">Yaba Sanshiro 2</a>
-      — Emulator Sega Saturn untuk Android.
-      <span class="inline-links">
-        <a href="https://play.google.com/store/apps/details?id=org.devmiyax.yabasanshioro2" target="_blank" rel="noopener noreferrer">Play Store</a>
-        <span class="sep" aria-hidden="true">/</span>
-        <a href="https://github.com/devmiyax/yabause" target="_blank" rel="noopener noreferrer">GitHub</a>
-      </span>
-    </li>
-  </ul>
-</div>
+    <section class="section" id="mobile-classics">
+      <div class="container list-section">
+        <div class="section-head">
+          <h2>Mobile Classics</h2>
+          <p>Emulator untuk Symbian, N-Gage, dan Java/J2ME di Android maupun desktop.</p>
+        </div>
 
-<div class="resource-group">
-  <h3 class="resource-subtitle">Dreamcast</h3>
-  <ul class="resource-list">
-    <li>
-      <a class="primary-link" href="https://github.com/flyinghead/flycast" target="_blank" rel="noopener noreferrer">Flycast</a>
-      — Emulator Dreamcast, Naomi, Naomi 2, dan Atomiswave untuk Android dan desktop.
-      <span class="inline-links">
-        <a href="https://play.google.com/store/apps/details?id=com.flycast.emulator" target="_blank" rel="noopener noreferrer">Play Store</a>
-      </span>
-    </li>
-  </ul>
-</div>
-  </div>
-</section>
+        <div class="resource-group">
+          <h3 class="resource-subtitle">Symbian</h3>
+          <ul class="resource-list">
+            <li>
+              <a class="primary-link" href="https://eka2l1.github.io" target="_blank" rel="noopener noreferrer">EKA2L1</a>
+              — Emulator Symbian OS dan N-Gage untuk Android dan desktop.
+              <span class="inline-links">
+                <a href="https://play.google.com/store/apps/details?id=com.github.eka2l1" target="_blank" rel="noopener noreferrer">Play Store</a>
+                <span class="sep" aria-hidden="true">/</span>
+                <a href="https://github.com/EKA2L1/EKA2L1" target="_blank" rel="noopener noreferrer">GitHub</a>
+              </span>
+            </li>
+          </ul>
+        </div>
 
-<section class="section" id="mobile-classics">
-  <div class="container list-section">
-    <div class="section-head">
-    <h2>Mobile Classics</h2>
-    <p>Emulator untuk Symbian, N-Gage, dan Java/J2ME di Android maupun desktop.</p>
-  </div>
-
-  <div class="resource-group">
-    <h3 class="resource-subtitle">Symbian</h3>
-    <ul class="resource-list">
-      <li>
-        <a class="primary-link" href="https://eka2l1.github.io" target="_blank" rel="noopener noreferrer">EKA2L1</a>
-        — Emulator Symbian OS dan N-Gage untuk Android dan desktop.
-        <span class="inline-links">
-          <a href="https://play.google.com/store/apps/details?id=com.github.eka2l1" target="_blank" rel="noopener noreferrer">Play Store</a>
-          <span class="sep" aria-hidden="true">/</span>
-          <a href="https://github.com/EKA2L1/EKA2L1" target="_blank" rel="noopener noreferrer">GitHub</a>
-        </span>
-      </li>
-    </ul>
-  </div>
-
-  <div class="resource-group">
-    <h3 class="resource-subtitle">Java/J2ME</h3>
-    <ul class="resource-list">
-      <li>
-        <a class="primary-link" href="https://github.com/nikita36078/J2ME-Loader" target="_blank" rel="noopener noreferrer">J2ME Loader</a>
-        — Emulator game Java untuk Android dengan dukungan banyak game 2D dan sebagian game 3D.
-        <span class="inline-links">
-          <a href="https://play.google.com/store/apps/details?id=ru.playsoftware.j2meloader" target="_blank" rel="noopener noreferrer">Play Store</a>
-        </span>
-      </li>
-      <li>
-        <a class="primary-link" href="https://tasemulators.github.io/freej2me-plus/" target="_blank" rel="noopener noreferrer">FreeJ2ME-Plus</a>
-        — Emulator Java/J2ME open-source untuk desktop.
-      </li>
-      <li>
-        <a class="primary-link" href="https://nnproject.cc/kem/" target="_blank" rel="noopener noreferrer">KEmulator nnmod</a>
-        — J2ME emulator cross-platform, berbasis KEmulator 1.0.3.
-        <span class="inline-links">
-          <a href="https://github.com/shinovon/KEmulator" target="_blank" rel="noopener noreferrer">GitHub</a>
-        </span>
-      </li>
-    </ul>
-  </div>
-  </div>
-</section>
+        <div class="resource-group">
+          <h3 class="resource-subtitle">Java/J2ME</h3>
+          <ul class="resource-list">
+            <li>
+              <a class="primary-link" href="https://github.com/nikita36078/J2ME-Loader" target="_blank" rel="noopener noreferrer">J2ME Loader</a>
+              — Emulator game Java untuk Android dengan dukungan banyak game 2D dan sebagian game 3D.
+              <span class="inline-links">
+                <a href="https://play.google.com/store/apps/details?id=ru.playsoftware.j2meloader" target="_blank" rel="noopener noreferrer">Play Store</a>
+              </span>
+            </li>
+            <li>
+              <a class="primary-link" href="https://tasemulators.github.io/freej2me-plus/" target="_blank" rel="noopener noreferrer">FreeJ2ME-Plus</a>
+              — Emulator Java/J2ME open-source untuk desktop.
+            </li>
+            <li>
+              <a class="primary-link" href="https://nnproject.cc/kem/" target="_blank" rel="noopener noreferrer">KEmulator nnmod</a>
+              — J2ME emulator cross-platform, berbasis KEmulator 1.0.3.
+              <span class="inline-links">
+                <a href="https://github.com/shinovon/KEmulator" target="_blank" rel="noopener noreferrer">GitHub</a>
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
 
     <section class="section" id="multisystem">
       <div class="container list-section">
@@ -476,10 +513,11 @@
             <a class="primary-link" href="https://www.retroarch.com/" target="_blank" rel="noopener noreferrer">RetroArch</a> — Aplikasi yang menggabungkan berbagai emulator (core) dengan berbagai fitur mumpuni.
             <span class="inline-links">
               <span class="link-flag" aria-label="Outdated" title="Outdated">⌛
-              <a href="https://play.google.com/store/apps/details?id=com.retroarch" target="_blank" rel="noopener noreferrer">Play Store</a></span>
+                <a href="https://play.google.com/store/apps/details?id=com.retroarch" target="_blank" rel="noopener noreferrer">Play Store</a>
+              </span>
               <span class="sep" aria-hidden="true">/</span>
               <a href="https://f-droid.org/en/packages/com.retroarch/" target="_blank" rel="noopener noreferrer">F-Droid</a>
-              </span>
+            </span>
           </li>
           <li>
             <a class="primary-link" href="https://swordfish90.github.io/" target="_blank" rel="noopener noreferrer">Lemuroid</a> — Emulator multi-system sederhana untuk Android.
@@ -494,37 +532,37 @@
     </section>
 
     <section class="section" id="pc-emulation">
-  <div class="container list-section">
-    <div class="section-head">
-      <h2>PC Emulation</h2>
-      <p>Tool untuk menjalankan aplikasi atau game PC di Android, mulai dari compatibility layer sampai platform gaming hybrid.</p>
-    </div>
+      <div class="container list-section">
+        <div class="section-head">
+          <h2>PC Emulation</h2>
+          <p>Tool untuk menjalankan aplikasi atau game PC di Android, mulai dari compatibility layer sampai platform gaming hybrid.</p>
+        </div>
 
-      <ul class="resource-list">
-        <li>
-          <a class="primary-link" href="https://winlator.org" target="_blank" rel="noopener noreferrer">Winlator</a> — Menjalankan aplikasi dan game Windows di Android lewat Wine dan Box86/Box64.
-          <span class="inline-links">
-            <a href="https://github.com/brunodev85/winlator" target="_blank" rel="noopener noreferrer">GitHub</a>
-          </span>
-        </li>
-        <li>
-          <a class="primary-link" href="https://gamehub.gamesir.com" target="_blank" rel="noopener noreferrer">GameHub</a> — Platform gaming Android dari GameSir yang menggabungkan PC emulation, cloud gaming, dan streaming dalam satu aplikasi.
-          <span class="inline-links">
-            <a href="https://play.google.com/store/apps/details?id=com.xiaoji.egggame" target="_blank" rel="noopener noreferrer">Play Store</a>
-          </span>
-        </li>
-        <li>
-          <a class="primary-link" href="https://gamenative.app/" target="_blank" rel="noopener noreferrer">GameNative</a> — Frontend eksperimental untuk menjalankan game PC milikmu di Android dengan pendekatan yang lebih praktis.
-          <span class="inline-links">
-            <a href="https://github.com/utkarshdalal/GameNative" target="_blank" rel="noopener noreferrer">GitHub</a>
-          </span>
-        </li>
-        <li>
-          <a class="primary-link" href="https://github.com/KreitinnSoftware/MiceWine-Application" target="_blank" rel="noopener noreferrer">MiceWine</a> — Proyek open-source untuk menjalankan aplikasi dan game Windows di Android dengan basis Wine dan Box64.
-        </li>
-      </ul>
-    </div>
-</section>
+        <ul class="resource-list">
+          <li>
+            <a class="primary-link" href="https://winlator.org" target="_blank" rel="noopener noreferrer">Winlator</a> — Menjalankan aplikasi dan game Windows di Android lewat Wine dan Box86/Box64.
+            <span class="inline-links">
+              <a href="https://github.com/brunodev85/winlator" target="_blank" rel="noopener noreferrer">GitHub</a>
+            </span>
+          </li>
+          <li>
+            <a class="primary-link" href="https://gamehub.gamesir.com" target="_blank" rel="noopener noreferrer">GameHub</a> — Platform gaming Android dari GameSir yang menggabungkan PC emulation, cloud gaming, dan streaming dalam satu aplikasi.
+            <span class="inline-links">
+              <a href="https://play.google.com/store/apps/details?id=com.xiaoji.egggame" target="_blank" rel="noopener noreferrer">Play Store</a>
+            </span>
+          </li>
+          <li>
+            <a class="primary-link" href="https://gamenative.app/" target="_blank" rel="noopener noreferrer">GameNative</a> — Frontend eksperimental untuk menjalankan game PC milikmu di Android dengan pendekatan yang lebih praktis.
+            <span class="inline-links">
+              <a href="https://github.com/utkarshdalal/GameNative" target="_blank" rel="noopener noreferrer">GitHub</a>
+            </span>
+          </li>
+          <li>
+            <a class="primary-link" href="https://github.com/KreitinnSoftware/MiceWine-Application" target="_blank" rel="noopener noreferrer">MiceWine</a> — Proyek open-source untuk menjalankan aplikasi dan game Windows di Android dengan basis Wine dan Box64.
+          </li>
+        </ul>
+      </div>
+    </section>
 
     <section class="section" id="frontend">
       <div class="container list-section">
@@ -541,14 +579,14 @@
             </span>
           </li>
           <li>
-        <a class="primary-link" href="https://play.google.com/store/apps/details?id=com.radikal.gamelauncher" target="_blank" rel="noopener noreferrer">Beacon</a> — Launcher minimalis untuk Android yang fokus pada koleksi game klasik tanpa antarmuka yang terlalu ramai.
-      </li>
-      <li>
-        <a class="primary-link" href="https://es-de.org" target="_blank" rel="noopener noreferrer">ES-DE</a> — Frontend multi-platform yang fleksibel dengan nuansa console-style yang lebih serius.
-        <span class="inline-links">
-          <a href="https://www.patreon.com/cw/es_de" target="_blank" rel="noopener noreferrer">Patreon</a>
-        </span>
-      </li>
+            <a class="primary-link" href="https://play.google.com/store/apps/details?id=com.radikal.gamelauncher" target="_blank" rel="noopener noreferrer">Beacon</a> — Launcher minimalis untuk Android yang fokus pada koleksi game klasik tanpa antarmuka yang terlalu ramai.
+          </li>
+          <li>
+            <a class="primary-link" href="https://es-de.org" target="_blank" rel="noopener noreferrer">ES-DE</a> — Frontend multi-platform yang fleksibel dengan nuansa console-style yang lebih serius.
+            <span class="inline-links">
+              <a href="https://www.patreon.com/cw/es_de" target="_blank" rel="noopener noreferrer">Patreon</a>
+            </span>
+          </li>
         </ul>
       </div>
     </section>
@@ -574,358 +612,405 @@
 
   <a class="back-top-floating" href="#top" aria-label="Back to top">🔝</a>
 
-<script>
-  const toggle = document.querySelector('.menu-toggle');
-  const menu = document.getElementById('mobile-menu');
-  const backTops = document.querySelectorAll('.back-top-floating');
-  const siteHeader = document.querySelector('.site-header');
-  const topbar = document.querySelector('.topbar');
-  const hashLinks = document.querySelectorAll('a[href^="#"]');
-  const featuredSection = document.getElementById('featured-section');
+  <script>
+    const body = document.body;
+    const toggle = document.querySelector('.menu-toggle');
+    const menu = document.getElementById('mobile-menu');
+    const searchToggle = document.querySelector('.search-toggle');
+    const searchBar = document.getElementById('mobile-search-form');
+    const searchClose = document.querySelector('.search-close');
+    const backTops = document.querySelectorAll('.back-top-floating');
+    const siteHeader = document.querySelector('.site-header');
+    const topbar = document.querySelector('.topbar');
+    const hashLinks = document.querySelectorAll('a[href^="#"]');
+    const featuredSection = document.getElementById('featured-section');
 
-  const desktopSearchForm = document.getElementById('desktop-search-form');
-  const mobileSearchForm = document.getElementById('mobile-search-form');
-  const desktopSearchInput = document.getElementById('desktop-search-input');
-  const mobileSearchInput = document.getElementById('mobile-search-input');
-  const searchStatusWrap = document.getElementById('search-status-wrap');
-  const searchStatus = document.getElementById('search-status');
-  const noResults = document.getElementById('no-results');
+    const desktopSearchForm = document.querySelector('.desktop-search');
+    const mobileSearchForm = document.getElementById('mobile-search-form');
+    const desktopSearchInput = document.getElementById('desktop-search-input');
+    const mobileSearchInput = document.getElementById('mobile-search-input');
+    const searchStatusWrap = document.getElementById('search-status-wrap');
+    const searchStatus = document.getElementById('search-status');
+    const noResults = document.getElementById('no-results');
 
-  let lastScrollY = window.scrollY;
-  let ticking = false;
-  let isAnchoring = false;
-  let anchorUnlockTimer = null;
+    let lastScrollY = window.scrollY;
+    let ticking = false;
+    let isAnchoring = false;
+    let anchorUnlockTimer = null;
 
-  const threshold = 10;
-  const revealOffset = 80;
-  const mobileMenuDelay = 320;
+    const threshold = 10;
+    const revealOffset = 80;
+    const mobileMenuDelay = 320;
 
-  const getHeaderOffset = () => {
-    return topbar ? topbar.offsetHeight : (siteHeader ? siteHeader.offsetHeight : 0);
-  };
+    const getHeaderOffset = () => {
+      return topbar ? topbar.offsetHeight : (siteHeader ? siteHeader.offsetHeight : 0);
+    };
 
-  const getAnchorGap = () => {
-    return window.matchMedia('(max-width: 640px)').matches ? 8 : 12;
-  };
+    const getAnchorGap = () => {
+      return window.matchMedia('(max-width: 640px)').matches ? 8 : 12;
+    };
 
-  const closeMobileMenu = () => {
-    if (!toggle || !menu) return;
-    toggle.setAttribute('aria-expanded', 'false');
-    menu.classList.remove('is-open');
-  };
+    const closeMobileMenu = () => {
+      if (!toggle || !menu) return;
+      toggle.setAttribute('aria-expanded', 'false');
+      menu.classList.remove('is-open');
+    };
 
-  const lockHeaderForAnchor = () => {
-    if (!siteHeader) return;
-    isAnchoring = true;
-    siteHeader.classList.remove('is-hidden');
-    siteHeader.classList.add('is-anchoring');
-    clearTimeout(anchorUnlockTimer);
-  };
+    const closeMobileSearch = () => {
+      if (!searchToggle || !searchBar) return;
+      searchToggle.setAttribute('aria-expanded', 'false');
+      searchBar.classList.remove('is-open');
+      body.classList.remove('mobile-search-open');
+    };
 
-  const scheduleAnchorUnlock = () => {
-    clearTimeout(anchorUnlockTimer);
-    anchorUnlockTimer = setTimeout(() => {
-      isAnchoring = false;
-      if (siteHeader) {
-        siteHeader.classList.remove('is-anchoring');
+    const lockHeaderForAnchor = () => {
+      if (!siteHeader) return;
+      isAnchoring = true;
+      siteHeader.classList.remove('is-hidden');
+      siteHeader.classList.add('is-anchoring');
+      clearTimeout(anchorUnlockTimer);
+    };
+
+    const scheduleAnchorUnlock = () => {
+      clearTimeout(anchorUnlockTimer);
+      anchorUnlockTimer = setTimeout(() => {
+        isAnchoring = false;
+        if (siteHeader) {
+          siteHeader.classList.remove('is-anchoring');
+        }
+        lastScrollY = window.scrollY;
+        updateHeader();
+      }, 140);
+    };
+
+    const scrollToHashTarget = (hash) => {
+      const target = document.querySelector(hash);
+      if (!target) return;
+
+      lockHeaderForAnchor();
+
+      const headerOffset = getHeaderOffset();
+      const extraGap = getAnchorGap();
+      const top = target.getBoundingClientRect().top + window.scrollY - headerOffset - extraGap;
+
+      window.scrollTo({
+        top: Math.max(0, top),
+        behavior: 'smooth'
+      });
+
+      if (history.replaceState) {
+        history.replaceState(null, '', hash);
+      } else {
+        window.location.hash = hash;
       }
-      lastScrollY = window.scrollY;
-      updateHeader();
-    }, 140);
-  };
 
-  const scrollToHashTarget = (hash) => {
-    const target = document.querySelector(hash);
-    if (!target) return;
+      scheduleAnchorUnlock();
+    };
 
-    lockHeaderForAnchor();
+    if (toggle && menu) {
+      toggle.addEventListener('click', () => {
+        closeMobileSearch();
 
-    const headerOffset = getHeaderOffset();
-    const extraGap = getAnchorGap();
-    const top = target.getBoundingClientRect().top + window.scrollY - headerOffset - extraGap;
+        const expanded = toggle.getAttribute('aria-expanded') === 'true';
+        toggle.setAttribute('aria-expanded', String(!expanded));
+        menu.classList.toggle('is-open', !expanded);
 
-    window.scrollTo({
-      top: Math.max(0, top),
-      behavior: 'smooth'
-    });
-
-    if (history.replaceState) {
-      history.replaceState(null, '', hash);
-    } else {
-      window.location.hash = hash;
+        if (siteHeader) {
+          siteHeader.classList.remove('is-hidden');
+        }
+      });
     }
 
-    scheduleAnchorUnlock();
-  };
+    if (searchToggle && searchBar) {
+      searchToggle.addEventListener('click', () => {
+        closeMobileMenu();
 
-  if (toggle && menu) {
-    toggle.addEventListener('click', () => {
-      const expanded = toggle.getAttribute('aria-expanded') === 'true';
-      toggle.setAttribute('aria-expanded', String(!expanded));
-      menu.classList.toggle('is-open', !expanded);
+        const expanded = searchToggle.getAttribute('aria-expanded') === 'true';
+        searchToggle.setAttribute('aria-expanded', String(!expanded));
+        searchBar.classList.toggle('is-open', !expanded);
+        body.classList.toggle('mobile-search-open', !expanded);
 
-      if (siteHeader) {
+        if (siteHeader) {
+          siteHeader.classList.remove('is-hidden');
+        }
+
+        if (!expanded && mobileSearchInput) {
+          mobileSearchInput.focus();
+        }
+      });
+    }
+
+    if (searchClose) {
+      searchClose.addEventListener('click', () => {
+        closeMobileSearch();
+        if (mobileSearchInput) {
+          mobileSearchInput.blur();
+        }
+      });
+    }
+
+    hashLinks.forEach(link => {
+      link.addEventListener('click', (event) => {
+        const href = link.getAttribute('href') || '';
+        if (!href.startsWith('#')) return;
+
+        event.preventDefault();
+
+        if (menu && menu.contains(link)) {
+          closeMobileMenu();
+          setTimeout(() => {
+            scrollToHashTarget(href);
+          }, mobileMenuDelay);
+        } else {
+          scrollToHashTarget(href);
+        }
+      });
+    });
+
+    const updateBackTop = () => {
+      backTops.forEach(btn => {
+        btn.classList.toggle('is-visible', window.scrollY > 280);
+      });
+    };
+
+    const updateHeader = () => {
+      if (!siteHeader || isAnchoring) return;
+
+      const currentScrollY = window.scrollY;
+      const menuOpen = toggle && toggle.getAttribute('aria-expanded') === 'true';
+      const searchOpen = searchToggle && searchToggle.getAttribute('aria-expanded') === 'true';
+
+      if (menuOpen || searchOpen) {
+        siteHeader.classList.remove('is-hidden');
+        lastScrollY = currentScrollY;
+        return;
+      }
+
+      if (currentScrollY <= 0 || currentScrollY < revealOffset) {
+        siteHeader.classList.remove('is-hidden');
+      } else if (currentScrollY > lastScrollY + threshold) {
+        siteHeader.classList.add('is-hidden');
+      } else if (currentScrollY < lastScrollY - threshold) {
         siteHeader.classList.remove('is-hidden');
       }
-    });
-  }
 
-  hashLinks.forEach(link => {
-    link.addEventListener('click', (event) => {
-      const href = link.getAttribute('href') || '';
-      if (!href.startsWith('#')) return;
-
-      event.preventDefault();
-
-      if (menu && menu.contains(link)) {
-        closeMobileMenu();
-        setTimeout(() => {
-          scrollToHashTarget(href);
-        }, mobileMenuDelay);
-      } else {
-        scrollToHashTarget(href);
-      }
-    });
-  });
-
-  const updateBackTop = () => {
-    backTops.forEach(btn => {
-      btn.classList.toggle('is-visible', window.scrollY > 280);
-    });
-  };
-
-  const updateHeader = () => {
-    if (!siteHeader || isAnchoring) return;
-
-    const currentScrollY = window.scrollY;
-    const menuOpen = toggle && toggle.getAttribute('aria-expanded') === 'true';
-
-    if (menuOpen) {
-      siteHeader.classList.remove('is-hidden');
       lastScrollY = currentScrollY;
-      return;
-    }
+    };
 
-    if (currentScrollY <= 0 || currentScrollY < revealOffset) {
-      siteHeader.classList.remove('is-hidden');
-    } else if (currentScrollY > lastScrollY + threshold) {
-      siteHeader.classList.add('is-hidden');
-    } else if (currentScrollY < lastScrollY - threshold) {
-      siteHeader.classList.remove('is-hidden');
-    }
+    const searchableItems = Array.from(document.querySelectorAll('.resource-list li')).map((item) => {
+      const group = item.closest('.resource-group');
+      const section = item.closest('.section');
+      const subtitle = group ? group.querySelector('.resource-subtitle') : null;
+      const sectionTitle = section ? section.querySelector('.section-head h2') : null;
 
-    lastScrollY = currentScrollY;
-  };
+      const searchableText = [
+        item.textContent,
+        subtitle ? subtitle.textContent : '',
+        sectionTitle ? sectionTitle.textContent : ''
+      ].join(' ').toLowerCase();
 
-  const searchableItems = Array.from(document.querySelectorAll('.resource-list li')).map((item) => {
-    const group = item.closest('.resource-group');
-    const section = item.closest('.section');
-    const subtitle = group ? group.querySelector('.resource-subtitle') : null;
-    const sectionTitle = section ? section.querySelector('.section-head h2') : null;
-
-    const searchableText = [
-      item.textContent,
-      subtitle ? subtitle.textContent : '',
-      sectionTitle ? sectionTitle.textContent : ''
-    ].join(' ').toLowerCase();
-
-    return { item, group, section, searchableText };
-  });
-
-  const normalizeQuery = (value) =>
-    value.toLowerCase().trim().replace(/\s+/g, ' ');
-
-  const escapeRegExp = (value) =>
-    value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-
-  const clearHighlights = (root) => {
-    root.querySelectorAll('mark.search-hit').forEach((mark) => {
-      const textNode = document.createTextNode(mark.textContent);
-      mark.replaceWith(textNode);
-    });
-    root.normalize();
-  };
-
-  const highlightInElement = (root, query) => {
-    if (!query) return;
-
-    const regex = new RegExp(`(${escapeRegExp(query)})`, 'gi');
-    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
-      acceptNode(node) {
-        if (!node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
-        if (node.parentElement.closest('.inline-links')) return NodeFilter.FILTER_REJECT;
-        if (node.parentElement.closest('mark')) return NodeFilter.FILTER_REJECT;
-        if (!regex.test(node.nodeValue)) return NodeFilter.FILTER_REJECT;
-        regex.lastIndex = 0;
-        return NodeFilter.FILTER_ACCEPT;
-      }
+      return { item, group, section, searchableText };
     });
 
-    const textNodes = [];
-    let currentNode;
-    while ((currentNode = walker.nextNode())) {
-      textNodes.push(currentNode);
-    }
+    const normalizeQuery = (value) =>
+      value.toLowerCase().trim().replace(/\s+/g, ' ');
 
-    textNodes.forEach((node) => {
-      const frag = document.createDocumentFragment();
-      const parts = node.nodeValue.split(regex);
+    const escapeRegExp = (value) =>
+      value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
-      parts.forEach((part) => {
-        if (!part) return;
+    const clearHighlights = (root) => {
+      root.querySelectorAll('mark.search-hit').forEach((mark) => {
+        const textNode = document.createTextNode(mark.textContent);
+        mark.replaceWith(textNode);
+      });
+      root.normalize();
+    };
 
-        if (part.toLowerCase() === query.toLowerCase()) {
-          const mark = document.createElement('mark');
-          mark.className = 'search-hit';
-          mark.textContent = part;
-          frag.appendChild(mark);
-        } else {
-          frag.appendChild(document.createTextNode(part));
+    const highlightInElement = (root, query) => {
+      if (!query) return;
+
+      const regex = new RegExp(`(${escapeRegExp(query)})`, 'gi');
+      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+        acceptNode(node) {
+          if (!node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+          if (node.parentElement.closest('.inline-links')) return NodeFilter.FILTER_REJECT;
+          if (node.parentElement.closest('mark')) return NodeFilter.FILTER_REJECT;
+          if (!regex.test(node.nodeValue)) return NodeFilter.FILTER_REJECT;
+          regex.lastIndex = 0;
+          return NodeFilter.FILTER_ACCEPT;
         }
       });
 
-      node.parentNode.replaceChild(frag, node);
-    });
-  };
+      const textNodes = [];
+      let currentNode;
+      while ((currentNode = walker.nextNode())) {
+        textNodes.push(currentNode);
+      }
 
-  const updateSearchUI = (query, matchCount) => {
-    if (!searchStatusWrap || !searchStatus || !noResults) return;
+      textNodes.forEach((node) => {
+        const frag = document.createDocumentFragment();
+        const parts = node.nodeValue.split(regex);
 
-    if (!query) {
-      searchStatusWrap.hidden = true;
-      noResults.hidden = true;
-      return;
-    }
+        parts.forEach((part) => {
+          if (!part) return;
 
-    searchStatusWrap.hidden = false;
-    searchStatus.textContent = `${matchCount} hasil untuk "${query}"`;
-    noResults.hidden = matchCount !== 0;
-  };
+          if (part.toLowerCase() === query.toLowerCase()) {
+            const mark = document.createElement('mark');
+            mark.className = 'search-hit';
+            mark.textContent = part;
+            frag.appendChild(mark);
+          } else {
+            frag.appendChild(document.createTextNode(part));
+          }
+        });
 
-  const runSearch = (rawQuery) => {
-    const query = normalizeQuery(rawQuery);
-    let matchCount = 0;
+        node.parentNode.replaceChild(frag, node);
+      });
+    };
 
-    if (featuredSection) {
-      featuredSection.hidden = !!query;
-    }
+    const updateSearchUI = (query, matchCount) => {
+      if (!searchStatusWrap || !searchStatus || !noResults) return;
 
-    searchableItems.forEach(({ item, searchableText }) => {
-      clearHighlights(item);
+      if (!query) {
+        searchStatusWrap.hidden = true;
+        noResults.hidden = true;
+        return;
+      }
 
-      const matched = !query || searchableText.includes(query);
-      item.hidden = !matched;
+      searchStatusWrap.hidden = false;
+      searchStatus.textContent = `${matchCount} hasil untuk "${query}"`;
+      noResults.hidden = matchCount !== 0;
+    };
 
-      if (matched) {
-        matchCount++;
-        if (query) {
-          highlightInElement(item, query);
+    const runSearch = (rawQuery) => {
+      const query = normalizeQuery(rawQuery);
+      let matchCount = 0;
+
+      if (featuredSection) {
+        featuredSection.hidden = !!query;
+      }
+
+      searchableItems.forEach(({ item, searchableText }) => {
+        clearHighlights(item);
+
+        const matched = !query || searchableText.includes(query);
+        item.hidden = !matched;
+
+        if (matched) {
+          matchCount++;
+          if (query) {
+            highlightInElement(item, query);
+          }
         }
+      });
+
+      document.querySelectorAll('.resource-group').forEach((group) => {
+        const visibleItems = Array.from(group.querySelectorAll('.resource-list li'))
+          .some((item) => !item.hidden);
+
+        group.hidden = !visibleItems;
+      });
+
+      document.querySelectorAll('.section').forEach((section) => {
+        if (featuredSection && section === featuredSection) {
+          return;
+        }
+
+        const hasLists = !!section.querySelector('.resource-list');
+
+        if (!hasLists) {
+          section.hidden = false;
+          return;
+        }
+
+        const visibleItems = Array.from(section.querySelectorAll('.resource-list li'))
+          .some((item) => !item.hidden);
+
+        section.hidden = !visibleItems;
+      });
+
+      updateSearchUI(query, query ? matchCount : 0);
+    };
+
+    const syncSearchInputs = (source, value) => {
+      if (source !== desktopSearchInput && desktopSearchInput) {
+        desktopSearchInput.value = value;
       }
-    });
-
-    document.querySelectorAll('.resource-group').forEach((group) => {
-      const visibleItems = Array.from(group.querySelectorAll('.resource-list li'))
-        .some((item) => !item.hidden);
-
-      group.hidden = !visibleItems;
-    });
-
-    document.querySelectorAll('.section').forEach((section) => {
-      if (featuredSection && section === featuredSection) {
-        return;
+      if (source !== mobileSearchInput && mobileSearchInput) {
+        mobileSearchInput.value = value;
       }
+    };
 
-      const hasLists = !!section.querySelector('.resource-list');
-
-      if (!hasLists) {
-        section.hidden = false;
-        return;
-      }
-
-      const visibleItems = Array.from(section.querySelectorAll('.resource-list li'))
-        .some((item) => !item.hidden);
-
-      section.hidden = !visibleItems;
-    });
-
-    updateSearchUI(query, query ? matchCount : 0);
-  };
-
-  const syncSearchInputs = (source, value) => {
-    if (source !== desktopSearchInput && desktopSearchInput) {
-      desktopSearchInput.value = value;
-    }
-    if (source !== mobileSearchInput && mobileSearchInput) {
-      mobileSearchInput.value = value;
-    }
-  };
-
-  const handleSearchInput = (event) => {
-    const value = event.target.value || '';
-    syncSearchInputs(event.target, value);
-    runSearch(value);
-  };
-
-  const handleSearchSubmit = (event) => {
-    event.preventDefault();
-
-    const form = event.currentTarget;
-    const input = form.querySelector('input[type="search"]');
-    const value = input ? input.value : '';
-
-    syncSearchInputs(input, value);
-    runSearch(value);
-  };
-
-  const preventEnterKeySubmit = (event) => {
-    if (event.key === 'Enter') {
-      event.preventDefault();
+    const handleSearchInput = (event) => {
       const value = event.target.value || '';
       syncSearchInputs(event.target, value);
       runSearch(value);
+    };
+
+    const handleSearchSubmit = (event) => {
+      event.preventDefault();
+
+      const form = event.currentTarget;
+      const input = form.querySelector('input[type="search"]');
+      const value = input ? input.value : '';
+
+      syncSearchInputs(input, value);
+      runSearch(value);
+    };
+
+    const preventEnterKeySubmit = (event) => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        const value = event.target.value || '';
+        syncSearchInputs(event.target, value);
+        runSearch(value);
+      }
+    };
+
+    if (desktopSearchInput) {
+      desktopSearchInput.addEventListener('input', handleSearchInput);
+      desktopSearchInput.addEventListener('keydown', preventEnterKeySubmit);
     }
-  };
 
-  if (desktopSearchInput) {
-    desktopSearchInput.addEventListener('input', handleSearchInput);
-    desktopSearchInput.addEventListener('keydown', preventEnterKeySubmit);
-  }
-
-  if (mobileSearchInput) {
-    mobileSearchInput.addEventListener('input', handleSearchInput);
-    mobileSearchInput.addEventListener('keydown', preventEnterKeySubmit);
-  }
-
-  if (desktopSearchForm) {
-    desktopSearchForm.addEventListener('submit', handleSearchSubmit);
-  }
-
-  if (mobileSearchForm) {
-    mobileSearchForm.addEventListener('submit', handleSearchSubmit);
-  }
-
-  const onScroll = () => {
-    updateBackTop();
-
-    if (isAnchoring) {
-      scheduleAnchorUnlock();
-    }
-
-    if (!ticking) {
-      window.requestAnimationFrame(() => {
-        updateHeader();
-        ticking = false;
+    if (mobileSearchInput) {
+      mobileSearchInput.addEventListener('input', handleSearchInput);
+      mobileSearchInput.addEventListener('keydown', preventEnterKeySubmit);
+      mobileSearchInput.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+          closeMobileSearch();
+          mobileSearchInput.blur();
+        }
       });
-      ticking = true;
     }
-  };
 
-  updateBackTop();
-  updateHeader();
-  runSearch('');
-  window.addEventListener('scroll', onScroll, { passive: true });
-</script>
+    if (desktopSearchForm) {
+      desktopSearchForm.addEventListener('submit', handleSearchSubmit);
+    }
 
+    if (mobileSearchForm) {
+      mobileSearchForm.addEventListener('submit', handleSearchSubmit);
+    }
+
+    const onScroll = () => {
+      updateBackTop();
+
+      if (isAnchoring) {
+        scheduleAnchorUnlock();
+      }
+
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          updateHeader();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    updateBackTop();
+    updateHeader();
+    runSearch('');
+    window.addEventListener('scroll', onScroll, { passive: true });
+  </script>
 </body>
 </html>
