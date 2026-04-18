@@ -577,6 +577,35 @@
   const threshold = 10;
   const revealOffset = 80;
 
+  const closeMobileMenu = () => {
+    if (!toggle || !menu) return;
+    toggle.setAttribute('aria-expanded', 'false');
+    menu.classList.remove('is-open');
+    if (siteHeader) {
+      siteHeader.classList.remove('is-hidden');
+    }
+  };
+
+  const scrollToHashTarget = (hash) => {
+    const target = document.querySelector(hash);
+    if (!target) return;
+
+    const headerHeight = siteHeader ? siteHeader.offsetHeight : 0;
+    const extraGap = 12;
+    const top = target.getBoundingClientRect().top + window.scrollY - headerHeight - extraGap;
+
+    window.scrollTo({
+      top: Math.max(0, top),
+      behavior: 'smooth'
+    });
+
+    if (history.replaceState) {
+      history.replaceState(null, '', hash);
+    } else {
+      window.location.hash = hash;
+    }
+  };
+
   if (toggle && menu) {
     toggle.addEventListener('click', () => {
       const expanded = toggle.getAttribute('aria-expanded') === 'true';
@@ -589,26 +618,27 @@
     });
 
     menu.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        toggle.setAttribute('aria-expanded', 'false');
-        menu.classList.remove('is-open');
+      link.addEventListener('click', (event) => {
+        const href = link.getAttribute('href') || '';
+        const isHashLink = href.startsWith('#');
 
-        if (siteHeader) {
-          siteHeader.classList.remove('is-hidden');
+        if (isHashLink) {
+          event.preventDefault();
+          closeMobileMenu();
+          setTimeout(() => {
+            scrollToHashTarget(href);
+          }, 300);
+          return;
         }
+
+        closeMobileMenu();
       });
     });
   }
 
   const updateBackTop = () => {
-    if (!backTops.length) return;
-
     backTops.forEach(btn => {
-      if (window.scrollY > 280) {
-        btn.classList.add('is-visible');
-      } else {
-        btn.classList.remove('is-visible');
-      }
+      btn.classList.toggle('is-visible', window.scrollY > 280);
     });
   };
 
@@ -651,5 +681,6 @@
   updateHeader();
   window.addEventListener('scroll', onScroll, { passive: true });
 </script>
+
 </body>
 </html>
