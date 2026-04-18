@@ -421,6 +421,13 @@ input, button { font: inherit; }
   color: var(--muted);
 }
 
+mark.search-hit {
+  background: rgba(255, 229, 138, 0.72);
+  color: inherit;
+  padding: 0 2px;
+  border-radius: 3px;
+}
+
 @media (max-width: 920px) {
   .featured-grid { grid-template-columns: 1fr; }
 }

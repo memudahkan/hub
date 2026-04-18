@@ -735,6 +735,59 @@
   const normalizeQuery = (value) =>
     value.toLowerCase().trim().replace(/\s+/g, ' ');
 
+  const escapeRegExp = (value) =>
+    value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+  const clearHighlights = (root) => {
+    root.querySelectorAll('mark.search-hit').forEach((mark) => {
+      const textNode = document.createTextNode(mark.textContent);
+      mark.replaceWith(textNode);
+    });
+    root.normalize();
+  };
+
+  const highlightInElement = (root, query) => {
+    if (!query) return;
+
+    const regex = new RegExp(`(${escapeRegExp(query)})`, 'gi');
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode(node) {
+        if (!node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        if (node.parentElement.closest('.inline-links')) return NodeFilter.FILTER_REJECT;
+        if (node.parentElement.closest('mark')) return NodeFilter.FILTER_REJECT;
+        if (!regex.test(node.nodeValue)) return NodeFilter.FILTER_REJECT;
+        regex.lastIndex = 0;
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+
+    const textNodes = [];
+    let currentNode;
+    while ((currentNode = walker.nextNode())) {
+      textNodes.push(currentNode);
+    }
+
+    textNodes.forEach((node) => {
+      const frag = document.createDocumentFragment();
+      const parts = node.nodeValue.split(regex);
+
+      parts.forEach((part) => {
+        if (!part) return;
+
+        if (part.toLowerCase() === query.toLowerCase()) {
+          const mark = document.createElement('mark');
+          mark.className = 'search-hit';
+          mark.textContent = part;
+          frag.appendChild(mark);
+        } else {
+          frag.appendChild(document.createTextNode(part));
+        }
+      });
+
+      node.parentNode.replaceChild(frag, node);
+    });
+  };
+
   const updateSearchUI = (query, matchCount) => {
     if (!searchStatusWrap || !searchStatus || !noResults) return;
 
@@ -758,9 +811,17 @@
     }
 
     searchableItems.forEach(({ item, searchableText }) => {
+      clearHighlights(item);
+
       const matched = !query || searchableText.includes(query);
       item.hidden = !matched;
-      if (matched) matchCount++;
+
+      if (matched) {
+        matchCount++;
+        if (query) {
+          highlightInElement(item, query);
+        }
+      }
     });
 
     document.querySelectorAll('.resource-group').forEach((group) => {
