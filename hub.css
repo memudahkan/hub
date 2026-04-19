@@ -451,6 +451,36 @@ input, button { font: inherit; }
   transform: translateY(0);
 }
 
+.category-card {
+  position: relative;
+  display: block;
+  padding: 20px 18px 18px;
+  min-height: 128px;
+}
+
+.category-emoji {
+  display: block;
+  margin-bottom: 12px;
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.category-meta {
+  position: absolute;
+  top: 20px;
+  right: 18px;
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.02em;
+}
+
+.category-card strong {
+  display: block;
+  margin-bottom: 6px;
+}
+
 @media (max-width: 920px) {
   .category-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
