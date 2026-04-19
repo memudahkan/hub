@@ -365,10 +365,15 @@ input, button { font: inherit; }
   margin-bottom: 6px;
 }
 
-.category-card:hover,
+a.category-card:hover,
+a.category-card:focus-visible,
 .resource-card:hover {
   border-color: color-mix(in srgb, var(--accent) 35%, var(--line));
   background: color-mix(in srgb, var(--surface) 82%, var(--surface-2));
+}
+
+.category-card.is-soon {
+  cursor: default;
 }
 
 .resource-card {
