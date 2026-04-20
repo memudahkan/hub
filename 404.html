@@ -116,7 +116,7 @@
         <input id="cmd" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Masukkan perintah">
       </div>
 
-      <div class="hint">Perintah: help, home, path, cls</div>
+      <div class="hint">Perintah: help, home, path, clr</div>
     </section>
   </main>
 
@@ -147,7 +147,7 @@
         addLine('help  - tampilkan bantuan');
         addLine('home  - kembali ke beranda');
         addLine('path  - tampilkan path yang gagal dibuka');
-        addLine('cls   - bersihkan layar');
+        addLine('clr   - bersihkan layar');
         return;
       }
 
@@ -162,7 +162,7 @@
         return;
       }
 
-      if (value === 'cls') {
+      if (value === 'clr') {
         output.innerHTML = '';
         return;
       }
