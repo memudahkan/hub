@@ -383,8 +383,8 @@
     width: calc(100% - 50px);
   }
 
-  .page-emulator .mobile-search-open .brand,
-  .page-emulator .mobile-search-open .search-toggle {
+  .page-emulator.mobile-search-open .brand,
+  .page-emulator.mobile-search-open .search-toggle {
     opacity: 0;
     pointer-events: none;
   }
