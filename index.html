@@ -23,40 +23,46 @@
   <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon/favicon-48x48.png">
   <link rel="apple-touch-icon" href="/assets/favicon/apple-touch-icon.png">
   <meta name="theme-color" content="#0f1316">
-  <link rel="stylesheet" href="/assets/css/shared.css" />
-  <link rel="stylesheet" href="/assets/css/home.css" />
+  <link rel="stylesheet" href="hub.css" />
 </head>
-<body class="page page-home">
+<body>
   <a class="skip-link" href="#main">Skip to content</a>
 
-    <header class="site-header">
+  <header class="site-header">
     <div class="container topbar">
-      <a class="brand" href="/" aria-label="M2D Link Hub home">
+      <a class="brand" href="#" aria-label="Link Hub home">
         <span class="brand-mark" aria-hidden="true">L</span>
         <span>Link Hub</span>
       </a>
 
       <nav class="desktop-nav" aria-label="Primary navigation">
-        <a href="/emulator/">Emulator</a>
-        <a href="https://bio.memudahkan.com/">Tentang</a>
+        <a href="#">Categories</a>
+        <a href="#">Resources</a>
+        <a href="#">About</a>
       </nav>
 
-      <div class="mobile-actions">
-  <button class="icon-btn menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Buka menu navigasi">
-    <svg viewBox="0 0 24 24" class="icon" aria-hidden="true" focusable="false">
-      <path d="M4 7h16"></path>
-      <path d="M4 12h16"></path>
-      <path d="M4 17h16"></path>
-    </svg>
-  </button>
-</div>
+      <form class="desktop-search" role="search">
+        <label class="sr-only" for="desktop-search-input">Search</label>
+        <input id="desktop-search-input" type="search" placeholder="Search links..." />
+      </form>
+
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open navigation menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
     </div>
 
     <div class="container mobile-menu-shell">
       <div class="mobile-menu" id="mobile-menu">
+        <form class="mobile-search" role="search">
+          <label class="sr-only" for="mobile-search-input">Search</label>
+          <input id="mobile-search-input" type="search" placeholder="Search links..." />
+        </form>
         <nav class="mobile-nav" aria-label="Mobile navigation">
-          <a href="/emulator/">Emulator</a>
-          <a href="https://bio.memudahkan.com/">Tentang</a>
+          <a href="#">Categories</a>
+          <a href="#">Resources</a>
+          <a href="#">About</a>
         </nav>
       </div>
     </div>
@@ -74,7 +80,7 @@
 <section class="section" id="categories">
   <div class="container">
     <div class="category-grid">
-      <a class="category-card" href="/emulator/">
+      <a class="category-card" href="/emulator">
         <span class="category-emoji" aria-hidden="true">🕹️</span>
         <strong>Emulator</strong>
         <span>Unduh game emulator dari sumber yang aman dan terpercaya.</span>
@@ -132,102 +138,12 @@
   </div>
 </section>
     
-
-    <section class="section muted-section" id="about">
-      <div class="container">
-        <div class="about-box">
-          <h2>Tentang hub ini</h2>
-          <p>Halo sob, laman link hub ini masih dalam proses pengembangan, jadi untuk saat ini hanya kategori "Emulator" yang bisa kalian akses. "Terus yang lain kapan min?" Yo ndak tahu, sering-sering mampir saja ke sini, siapa tahu ada yang baru 😊</p>
-        </div>
-      </div>
-    </section>
-
   </main>
 
   <a class="back-top-floating" href="#top" aria-label="Back to top">🔝</a>
 
-<script>
-  const toggle = document.querySelector('.menu-toggle');
-  const menu = document.getElementById('mobile-menu');
-  const backTop = document.querySelector('.back-top-floating');
-  const siteHeader = document.querySelector('.site-header');
-
-  let lastScrollY = window.scrollY;
-  let ticking = false;
-  const threshold = 10;
-  const revealOffset = 80;
-
-  if (toggle && menu) {
-    toggle.addEventListener('click', () => {
-      const expanded = toggle.getAttribute('aria-expanded') === 'true';
-      toggle.setAttribute('aria-expanded', String(!expanded));
-      menu.classList.toggle('is-open', !expanded);
-
-      if (siteHeader) {
-        siteHeader.classList.remove('is-hidden');
-      }
-    });
-
-    menu.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        toggle.setAttribute('aria-expanded', 'false');
-        menu.classList.remove('is-open');
-
-        if (siteHeader) {
-          siteHeader.classList.remove('is-hidden');
-        }
-      });
-    });
-  }
-
-  const updateBackTop = () => {
-    if (!backTop) return;
-    if (window.scrollY > 280) {
-      backTop.classList.add('is-visible');
-    } else {
-      backTop.classList.remove('is-visible');
-    }
-  };
-
-  const updateHeader = () => {
-    if (!siteHeader) return;
-
-    const currentScrollY = window.scrollY;
-    const menuOpen = toggle && toggle.getAttribute('aria-expanded') === 'true';
-
-    if (menuOpen) {
-      siteHeader.classList.remove('is-hidden');
-      lastScrollY = currentScrollY;
-      return;
-    }
-
-    if (currentScrollY <= 0 || currentScrollY < revealOffset) {
-      siteHeader.classList.remove('is-hidden');
-    } else if (currentScrollY > lastScrollY + threshold) {
-      siteHeader.classList.add('is-hidden');
-    } else if (currentScrollY < lastScrollY - threshold) {
-      siteHeader.classList.remove('is-hidden');
-    }
-
-    lastScrollY = currentScrollY;
-  };
-
-  const onScroll = () => {
-    updateBackTop();
-
-    if (!ticking) {
-      window.requestAnimationFrame(() => {
-        updateHeader();
-        ticking = false;
-      });
-      ticking = true;
-    }
-  };
-
-  updateBackTop();
-  updateHeader();
-  window.addEventListener('scroll', onScroll, { passive: true });
-</script>
+  <script src="/assets/js/shared.js"></script>
+  <script src="/assets/js/home.js"></script>
 
 </body>
 </html>
