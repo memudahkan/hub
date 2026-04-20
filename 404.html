@@ -15,7 +15,7 @@
   <link rel="apple-touch-icon" href="/assets/favicon/apple-touch-icon.png">
   <meta name="theme-color" content="#0f1316">
 
-  <style>
+<style>
     :root {
       --bg: #0b0f12;
       --panel: #11161b;
@@ -47,15 +47,15 @@
 
     .terminal {
       width: 100%;
-      max-width: 860px;
-      background: rgba(17, 22, 27, 0.94);
+      max-width: 900px;
+      background: rgba(17, 22, 27, 0.96);
       border: 1px solid var(--line);
       border-radius: 16px;
       overflow: hidden;
       box-shadow: 0 20px 70px rgba(0, 0, 0, 0.45);
     }
 
-    .terminal-bar {
+    .bar {
       display: flex;
       align-items: center;
       gap: 8px;
@@ -70,171 +70,183 @@
       border-radius: 50%;
     }
 
-    .dot.red { background: #ff5f56; }
-    .dot.yellow { background: #ffbd2e; }
-    .dot.green { background: #27c93f; }
+    .red { background: #ff5f56; }
+    .yellow { background: #ffbd2e; }
+    .green { background: #27c93f; }
 
-    .terminal-title {
+    .title {
       margin-left: 10px;
       color: var(--muted);
       font-size: 0.92rem;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
 
     .screen {
-      padding: 22px 20px 18px;
+      padding: 20px 18px;
+      min-height: 440px;
     }
 
     .line {
-      margin: 0 0 10px;
+      margin: 0 0 8px;
+      white-space: pre-wrap;
       word-break: break-word;
     }
 
-    .prompt {
-      color: var(--green);
-    }
+    .prompt { color: var(--green); }
+    .host { color: var(--blue); }
+    .path { color: var(--yellow); }
+    .error { color: var(--red); }
+    .muted { color: var(--muted); }
 
-    .host {
-      color: var(--blue);
-    }
-
-    .path {
-      color: var(--yellow);
-    }
-
-    .error {
-      color: var(--red);
-    }
-
-    .muted {
-      color: var(--muted);
-    }
-
-    .big {
-      margin: 6px 0 16px;
-      font-size: clamp(1.2rem, 2vw, 1.5rem);
-      color: var(--green-2);
-    }
-
-    .cmd-list {
-      display: grid;
-      gap: 10px;
-      margin: 18px 0 0;
-    }
-
-    .cmd {
+    .input-row {
       display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 10px;
-      padding: 12px 14px;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      background: #0d1217;
-      text-decoration: none;
+      align-items: flex-start;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .prompt-label {
+      color: var(--green);
+      white-space: nowrap;
+      padding-top: 1px;
+    }
+
+    .cmdline {
+      flex: 1;
+      min-width: 0;
+      background: transparent;
+      border: 0;
+      outline: none;
       color: var(--text);
-      transition: border-color .15s ease, transform .15s ease, background .15s ease;
+      font: inherit;
+      caret-color: var(--green);
+      padding: 0;
+      margin: 0;
     }
 
-    .cmd:hover {
-      border-color: var(--green);
-      background: #10171d;
-      transform: translateY(-1px);
-    }
-
-    .cmd code {
-      color: var(--green-2);
-      font-size: 0.96rem;
-    }
-
-    .cmd span {
-      color: var(--muted);
-      font-size: 0.94rem;
-    }
-
-    .footer-line {
-      margin-top: 18px;
-      padding-top: 14px;
+    .hint {
+      margin-top: 14px;
+      padding-top: 12px;
       border-top: 1px dashed var(--line);
       color: var(--muted);
       font-size: 0.92rem;
     }
 
-    .blink {
+    .kbd {
       display: inline-block;
-      width: 10px;
-      height: 1.1em;
-      vertical-align: -2px;
-      background: var(--green);
-      animation: blink 1s step-end infinite;
-    }
-
-    @keyframes blink {
-      50% { opacity: 0; }
+      padding: 1px 6px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      color: var(--green-2);
+      background: #0d1217;
     }
 
     @media (max-width: 560px) {
-      .screen {
-        padding: 18px 16px 16px;
-      }
-      .cmd {
-        align-items: flex-start;
-      }
+      .screen { min-height: 380px; }
+      .title { font-size: 0.86rem; }
     }
   </style>
 </head>
 <body>
   <main class="terminal" aria-label="Terminal 404">
-    <div class="terminal-bar">
+    <div class="bar">
       <span class="dot red"></span>
       <span class="dot yellow"></span>
       <span class="dot green"></span>
-      <div class="terminal-title">hub.memudahkan.com — shell</div>
+      <div class="title">hub.memudahkan.com — not-found shell</div>
     </div>
 
     <section class="screen">
-      <p class="line">
-        <span class="prompt">visitor@hub</span>:<span class="path">~</span>$ open
-        <span id="missing-path">/</span>
-      </p>
-
-      <p class="line error">error: page not found (404)</p>
-      <p class="line big">Halaman yang kamu cari tidak ditemukan.</p>
-      <p class="line muted">Mungkin URL salah, halamannya dipindah, atau memang belum dibuat.</p>
-
-      <p class="line">
-        <span class="prompt">system</span>: saran perintah yang tersedia:
-      </p>
-
-      <div class="cmd-list">
-        <a class="cmd" href="/">
-          <code>cd /</code>
-          <span>Kembali ke beranda hub</span>
-        </a>
-
-        <a class="cmd" href="/emulator/">
-          <code>open /emulator/</code>
-          <span>Buka halaman emulator</span>
-        </a>
-
-        <a class="cmd" href="javascript:history.back()">
-          <code>history -1</code>
-          <span>Kembali ke halaman sebelumnya</span>
-        </a>
+      <div id="output">
+        <p class="line"><span class="prompt">system</span>: memuat halaman...</p>
+        <p class="line error">error 404: page not found</p>
+        <p class="line">Alamat yang diminta: <span class="path" id="missing-path">/</span></p>
+        <p class="line muted">Ketik <span class="kbd">help</span> untuk melihat perintah yang tersedia.</p>
       </div>
 
-      <div class="footer-line">
-        <span class="prompt">visitor@hub</span>:<span class="path">~</span>$ _
-        <span class="blink" aria-hidden="true"></span>
+      <div class="input-row">
+        <label class="prompt-label" for="cmd"><span class="prompt">visitor@hub</span>:<span class="path">~</span>$</label>
+        <input id="cmd" class="cmdline" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Masukkan perintah">
+      </div>
+
+      <div class="hint">
+        Perintah cepat: <span class="kbd">help</span> <span class="kbd">home</span> <span class="kbd">back</span> <span class="kbd">clear</span> <span class="kbd">path</span>
       </div>
     </section>
   </main>
 
   <script>
-    const path = window.location.pathname || "/";
-    document.getElementById("missing-path").textContent = path;
+    const output = document.getElementById('output');
+    const cmd = document.getElementById('cmd');
+    const missingPath = window.location.pathname || '/';
+    document.getElementById('missing-path').textContent = missingPath;
+
+    function escapeHtml(str) {
+      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    function addLine(html, cls = 'line') {
+      const p = document.createElement('p');
+      p.className = cls;
+      p.innerHTML = html;
+      output.appendChild(p);
+      window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function runCommand(value) {
+      const raw = value || '';
+      const command = raw.trim().toLowerCase();
+
+      addLine('<span class=\"prompt\">visitor@hub</span>:<span class=\"path\">~</span>$ ' + escapeHtml(raw));
+
+      if (!command) return;
+
+      if (command === 'help') {
+        addLine('Perintah tersedia: <span class="kbd">home</span>, <span class="kbd">back</span>, <span class="kbd">clear</span>, <span class="kbd">path</span>.');
+        return;
+      }
+
+      if (command === 'home') {
+        addLine('Mengalihkan ke / ...', 'line muted');
+        setTimeout(() => { window.location.href = '/'; }, 250);
+        return;
+      }
+
+      if (command === 'back') {
+        addLine('Kembali ke halaman sebelumnya ...', 'line muted');
+        setTimeout(() => { history.back(); }, 250);
+        return;
+      }
+
+      if (command === 'clear') {
+        output.innerHTML = '';
+        return;
+      }
+
+      if (command === 'path') {
+        addLine('Path yang gagal dibuka: <span class="path">' + escapeHtml(missingPath) + '</span>');
+        return;
+      }
+
+      addLine('command not found: <span class="error">' + escapeHtml(command) + '</span>');
+      addLine('Ketik <span class="kbd">help</span> untuk melihat perintah yang tersedia.', 'line muted');
+    }
+
+    cmd.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        const value = cmd.value;
+        cmd.value = '';
+        runCommand(value);
+      }
+    });
+
+    window.addEventListener('load', () => {
+      cmd.focus();
+    });
+
+    document.addEventListener('click', () => {
+      cmd.focus();
+    });
   </script>
 </body>
 </html>
