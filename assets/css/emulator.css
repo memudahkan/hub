@@ -76,7 +76,7 @@
 .page-emulator .mobile-searchbar {
   position: absolute;
   top: 50%;
-  right: 0;
+  right: 50px;
   transform: translateY(-50%);
   display: flex;
   align-items: center;
@@ -379,27 +379,14 @@
     display: block;
   }
 
-  .page-emulator .mobile-searchbar {
-    left: 0;
-    right: 0;
-    max-width: none;
-    z-index: 4;
-  }
-
   .page-emulator .mobile-searchbar.is-open {
-    width: 100%;
+    width: calc(100% - 50px);
   }
 
   .page-emulator .mobile-search-open .brand,
-  .page-emulator .mobile-search-open .mobile-actions {
+  .page-emulator .mobile-search-open .search-toggle {
     opacity: 0;
     pointer-events: none;
-  }
-
-  .page-emulator .mobile-search-open .mobile-searchbar {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
   }
 
   .page-emulator .inline-links {
