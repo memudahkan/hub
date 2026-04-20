@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>404 - M2D Link Hub</title>
+  <meta name="description" content="Halaman tidak ditemukan di M2D Link Hub.">
+  <meta name="robots" content="noindex, follow">
+  <link rel="canonical" href="https://hub.memudahkan.com/404.html">
+
+  <link rel="icon" href="/assets/favicon/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon/favicon-48x48.png">
+  <link rel="apple-touch-icon" href="/assets/favicon/apple-touch-icon.png">
+  <meta name="theme-color" content="#0f1316">
+
+  <style>
+    :root {
+      --bg: #0b0f12;
+      --panel: #11161b;
+      --line: #24303a;
+      --text: #d7e2ea;
+      --muted: #8ea1af;
+      --green: #7ee787;
+      --green-2: #9ff5a7;
+      --red: #ff7b72;
+      --yellow: #e3b341;
+      --blue: #79c0ff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 20px;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(circle at top, rgba(121,192,255,0.08), transparent 35%),
+        radial-gradient(circle at bottom, rgba(126,231,135,0.07), transparent 35%),
+        var(--bg);
+      color: var(--text);
+      font: 15px/1.65 ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    }
+
+    .terminal {
+      width: 100%;
+      max-width: 860px;
+      background: rgba(17, 22, 27, 0.94);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 20px 70px rgba(0, 0, 0, 0.45);
+    }
+
+    .terminal-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--line);
+      background: #0f1419;
+    }
+
+    .dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+    }
+
+    .dot.red { background: #ff5f56; }
+    .dot.yellow { background: #ffbd2e; }
+    .dot.green { background: #27c93f; }
+
+    .terminal-title {
+      margin-left: 10px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .screen {
+      padding: 22px 20px 18px;
+    }
+
+    .line {
+      margin: 0 0 10px;
+      word-break: break-word;
+    }
+
+    .prompt {
+      color: var(--green);
+    }
+
+    .host {
+      color: var(--blue);
+    }
+
+    .path {
+      color: var(--yellow);
+    }
+
+    .error {
+      color: var(--red);
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .big {
+      margin: 6px 0 16px;
+      font-size: clamp(1.2rem, 2vw, 1.5rem);
+      color: var(--green-2);
+    }
+
+    .cmd-list {
+      display: grid;
+      gap: 10px;
+      margin: 18px 0 0;
+    }
+
+    .cmd {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #0d1217;
+      text-decoration: none;
+      color: var(--text);
+      transition: border-color .15s ease, transform .15s ease, background .15s ease;
+    }
+
+    .cmd:hover {
+      border-color: var(--green);
+      background: #10171d;
+      transform: translateY(-1px);
+    }
+
+    .cmd code {
+      color: var(--green-2);
+      font-size: 0.96rem;
+    }
+
+    .cmd span {
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .footer-line {
+      margin-top: 18px;
+      padding-top: 14px;
+      border-top: 1px dashed var(--line);
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .blink {
+      display: inline-block;
+      width: 10px;
+      height: 1.1em;
+      vertical-align: -2px;
+      background: var(--green);
+      animation: blink 1s step-end infinite;
+    }
+
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+
+    @media (max-width: 560px) {
+      .screen {
+        padding: 18px 16px 16px;
+      }
+      .cmd {
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="terminal" aria-label="Terminal 404">
+    <div class="terminal-bar">
+      <span class="dot red"></span>
+      <span class="dot yellow"></span>
+      <span class="dot green"></span>
+      <div class="terminal-title">hub.memudahkan.com — shell</div>
+    </div>
+
+    <section class="screen">
+      <p class="line">
+        <span class="prompt">visitor@hub</span>:<span class="path">~</span>$ open
+        <span id="missing-path">/</span>
+      </p>
+
+      <p class="line error">error: page not found (404)</p>
+      <p class="line big">Halaman yang kamu cari tidak ditemukan.</p>
+      <p class="line muted">Mungkin URL salah, halamannya dipindah, atau memang belum dibuat.</p>
+
+      <p class="line">
+        <span class="prompt">system</span>: saran perintah yang tersedia:
+      </p>
+
+      <div class="cmd-list">
+        <a class="cmd" href="/">
+          <code>cd /</code>
+          <span>Kembali ke beranda hub</span>
+        </a>
+
+        <a class="cmd" href="/emulator/">
+          <code>open /emulator/</code>
+          <span>Buka halaman emulator</span>
+        </a>
+
+        <a class="cmd" href="javascript:history.back()">
+          <code>history -1</code>
+          <span>Kembali ke halaman sebelumnya</span>
+        </a>
+      </div>
+
+      <div class="footer-line">
+        <span class="prompt">visitor@hub</span>:<span class="path">~</span>$ _
+        <span class="blink" aria-hidden="true"></span>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const path = window.location.pathname || "/";
+    document.getElementById("missing-path").textContent = path;
+  </script>
+</body>
+</html>
