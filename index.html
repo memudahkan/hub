@@ -23,30 +23,26 @@
   <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon/favicon-48x48.png">
   <link rel="apple-touch-icon" href="/assets/favicon/apple-touch-icon.png">
   <meta name="theme-color" content="#0f1316">
-  <link rel="stylesheet" href="hub.css" />
+  <link rel="stylesheet" href="/assets/css/shared.css" />
+  <link rel="stylesheet" href="/assets/css/home.css" />
 </head>
-<body>
+<body class="page page-home">
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <header class="site-header">
+    <header class="site-header">
     <div class="container topbar">
-      <a class="brand" href="#" aria-label="Link Hub home">
+      <a class="brand" href="/" aria-label="M2D Link Hub home">
         <span class="brand-mark" aria-hidden="true">L</span>
-        <span>Link Hub</span>
+        <span>M2D Link Hub</span>
       </a>
 
       <nav class="desktop-nav" aria-label="Primary navigation">
-        <a href="#">Categories</a>
-        <a href="#">Resources</a>
-        <a href="#">About</a>
+        <a href="#categories">Kategori</a>
+        <a href="/emulator/">Emulator</a>
+        <a href="#about">Tentang</a>
       </nav>
 
-      <form class="desktop-search" role="search">
-        <label class="sr-only" for="desktop-search-input">Search</label>
-        <input id="desktop-search-input" type="search" placeholder="Search links..." />
-      </form>
-
-      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open navigation menu">
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Buka menu navigasi">
         <span></span>
         <span></span>
         <span></span>
@@ -55,14 +51,10 @@
 
     <div class="container mobile-menu-shell">
       <div class="mobile-menu" id="mobile-menu">
-        <form class="mobile-search" role="search">
-          <label class="sr-only" for="mobile-search-input">Search</label>
-          <input id="mobile-search-input" type="search" placeholder="Search links..." />
-        </form>
         <nav class="mobile-nav" aria-label="Mobile navigation">
-          <a href="#">Categories</a>
-          <a href="#">Resources</a>
-          <a href="#">About</a>
+          <a href="#categories">Kategori</a>
+          <a href="/emulator/">Emulator</a>
+          <a href="#about">Tentang</a>
         </nav>
       </div>
     </div>
@@ -80,7 +72,7 @@
 <section class="section" id="categories">
   <div class="container">
     <div class="category-grid">
-      <a class="category-card" href="/emulator">
+      <a class="category-card" href="/emulator/">
         <span class="category-emoji" aria-hidden="true">🕹️</span>
         <strong>Emulator</strong>
         <span>Unduh game emulator dari sumber yang aman dan terpercaya.</span>
@@ -138,6 +130,16 @@
   </div>
 </section>
     
+
+    <section class="section muted-section" id="about">
+      <div class="container">
+        <div class="about-box">
+          <h2>Tentang hub ini</h2>
+          <p>Kumpulan link valid, bersih, dan aman untuk membantu menemukan aplikasi, tools, dan panduan dari sumber yang lebih jelas.</p>
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <a class="back-top-floating" href="#top" aria-label="Back to top">🔝</a>
