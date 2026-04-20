@@ -23,9 +23,10 @@
   <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon/favicon-48x48.png">
   <link rel="apple-touch-icon" href="/assets/favicon/apple-touch-icon.png">
   <meta name="theme-color" content="#0f1316">
-  <link rel="stylesheet" href="emulator.css" />
+  <link rel="stylesheet" href="/assets/css/shared.css" />
+  <link rel="stylesheet" href="/assets/css/emulator.css" />
 </head>
-<body>
+<body class="page page-emulator">
   <a class="skip-link" href="#main">Skip to content</a>
 
   <header class="site-header">
@@ -720,23 +721,25 @@
       menu.classList.remove('is-open');
     };
 
-    const closeMobileSearch = () => {
-  if (!searchToggle || !searchBar) return;
+    const closeMobileSearch = ({ clear = false } = {}) => {
+      if (!searchToggle || !searchBar) return;
 
-  searchToggle.setAttribute('aria-expanded', 'false');
-  searchBar.classList.remove('is-open');
-  body.classList.remove('mobile-search-open');
+      searchToggle.setAttribute('aria-expanded', 'false');
+      searchBar.classList.remove('is-open');
+      body.classList.remove('mobile-search-open');
 
-  if (desktopSearchInput) {
-    desktopSearchInput.value = '';
-  }
+      if (clear) {
+        if (desktopSearchInput) {
+          desktopSearchInput.value = '';
+        }
 
-  if (mobileSearchInput) {
-    mobileSearchInput.value = '';
-  }
+        if (mobileSearchInput) {
+          mobileSearchInput.value = '';
+        }
 
-  runSearch('');
-};
+        runSearch('');
+      }
+    };
 
     const lockHeaderForAnchor = () => {
       if (!siteHeader) return;
@@ -817,7 +820,7 @@
 
     if (searchClose) {
       searchClose.addEventListener('click', () => {
-        closeMobileSearch();
+        closeMobileSearch({ clear: true });
         if (mobileSearchInput) {
           mobileSearchInput.blur();
         }
@@ -841,6 +844,17 @@
         }
       });
     });
+
+    if (menu) {
+      menu.querySelectorAll('a').forEach((link) => {
+        link.addEventListener('click', () => {
+          closeMobileMenu();
+          if (siteHeader) {
+            siteHeader.classList.remove('is-hidden');
+          }
+        });
+      });
+    }
 
     const updateBackTop = () => {
       backTops.forEach(btn => {
