@@ -173,6 +173,47 @@ input, button { font: inherit; }
   background: var(--surface);
 }
 
+
+.icon-btn {
+  width: 42px;
+  height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--surface-2) 60%, transparent);
+  color: var(--text);
+  cursor: pointer;
+  transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease, transform 0.18s ease, opacity 0.18s ease;
+}
+
+.icon-btn:hover,
+.icon-btn:focus-visible {
+  background: color-mix(in srgb, var(--surface-2) 88%, transparent);
+}
+
+.icon-btn:focus-visible {
+  outline: none;
+  border-color: color-mix(in srgb, var(--accent) 55%, var(--line));
+}
+
+.icon-btn:active {
+  transform: translateY(1px);
+}
+
+.icon-btn .icon,
+.menu-toggle .icon {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+
 .menu-toggle {
   display: none;
   flex-direction: column;
@@ -186,6 +227,10 @@ input, button { font: inherit; }
   background: color-mix(in srgb, var(--surface-2) 60%, transparent);
   color: var(--text);
   cursor: pointer;
+}
+
+.menu-toggle.icon-btn {
+  gap: 0;
 }
 
 .menu-toggle span {
