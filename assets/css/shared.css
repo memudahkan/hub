@@ -393,18 +393,23 @@ input, button { font: inherit; }
 }
 
 .site-footer {
-  margin-top: 3rem;
-  border-top: 1px solid var(--border-color);
+  margin-top: 72px;
+  border-top: 1px solid var(--line);
 }
 
 .footer-inner {
-  padding: 1.25rem 0 2rem;
-  color: var(--text-muted);
+  padding: 36px 0 44px;
+  text-align: center;
+  color: var(--muted);
   font-size: 0.95rem;
 }
 
+.footer-inner p {
+  margin: 0;
+}
+
 .footer-inner p + p {
-  margin-top: 0.35rem;
+  margin-top: 8px;
 }
 
 @media (max-width: 640px) {
