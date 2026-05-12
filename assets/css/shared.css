@@ -401,7 +401,7 @@ input, button { font: inherit; }
   padding: 36px 0 44px;
   text-align: center;
   color: var(--muted);
-  font-size: 0.95rem;
+  font-size: 14px;
 }
 
 .footer-inner p {
