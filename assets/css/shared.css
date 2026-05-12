@@ -393,7 +393,7 @@ input, button { font: inherit; }
 }
 
 .site-footer {
-  margin-top: 0;
+  margin-top: 10px;
   border-top: 1px solid var(--line);
 }
 
