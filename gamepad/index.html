@@ -260,22 +260,6 @@
     runFilterSort();
     updateHeader();
     window.addEventListener('scroll', onScroll, { passive: true });
-
-  const chips = document.getElementById('filter-chips');
-  const sort = document.getElementById('sort-select');
-  const toolbar = sort.parentElement;
-  const results = document.getElementById('results-note');
-
-  function moveSort() {
-    if (window.innerWidth <= 720) {
-      chips.appendChild(sort);
-    } else {
-      toolbar.insertBefore(sort, results);
-    }
-  }
-
-  moveSort();
-  window.addEventListener('resize', moveSort);
   </script>
 </body>
 </html>
