@@ -260,7 +260,15 @@
 }
 
 .mobile-toolbar-panel {
-  display: none;
+  display: block;
+}
+
+.mobile-toolbar-panel .toolbar {
+  display: grid;
+  grid-template-columns: minmax(0,1fr) auto auto;
+  gap: .6rem;
+  align-items: center;
+  margin: 0 0 .9rem;
 }
 
 @media (max-width: 720px) {
