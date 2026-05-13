@@ -1,0 +1,87 @@
+/* Gamepad page styles not already covered by shared.css */
+
+/* Page-specific styles for Gamepad Hub; shared layout/header/tokens stay in shared.css */
+
+.page-gamepad .top-actions { display: flex; align-items: center; gap: 8px; margin-left: 0; }
+
+.page-gamepad .action:active { transform: translateY(1px); }
+
+.page-gamepad .hero {
+      padding: 34px 0 14px; border-bottom: 1px solid var(--line); margin-bottom: .9rem;
+    }
+
+.page-gamepad .kicker {
+      display: inline-block; color: var(--accent); background: var(--accent-soft);
+      border-radius: var(--radius-sm); padding: 6px 10px; font-size: .82rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
+    }
+
+.page-gamepad h1 { margin: .82rem 0 .55rem; font-size: clamp(1.65rem,4vw,2.25rem); line-height: 1.06; letter-spacing: -.04em; max-width: 14ch; }
+
+.page-gamepad .hero p { margin: 0; max-width: 58ch; color: var(--muted); }
+
+.page-gamepad .toolbar {
+      display: grid; grid-template-columns: minmax(0,1fr) auto auto; gap: .6rem; align-items: center;
+      margin: 0 0 .9rem;
+    }
+
+.page-gamepad .results-note { color: var(--muted); font-size: .84rem; line-height: 30px; }
+
+.page-gamepad .sort-select {
+      min-height: 30px; padding: 0 30px 0 10px; border-radius: var(--radius-sm); background: color-mix(in srgb, var(--surface-2) 92%, transparent); border: 1px solid var(--line);
+      color: var(--muted); font-size: .84rem; font-weight: 700;
+      appearance: none; -webkit-appearance: none; -moz-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%235f7183'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 8px center; background-size: 16px;
+    }
+
+.page-gamepad .sort-select:focus {
+      outline: none;
+      border-color: color-mix(in srgb, var(--accent) 55%, var(--line));
+      background-color: color-mix(in srgb, var(--surface-2) 100%, transparent);
+      color: var(--text);
+    }
+
+.page-gamepad .chips { display: flex; gap: .45rem; flex-wrap: wrap; }
+
+.page-gamepad .chip {
+      min-height: 30px; padding: 0 10px; border-radius: var(--radius-sm); border: 1px solid var(--line);
+      background: color-mix(in srgb, var(--surface-2) 92%, transparent); color: var(--muted); font-size: .84rem; font-weight: 700;
+    }
+
+.page-gamepad .chip.active { background: var(--accent-soft); color: var(--accent); border-color: transparent; }
+
+.page-gamepad .list { display: grid; gap: .75rem; }
+
+.page-gamepad .section-title { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin: .1rem 0 0; padding: .1rem 0; }
+
+.page-gamepad .section-title h2 { margin: 0; font-size: 1.02rem; letter-spacing: -.02em; }
+
+.page-gamepad .section-title span { color: var(--muted); font-size: .9rem; }
+
+.page-gamepad .entry {
+      display: grid; grid-template-columns: 150px minmax(0,1fr); gap: .95rem; border: 1px solid var(--border);
+      background: var(--surface); border-radius: var(--radius); padding: .85rem; box-shadow: var(--shadow); align-items: start;
+    }
+
+.page-gamepad .thumb {
+      width: 150px; aspect-ratio: 1 / 1; border-radius: var(--radius-sm); border: 1px solid var(--border);
+      background: linear-gradient(160deg, var(--surface-2), color-mix(in srgb, var(--accent-soft) 40%, var(--surface)));
+      display: block; overflow: hidden;
+    }
+
+.page-gamepad .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.page-gamepad .thumb-white { background: #fff; }
+
+.page-gamepad .thumb-white img { object-fit: contain; background: #fff; }
+
+.page-gamepad .price {
+      flex: 0 0 auto; font-size: .86rem; font-weight: 800; color: var(--accent);
+      background: var(--accent-soft); padding: .24rem .52rem; border-radius: 8px;
+    }
+
+.page-gamepad .meta { margin: .34rem 0 0; color: var(--muted); font-size: .84rem; }
+
+.page-gamepad .empty {
+      display: none; padding: .9rem; border: 1px dashed var(--border); border-radius: var(--radius); color: var(--muted); background: var(--surface);
+    }
