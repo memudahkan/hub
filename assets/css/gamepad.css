@@ -220,6 +220,7 @@
     @media (max-width: 720px) {
       .top-actions { display: flex; }
       .search-toggle { display: inline-flex; }
+      .topbar {padding:0;}
     }
     @media (max-width: 720px) {
       .desktop-search { display: none; }
@@ -233,7 +234,7 @@
       .entry { grid-template-columns: 1fr; gap: .75rem; }
       .thumb { width: 100%; aspect-ratio: 16 / 10; }
       .links { gap: .45rem; }
-      .topbar-inner { padding: 12px 0; }
+      .topbar-inner { padding: 16px 0; }
       .brand { font-size: 1rem; }
       .entry-head { display: block; }
       .price { display: inline-flex; margin-top: .4rem; }
