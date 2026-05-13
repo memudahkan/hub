@@ -221,6 +221,11 @@
       .top-actions { display: flex; }
       .search-toggle { display: inline-flex; }
       .topbar {padding:0;}
+      .sort-select {
+        width: auto;
+        max-width: 100%;
+        justify-self: start;
+      }
     }
     @media (max-width: 720px) {
       .desktop-search { display: none; }
