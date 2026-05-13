@@ -3,7 +3,6 @@
       --bg: #f5f7fb;
       --surface: #ffffff;
       --surface-2: #f0f4f8;
-      --line: rgba(24, 39, 56, 0.12);
       --border: var(--line);
       --text: #15202b;
       --muted: #5f7183;
@@ -81,7 +80,6 @@
     .topbar-inner {
       position: relative;
       display: flex; justify-content: space-between; align-items: center; gap: 16px;
-      padding: 16px 0;
     }
     .brand {
       display: inline-flex; align-items: center; gap: 10px; min-width: 0; flex: 0 0 auto;
