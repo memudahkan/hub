@@ -29,8 +29,7 @@
 <body class="page-emulator">
   <input type="checkbox" id="mobile-panel-toggle" class="mobile-panel-toggle" hidden>
   <header class="topbar site-header">
-    <div class="wrap topbar-shell">
-      <div class="topbar-inner">
+    <div class="wrap topbar-inner">
       <a class="brand" href="#" aria-label="M2D Link Hub home">
         <span class="brand-mark" aria-hidden="true">L</span>
         <span>Link Hub</span>
@@ -42,7 +41,7 @@
 
       <form class="mobile-searchbar" id="mobile-searchbar" role="search">
         <input id="mobile-search-input" type="search" placeholder="Cari gamepad..." autocomplete="off">
-        <button class="action search-close" id="search-close" type="button" aria-label="Tutup pencarian">
+        <button class="action search-close" style="display:none" id="search-close" type="button" aria-label="Tutup pencarian">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18"></path><path d="M6 6l12 12"></path></svg>
         </button>
       </form>
@@ -56,10 +55,15 @@
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16"></path><path d="M4 12h16"></path><path d="M4 17h16"></path></svg>
         </label>
       </div>
-      </div>
+    </div>
+  </header>
 
-      <div class="mobile-toolbar-panel">
-
+  <main class="wrap">
+    <section class="hero" id="gamepad">
+      <span class="kicker">Preview terintegrasi</span>
+      <h1>Koleksi Gamepad M2D</h1>
+      <p>Search mengikuti pola M2D Link Hub: di desktop tampil sebagai search box, sedangkan di mobile hanya muncul sebagai ikon yang membuka field pencarian di header.</p>
+    </section>
 
     <section class="toolbar" aria-label="Toolbar filter">
       <div class="chips" id="filter-chips">
@@ -78,17 +82,6 @@
       </select>
       <div class="results-note" id="results-note">6 item</div>
     </section>
-      </div>
-    </div>
-  </header>
-
-  <main class="wrap">
-    <section class="hero" id="gamepad">
-      <span class="kicker">Preview terintegrasi</span>
-      <h1>Koleksi Gamepad M2D</h1>
-      <p>Search mengikuti pola M2D Link Hub: di desktop tampil sebagai search box, sedangkan di mobile hanya muncul sebagai ikon yang membuka field pencarian di header.</p>
-    </section>
-
 
     <section class="list" id="product-list">
       <div class="section-title">
