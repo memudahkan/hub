@@ -8,13 +8,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/css/shared.css">
   <link rel="stylesheet" href="/assets/css/gamepad.css">
-</head>
-<body class="page page-gamepad">
-  <header class="site-header">
-    <div class="container topbar">
-      <a class="brand" href="/" aria-label="M2D Link Hub home">
+ </head>
+<body class="page-emulator">
+  <header class="topbar site-header">
+    <div class="wrap topbar-inner">
+      <a class="brand" href="#" aria-label="M2D Link Hub home">
         <span class="brand-mark" aria-hidden="true">L</span>
         <span>Link Hub</span>
       </a>
@@ -25,13 +24,13 @@
 
       <form class="mobile-searchbar" id="mobile-searchbar" role="search">
         <input id="mobile-search-input" type="search" placeholder="Cari gamepad..." autocomplete="off">
-        <button class="icon-btn search-close" style="display:none" id="search-close" type="button" aria-label="Tutup pencarian">
+        <button class="action search-close" style="display:none" id="search-close" type="button" aria-label="Tutup pencarian">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18"></path><path d="M6 6l12 12"></path></svg>
         </button>
       </form>
 
       <div class="top-actions" aria-label="Aksi header">
-        <button class="icon-btn search-toggle" id="search-toggle" type="button" aria-label="Buka pencarian" aria-expanded="false">
+        <button class="action search-toggle" id="search-toggle" type="button" aria-label="Buka pencarian" aria-expanded="false">
           <svg class="icon-search" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6"></circle><path d="M20 20l-4.35-4.35"></path></svg>
           <svg class="icon-close" viewBox="0 0 24 24" aria-hidden="true" style="display:none"><path d="M18 6L6 18"></path><path d="M6 6l12 12"></path></svg>
         </button>
@@ -39,7 +38,7 @@
     </div>
   </header>
 
-  <main class="container">
+  <main class="wrap">
     <section class="hero" id="gamepad">
       <span class="kicker">Preview terintegrasi</span>
       <h1>Daftar gamepad dengan search, sort, dan filter ringan.</h1>
@@ -104,8 +103,9 @@
     <div class="empty" id="empty-state">Tidak ada item yang cocok dengan pencarian atau filter saat ini.</div>
     <div class="footer-note">Dibuat pelan-pelan, dirapikan seperlunya.</div>
   </main>
+
   <script>
-const body = document.body;
+    const body = document.body;
     const desktopSearch = document.getElementById('desktop-search-input');
     const mobileSearch = document.getElementById('mobile-search-input');
     const searchToggle = document.getElementById('search-toggle');
