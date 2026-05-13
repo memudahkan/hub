@@ -41,7 +41,7 @@
 
       <form class="mobile-searchbar" id="mobile-searchbar" role="search">
         <input id="mobile-search-input" type="search" placeholder="Cari gamepad..." autocomplete="off">
-        <button class="action search-close" style="display:none" id="search-close" type="button" aria-label="Tutup pencarian">
+        <button class="action search-close" id="search-close" type="button" aria-label="Tutup pencarian">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18"></path><path d="M6 6l12 12"></path></svg>
         </button>
       </form>
@@ -56,6 +56,27 @@
         </label>
       </div>
     </div>
+  <div class="mobile-toolbar-panel" id="mobile-toolbar-panel">
+    <div class="wrap mobile-toolbar-inner">
+      <section class="mobile-toolbar" aria-label="Toolbar filter mobile">
+        <div class="chips mobile-chips" id="mobile-filter-chips">
+          <button class="chip active" type="button" data-filter="all">All</button>
+          <button class="chip" type="button" data-filter="bluetooth">Bluetooth</button>
+          <button class="chip" type="button" data-filter="wired">Wired</button>
+          <button class="chip" type="button" data-filter="hall">Hall Effect</button>
+          <button class="chip" type="button" data-filter="recommended">Recommended</button>
+        </div>
+        <select id="mobile-sort-select" class="sort-select" aria-label="Urutkan item mobile">
+          <option value="default">Urutkan: Default</option>
+          <option value="price-asc">Harga termurah</option>
+          <option value="price-desc">Harga tertinggi</option>
+          <option value="az">Nama A-Z</option>
+          <option value="za">Nama Z-A</option>
+        </select>
+        <div class="results-note" id="mobile-results-note">6 item</div>
+      </section>
+    </div>
+  </div>
   </header>
 
   <main class="wrap">
@@ -135,14 +156,20 @@
     const mobileSearch = document.getElementById('mobile-search-input');
     const searchToggle = document.getElementById('search-toggle');
     const sortSelect = document.getElementById('sort-select');
+    const mobileSortSelect = document.getElementById('mobile-sort-select');
     const mobileSearchbar = document.getElementById('mobile-searchbar');
     const searchClose = document.getElementById('search-close');
     const siteHeader = document.querySelector('.site-header');
+    const toolbar = document.querySelector('.toolbar');
+    const mobileToolbarPanel = document.getElementById('mobile-toolbar-panel');
+    const mobilePanelToggle = document.getElementById('mobile-panel-toggle');
     const resultsNote = document.getElementById('results-note');
+    const mobileResultsNote = document.getElementById('mobile-results-note');
     const productList = document.getElementById('product-list');
     const emptyState = document.getElementById('empty-state');
     const entries = Array.from(productList.querySelectorAll('.entry'));
-    const chips = Array.from(document.querySelectorAll('.chip'));
+    const desktopChips = Array.from(document.querySelectorAll('.toolbar .chip'));
+    const mobileChips = Array.from(document.querySelectorAll('.mobile-toolbar .chip'));
     let activeFilter = 'all';
     let query = '';
 
@@ -173,6 +200,17 @@
       return arr;
     };
 
+    const syncActiveChips = () => {
+      [...desktopChips, ...mobileChips].forEach(chip => {
+        chip.classList.toggle('active', chip.dataset.filter === activeFilter);
+      });
+    };
+
+    const syncSorts = (value, source) => {
+      if (source !== sortSelect) sortSelect.value = value;
+      if (source !== mobileSortSelect) mobileSortSelect.value = value;
+    };
+
     const runFilterSort = () => {
       const visible = entries.filter(e => matchesFilter(e) && matchesQuery(e));
       entries.forEach(e => e.style.display = 'none');
@@ -181,18 +219,19 @@
         productList.appendChild(e);
       });
       resultsNote.textContent = `${visible.length} item`;
+      if (mobileResultsNote) mobileResultsNote.textContent = `${visible.length} item`;
       emptyState.style.display = visible.length ? 'none' : 'block';
+      syncActiveChips();
     };
 
     desktopSearch.addEventListener('input', (e) => syncQuery(e.target.value, desktopSearch));
     mobileSearch.addEventListener('input', (e) => syncQuery(e.target.value, mobileSearch));
     document.getElementById('mobile-searchbar').addEventListener('submit', (e) => e.preventDefault());
-    sortSelect.addEventListener('change', runFilterSort);
+    sortSelect.addEventListener('change', (e) => { syncSorts(e.target.value, sortSelect); runFilterSort(); });
+    mobileSortSelect?.addEventListener('change', (e) => { syncSorts(e.target.value, mobileSortSelect); runFilterSort(); });
 
-    chips.forEach(chip => {
+    [...desktopChips, ...mobileChips].forEach(chip => {
       chip.addEventListener('click', () => {
-        chips.forEach(c => c.classList.remove('active'));
-        chip.classList.add('active');
         activeFilter = chip.dataset.filter;
         runFilterSort();
       });
@@ -224,7 +263,26 @@
       mobileSearch.blur();
     };
 
+    const closeMobilePanel = () => {
+      if (mobilePanelToggle) mobilePanelToggle.checked = false;
+      body.classList.remove('mobile-menu-floating');
+    };
+
+    const updateMobileMenuMode = () => {
+      if (window.innerWidth > 720 || !mobilePanelToggle) {
+        body.classList.remove('mobile-menu-floating');
+        return;
+      }
+      if (!mobilePanelToggle.checked) {
+        body.classList.remove('mobile-menu-floating');
+        return;
+      }
+      const toolbarTop = toolbar ? toolbar.getBoundingClientRect().top + window.scrollY : 0;
+      body.classList.toggle('mobile-menu-floating', window.scrollY > Math.max(0, toolbarTop - 90));
+    };
+
     searchToggle?.addEventListener('click', () => {
+      closeMobilePanel();
       if (body.classList.contains('mobile-search-open')) {
         closeMobileSearch();
       } else {
@@ -233,6 +291,12 @@
     });
 
     searchClose?.addEventListener('click', closeMobileSearch);
+
+    mobilePanelToggle?.addEventListener('change', () => {
+      if (mobilePanelToggle.checked) closeMobileSearch();
+      siteHeader?.classList.remove('is-hidden');
+      updateMobileMenuMode();
+    });
 
     let lastScrollY = window.scrollY;
     let ticking = false;
@@ -256,33 +320,23 @@
 
     const onScroll = () => {
       if (!ticking) {
-        window.requestAnimationFrame(updateHeader);
+        window.requestAnimationFrame(() => {
+          updateHeader();
+          updateMobileMenuMode();
+        });
         ticking = true;
       }
     };
 
-    const mobilePanelToggle = document.getElementById('mobile-panel-toggle');
-
-    const closeMobilePanel = () => {
-      if (mobilePanelToggle) mobilePanelToggle.checked = false;
-    };
-
-    searchToggle?.addEventListener('click', () => {
-      closeMobilePanel();
-    });
-
-    mobilePanelToggle?.addEventListener('change', () => {
-      if (mobilePanelToggle.checked) closeMobileSearch();
-      siteHeader?.classList.remove('is-hidden');
-    });
-
-    window.addEventListener('resize', () => {
-      if (window.innerWidth > 720) closeMobilePanel();
-    });
-
+    syncSorts(sortSelect.value, sortSelect);
     runFilterSort();
     updateHeader();
+    updateMobileMenuMode();
     window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 720) closeMobilePanel();
+      updateMobileMenuMode();
+    });
   </script>
 </body>
 </html>
