@@ -96,7 +96,7 @@
       width: min(220px, 28vw); height: 40px; padding: 0 14px;
       border: 1px solid var(--line); border-radius: var(--radius);
       background: color-mix(in srgb, var(--surface-2) 70%, transparent);
-      color: var(--text); font-size: .92rem;
+      color: var(--text); font: inherit;
     }
     .desktop-search input::placeholder, .mobile-searchbar input::placeholder { color: var(--muted); }
     .desktop-search input:focus, .mobile-searchbar input:focus {
@@ -215,6 +215,12 @@
       display: none; padding: .9rem; border: 1px dashed var(--border); border-radius: var(--radius); color: var(--muted); background: var(--surface);
     }
     .footer-note { margin-top: .95rem; padding-top: .95rem; border-top: 1px solid var(--border); color: var(--muted); font-size: .9rem; }
+    .top-actions { display: none; }
+
+    @media (max-width: 720px) {
+      .top-actions { display: flex; }
+      .search-toggle { display: inline-flex; }
+    }
     @media (max-width: 720px) {
       .desktop-search { display: none; }
       .search-toggle { display: inline-flex; }
