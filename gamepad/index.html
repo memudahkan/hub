@@ -160,15 +160,14 @@
     const mobileSearchbar = document.getElementById('mobile-searchbar');
     const searchClose = document.getElementById('search-close');
     const siteHeader = document.querySelector('.site-header');
-    const toolbar = document.querySelector('.toolbar');
-    const mobileToolbarPanel = document.getElementById('mobile-toolbar-panel');
+    const desktopToolbar = document.querySelector('main .toolbar');
     const mobilePanelToggle = document.getElementById('mobile-panel-toggle');
     const resultsNote = document.getElementById('results-note');
     const mobileResultsNote = document.getElementById('mobile-results-note');
     const productList = document.getElementById('product-list');
     const emptyState = document.getElementById('empty-state');
     const entries = Array.from(productList.querySelectorAll('.entry'));
-    const desktopChips = Array.from(document.querySelectorAll('.toolbar .chip'));
+    const desktopChips = Array.from(document.querySelectorAll('main .toolbar .chip'));
     const mobileChips = Array.from(document.querySelectorAll('.mobile-toolbar .chip'));
     let activeFilter = 'all';
     let query = '';
@@ -208,7 +207,7 @@
 
     const syncSorts = (value, source) => {
       if (source !== sortSelect) sortSelect.value = value;
-      if (source !== mobileSortSelect) mobileSortSelect.value = value;
+      if (source !== mobileSortSelect && mobileSortSelect) mobileSortSelect.value = value;
     };
 
     const runFilterSort = () => {
@@ -265,20 +264,11 @@
 
     const closeMobilePanel = () => {
       if (mobilePanelToggle) mobilePanelToggle.checked = false;
-      body.classList.remove('mobile-menu-floating');
     };
 
     const updateMobileMenuMode = () => {
-      if (window.innerWidth > 720 || !mobilePanelToggle) {
-        body.classList.remove('mobile-menu-floating');
-        return;
-      }
-      if (!mobilePanelToggle.checked) {
-        body.classList.remove('mobile-menu-floating');
-        return;
-      }
-      const toolbarTop = toolbar ? toolbar.getBoundingClientRect().top + window.scrollY : 0;
-      body.classList.toggle('mobile-menu-floating', window.scrollY > Math.max(0, toolbarTop - 90));
+      const floating = window.innerWidth <= 720 && window.scrollY > 24;
+      body.classList.toggle('mobile-menu-floating-source', floating);
     };
 
     searchToggle?.addEventListener('click', () => {
@@ -323,6 +313,7 @@
         window.requestAnimationFrame(() => {
           updateHeader();
           updateMobileMenuMode();
+          ticking = false;
         });
         ticking = true;
       }
