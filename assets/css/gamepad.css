@@ -227,3 +227,56 @@
     aspect-ratio: 16 / 10;
   }
 }
+
+
+.page-gamepad .chip,
+.page-gamepad .sort-select,
+.page-gamepad .icon-btn,
+.page-gamepad .market,
+.page-gamepad .more-btn {
+  cursor: pointer;
+}
+
+.page-gamepad .entry-main {
+  min-width: 0;
+}
+
+.page-gamepad .entry-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.page-gamepad .entry-head h3 {
+  margin: 0;
+  font-size: 1.06rem;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+
+.page-gamepad .entry-main p {
+  margin: 10px 0 0;
+  color: var(--text);
+}
+
+.page-gamepad .price {
+  white-space: nowrap;
+}
+
+.page-gamepad .meta {
+  margin: 0;
+}
+
+@media (max-width: 640px) {
+  .page-gamepad .entry-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .page-gamepad .price {
+    white-space: normal;
+  }
+}
