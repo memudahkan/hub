@@ -357,3 +357,38 @@
     max-height: 280px;
   }
 }
+
+
+@media (max-width: 720px) {
+  .topbar {
+    transition: transform 0.24s ease, background 0.2s ease, border-color 0.2s ease;
+  }
+
+  #mobile-panel-toggle:checked ~ header.topbar {
+    border-bottom-color: transparent;
+    background: color-mix(in srgb, var(--surface) 88%, transparent);
+  }
+
+  .toolbar {
+    gap: .65rem;
+  }
+
+  #mobile-panel-toggle:checked ~ main .toolbar {
+    max-height: 260px;
+    margin: 0 0 .9rem;
+    padding: .75rem 0 .9rem;
+    opacity: 1;
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    border-radius: 0;
+    background: color-mix(in srgb, var(--surface) 88%, transparent);
+    box-shadow: none;
+  }
+}
+
+@media (max-width: 640px) {
+  #mobile-panel-toggle:checked ~ main .toolbar {
+    max-height: 280px;
+    padding: .7rem 0 .85rem;
+  }
+}
