@@ -283,7 +283,48 @@
     fill: none;
   }
 
-  .toolbar {
+  .desktop-search {
+    display: none;
+  }
+
+  main.wrap {
+    display: flex;
+    flex-direction: column;
+    padding-top: 0;
+  }
+
+  main .toolbar {
+    order: -1;
+    width: 100vw;
+    margin: 0 calc(50% - 50vw);
+    padding: 0 16px;
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: .7rem;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    transition: max-height .24s ease, opacity .18s ease, padding .18s ease, border-color .18s ease;
+  }
+
+  body:not(.mobile-menu-floating-source) #mobile-panel-toggle:checked ~ header.topbar {
+    border-bottom-color: transparent;
+  }
+
+  body:not(.mobile-menu-floating-source) #mobile-panel-toggle:checked ~ main .toolbar {
+    max-height: 300px;
+    padding: 8px 16px 16px;
+    opacity: 1;
+    border-bottom: 1px solid var(--line);
+    background: color-mix(in srgb, var(--surface) 88%, transparent);
+  }
+
+  body.mobile-menu-floating-source main .toolbar {
     display: none;
   }
 
@@ -325,22 +366,24 @@
     justify-self: stretch;
   }
 
-  .mobile-toolbar .results-note {
+  .mobile-toolbar .results-note,
+  main .toolbar .results-note {
     line-height: 1.4;
   }
 
-  #mobile-panel-toggle:checked ~ header .mobile-toolbar-panel {
-    max-height: 280px;
+  body.mobile-menu-floating-source #mobile-panel-toggle:checked ~ header .mobile-toolbar-panel {
+    max-height: 320px;
     opacity: 1;
     border-bottom: 1px solid var(--line);
-  }
-
-  body.mobile-menu-floating #mobile-panel-toggle:checked ~ header .mobile-toolbar-panel {
     position: absolute;
     top: 100%;
     left: 0;
     right: 0;
     z-index: 11;
+  }
+
+  body:not(.mobile-menu-floating-source) header .mobile-toolbar-panel {
+    display: none;
   }
 
   .mobile-searchbar {
@@ -373,16 +416,18 @@
 }
 
 @media (max-width: 640px) {
+  main .toolbar {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  body:not(.mobile-menu-floating-source) #mobile-panel-toggle:checked ~ main .toolbar {
+    max-height: 320px;
+    padding: 8px 12px 14px;
+  }
+
   .mobile-toolbar-inner {
     width: min(calc(100% - 24px), var(--wrap));
-  }
-
-  #mobile-panel-toggle:checked ~ header .mobile-toolbar-panel {
-    max-height: 320px;
-  }
-
-  .mobile-toolbar {
-    padding: 8px 0 14px;
   }
 
   .mobile-searchbar {
@@ -391,67 +436,5 @@
 
   body.mobile-search-open .mobile-searchbar {
     width: calc(100% - 96px);
-  }
-}
-
-
-@media (max-width: 720px) {
-  .site-header {
-    position: sticky;
-  }
-
-  .mobile-toolbar-panel {
-    width: 100%;
-  }
-
-  #mobile-panel-toggle:checked ~ header .mobile-toolbar-panel {
-    max-height: 320px;
-    opacity: 1;
-    border-bottom: 1px solid var(--line);
-  }
-
-  body:not(.mobile-menu-floating) #mobile-panel-toggle:checked ~ header .mobile-toolbar-panel {
-    position: static;
-    background: color-mix(in srgb, var(--surface) 88%, transparent);
-  }
-
-  body:not(.mobile-menu-floating) #mobile-panel-toggle:checked ~ header .mobile-toolbar-inner {
-    width: 100%;
-    max-width: none;
-    margin: 0;
-    padding: 0 16px;
-  }
-
-  body:not(.mobile-menu-floating) #mobile-panel-toggle:checked ~ header .mobile-toolbar {
-    padding: 10px 0 16px;
-  }
-
-  body:not(.mobile-menu-floating) #mobile-panel-toggle:checked ~ header .mobile-chips {
-    justify-content: flex-start;
-    align-content: start;
-  }
-
-  body.mobile-menu-floating #mobile-panel-toggle:checked ~ header .mobile-toolbar-panel {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    z-index: 11;
-  }
-
-  body.mobile-menu-floating #mobile-panel-toggle:checked ~ header .mobile-toolbar-inner {
-    width: min(calc(100% - 32px), var(--wrap));
-    margin-inline: auto;
-    padding: 0;
-  }
-}
-
-@media (max-width: 640px) {
-  body:not(.mobile-menu-floating) #mobile-panel-toggle:checked ~ header .mobile-toolbar-inner {
-    padding: 0 12px;
-  }
-
-  body.mobile-menu-floating #mobile-panel-toggle:checked ~ header .mobile-toolbar-inner {
-    width: min(calc(100% - 24px), var(--wrap));
   }
 }
