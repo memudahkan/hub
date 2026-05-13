@@ -134,16 +134,17 @@
     .mobile-searchbar .search-close { flex: 0 0 auto; }
     .mobile-searchbar.is-open { opacity: 1; visibility: visible; pointer-events: auto; }
     body.mobile-search-open .mobile-searchbar { display: flex; }
-    main { padding: .85rem 0 2.2rem; }
+    main { padding: 0 0 2.2rem; }
     .hero {
       padding: 34px 0 14px; border-bottom: 1px solid var(--line); margin-bottom: .9rem;
     }
     .kicker {
       display: inline-block; color: var(--accent); background: var(--accent-soft);
       border-radius: var(--radius-sm); padding: 6px 10px; font-size: .82rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
+      margin: 0 0 10px;
     }
-    h1 { margin: .82rem 0 .55rem; font-size: clamp(1.65rem,4vw,2.25rem); line-height: 1.06; letter-spacing: -.04em; max-width: 14ch; }
-    .hero p { margin: 0; max-width: 58ch; color: var(--muted); }
+    h1 { margin: .82rem 0 .55rem; font-size: clamp(1.65rem,4vw,2.25rem); line-height: 1.06; letter-spacing: -.04em; max-width: 20ch; }
+    .hero p { margin: 14px 0 0; max-width: 58ch; color: var(--muted); }
     .toolbar {
       display: grid; grid-template-columns: minmax(0,1fr) auto auto; gap: .6rem; align-items: center;
       margin: 0 0 .9rem;
