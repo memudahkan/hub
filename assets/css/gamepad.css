@@ -230,7 +230,7 @@
     @media (max-width: 640px) {
       .mobile-searchbar.is-open { width: calc(100% - 50px); }
       body.mobile-search-open .brand { opacity: 0; pointer-events: none; }
-      .hero { padding-top: .85rem; padding-bottom: 1.05rem; }
+      .hero { padding-bottom: 1.05rem; }
       .entry { grid-template-columns: 1fr; gap: .75rem; }
       .thumb { width: 100%; aspect-ratio: 16 / 10; }
       .links { gap: .45rem; }
