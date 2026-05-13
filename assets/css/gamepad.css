@@ -250,21 +250,12 @@
     }
 
 
-.mobile-panel-toggle,
-.mobile-panel-backdrop,
-.menu-toggle {
+.menu-toggle,
+.mobile-panel-toggle {
   display: none;
 }
 
 @media (max-width: 720px) {
-  :root {
-    --mobile-topbar-h: 73px;
-  }
-
-  .desktop-search {
-    display: none;
-  }
-
   .top-actions {
     display: flex;
     align-items: center;
@@ -291,31 +282,36 @@
     fill: none;
   }
 
-  .toolbar {
-    position: fixed;
-    top: var(--mobile-topbar-h);
-    left: 16px;
-    right: 16px;
-    z-index: 30;
-    margin: 0;
-    padding: .9rem;
-    grid-template-columns: 1fr;
-    gap: .7rem;
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    background: color-mix(in srgb, var(--surface) 96%, transparent);
-    box-shadow: var(--shadow);
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    transform: translateY(-8px);
-    transition: opacity .18s ease, transform .18s ease, visibility .18s ease;
+  main.wrap {
+    display: flex;
+    flex-direction: column;
   }
 
-  .toolbar .chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: .45rem;
+  .toolbar {
+    order: -1;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: .7rem;
+    margin: 0;
+    max-height: 0;
+    padding: 0;
+    overflow: hidden;
+    opacity: 0;
+    border: 0;
+    border-radius: var(--radius);
+    background: transparent;
+    box-shadow: none;
+    transition: max-height .22s ease, opacity .18s ease, padding .18s ease, margin .18s ease, border-color .18s ease;
+  }
+
+  #mobile-panel-toggle:checked ~ main .toolbar {
+    max-height: 260px;
+    margin: 0 0 .9rem;
+    padding: .9rem;
+    opacity: 1;
+    border: 1px solid var(--line);
+    background: color-mix(in srgb, var(--surface) 96%, transparent);
+    box-shadow: var(--shadow);
   }
 
   .toolbar .sort-select {
@@ -328,54 +324,36 @@
     line-height: 1.4;
   }
 
-  .mobile-panel-backdrop {
-    display: block;
-    position: fixed;
-    inset: var(--mobile-topbar-h) 0 0;
-    z-index: 24;
-    background: rgba(15, 19, 22, 0.22);
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    transition: opacity .18s ease, visibility .18s ease;
+  .mobile-searchbar {
+    right: 50px;
+    z-index: 4;
   }
 
-  #mobile-panel-toggle:checked ~ .mobile-panel-backdrop {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
-  }
-
-  #mobile-panel-toggle:checked ~ main .toolbar {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
-    transform: translateY(0);
-  }
-
-  #mobile-panel-toggle:checked ~ header .menu-toggle {
-    background: color-mix(in srgb, var(--surface-2) 88%, transparent);
-    border-color: color-mix(in srgb, var(--accent) 40%, var(--line));
-  }
-
-  body.mobile-search-open .brand {
-    opacity: 0;
-    pointer-events: none;
+  .mobile-searchbar .search-close {
+    display: none;
+    flex: 0 0 auto;
   }
 
   body.mobile-search-open .mobile-searchbar {
     display: flex;
-    width: calc(100% - 100px);
+    width: calc(100% - 50px);
+  }
+
+  body.mobile-search-open .mobile-searchbar .search-close {
+    display: inline-flex !important;
+  }
+
+  body.mobile-search-open .mobile-searchbar svg {
+    display: block;
   }
 }
 
 @media (max-width: 640px) {
-  .toolbar {
-    left: 12px;
-    right: 12px;
-  }
-
   .topbar-inner {
     padding: 16px 0;
+  }
+
+  #mobile-panel-toggle:checked ~ main .toolbar {
+    max-height: 280px;
   }
 }
