@@ -170,7 +170,7 @@
     }
     .chip.active { background: var(--accent-soft); color: var(--accent); border-color: transparent; }
     .list { display: grid; gap: .75rem; }
-    .section-title { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin: .1rem 0 0; padding: .1rem 0; }
+    .section-title { display: none; align-items: center; justify-content: space-between; gap: 1rem; margin: .1rem 0 0; padding: .1rem 0; }
     .section-title h2 { margin: 0; font-size: 1.02rem; letter-spacing: -.02em; }
     .section-title span { color: var(--muted); font-size: .9rem; }
     .entry {
