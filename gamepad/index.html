@@ -27,32 +27,77 @@
   <link rel="stylesheet" href="/assets/css/gamepad.css">
  </head>
 <body class="page-emulator">
-  <header class="topbar site-header">
-    <div class="wrap topbar-inner">
-      <a class="brand" href="#" aria-label="M2D Link Hub home">
-        <span class="brand-mark" aria-hidden="true">L</span>
-        <span>Link Hub</span>
-      </a>
+<header class="topbar site-header">
+  <div class="wrap topbar-inner">
+    <a class="brand" href="#" aria-label="M2D Link Hub home">
+      <span class="brand-mark" aria-hidden="true">L</span>
+      <span>Link Hub</span>
+    </a>
 
-      <label class="desktop-search" aria-label="Cari gamepad">
-        <input id="desktop-search-input" type="search" placeholder="Cari gamepad..." autocomplete="off">
-      </label>
+    <label class="desktop-search" aria-label="Cari gamepad">
+      <input id="desktop-search-input" type="search" placeholder="Cari gamepad..." autocomplete="off">
+    </label>
 
-      <form class="mobile-searchbar" id="mobile-searchbar" role="search">
-        <input id="mobile-search-input" type="search" placeholder="Cari gamepad..." autocomplete="off">
-        <button class="action search-close" style="display:none" id="search-close" type="button" aria-label="Tutup pencarian">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18"></path><path d="M6 6l12 12"></path></svg>
-        </button>
-      </form>
+    <form class="mobile-searchbar" id="mobile-searchbar" role="search">
+      <input id="mobile-search-input" type="search" placeholder="Cari gamepad..." autocomplete="off">
+      <button class="action search-close" id="search-close" type="button" aria-label="Tutup pencarian">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M18 6L6 18"></path>
+          <path d="M6 6l12 12"></path>
+        </svg>
+      </button>
+    </form>
 
-      <div class="top-actions" aria-label="Aksi header">
-        <button class="action search-toggle" id="search-toggle" type="button" aria-label="Buka pencarian" aria-expanded="false">
-          <svg class="icon-search" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6"></circle><path d="M20 20l-4.35-4.35"></path></svg>
-          <svg class="icon-close" viewBox="0 0 24 24" aria-hidden="true" style="display:none"><path d="M18 6L6 18"></path><path d="M6 6l12 12"></path></svg>
-        </button>
-      </div>
+    <div class="top-actions" aria-label="Aksi header">
+      <button class="action search-toggle" id="search-toggle" type="button" aria-label="Buka pencarian" aria-expanded="false">
+        <svg class="icon-search" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="11" cy="11" r="6"></circle>
+          <path d="M20 20l-4.35-4.35"></path>
+        </svg>
+        <svg class="icon-close" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M18 6L6 18"></path>
+          <path d="M6 6l12 12"></path>
+        </svg>
+      </button>
+
+      <button class="action menu-toggle" id="menu-toggle" type="button" aria-label="Buka filter dan urutan" aria-expanded="false" aria-controls="mobile-menu">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 7h16"></path>
+          <path d="M7 12h13"></path>
+          <path d="M10 17h10"></path>
+        </svg>
+      </button>
     </div>
-  </header>
+  </div>
+
+  <div class="mobile-menu" id="mobile-menu">
+    <div class="wrap mobile-menu-inner">
+      <div class="mobile-menu-group">
+        <div class="mobile-menu-title">Filter</div>
+        <div class="chips mobile-chips" id="mobile-filter-chips">
+          <button class="chip active" type="button" data-filter="all">All</button>
+          <button class="chip" type="button" data-filter="bluetooth">Bluetooth</button>
+          <button class="chip" type="button" data-filter="wired">Wired</button>
+          <button class="chip" type="button" data-filter="hall">Hall Effect</button>
+          <button class="chip" type="button" data-filter="recommended">Recommended</button>
+        </div>
+      </div>
+
+      <div class="mobile-menu-group">
+        <div class="mobile-menu-title">Urutkan</div>
+        <select id="mobile-sort-select" class="sort-select" aria-label="Urutkan item">
+          <option value="default">Urutkan: Default</option>
+          <option value="price-asc">Harga termurah</option>
+          <option value="price-desc">Harga tertinggi</option>
+          <option value="az">Nama A-Z</option>
+          <option value="za">Nama Z-A</option>
+        </select>
+      </div>
+
+      <div class="results-note mobile-results-note" id="mobile-results-note">6 item</div>
+    </div>
+  </div>
+</header>
 
   <main class="wrap">
     <section class="hero" id="gamepad">
