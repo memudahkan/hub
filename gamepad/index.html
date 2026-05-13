@@ -41,7 +41,7 @@
 
       <form class="mobile-searchbar" id="mobile-searchbar" role="search">
         <input id="mobile-search-input" type="search" placeholder="Cari gamepad..." autocomplete="off">
-        <button class="action search-close" style="display:none" id="search-close" type="button" aria-label="Tutup pencarian">
+        <button class="action search-close" id="search-close" type="button" aria-label="Tutup pencarian">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18"></path><path d="M6 6l12 12"></path></svg>
         </button>
       </form>
@@ -57,8 +57,6 @@
       </div>
     </div>
   </header>
-
-  <label for="mobile-panel-toggle" class="mobile-panel-backdrop" aria-hidden="true"></label>
 
   <main class="wrap">
     <section class="hero" id="gamepad">
@@ -267,23 +265,19 @@
     updateHeader();
 
     const mobilePanelToggle = document.getElementById('mobile-panel-toggle');
-    const mobilePanelBackdrop = document.querySelector('.mobile-panel-backdrop');
 
-    if (searchToggle && mobilePanelToggle) {
-      searchToggle.addEventListener('click', () => {
-        mobilePanelToggle.checked = false;
-      });
-    }
+    searchToggle?.addEventListener('click', () => {
+      if (mobilePanelToggle) mobilePanelToggle.checked = false;
+    });
 
-    if (mobilePanelBackdrop && mobilePanelToggle) {
-      mobilePanelBackdrop.addEventListener('click', () => {
-        mobilePanelToggle.checked = false;
-      });
-    }
+    mobilePanelToggle?.addEventListener('change', () => {
+      if (mobilePanelToggle.checked) closeMobileSearch();
+    });
 
     window.addEventListener('resize', () => {
       if (window.innerWidth > 720 && mobilePanelToggle) mobilePanelToggle.checked = false;
     });
+
     window.addEventListener('scroll', onScroll, { passive: true });
   </script>
 </body>
