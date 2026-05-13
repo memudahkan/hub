@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Gamepad — Link Hub</title>
+  <meta name="description" content="Koleksi gamepad Memudahkan.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/shared.css">
+  <link rel="stylesheet" href="/assets/css/gamepad.css">
+</head>
+<body class="page page-gamepad">
+  <header class="topbar site-header">
+    <div class="wrap topbar-inner">
+      <a class="brand" href="#" aria-label="M2D Link Hub home">
+        <span class="brand-mark" aria-hidden="true">L</span>
+        <span>Link Hub</span>
+      </a>
+
+      <label class="desktop-search" aria-label="Cari gamepad">
+        <input id="desktop-search-input" type="search" placeholder="Cari gamepad..." autocomplete="off">
+      </label>
+
+      <form class="mobile-searchbar" id="mobile-searchbar" role="search">
+        <input id="mobile-search-input" type="search" placeholder="Cari gamepad..." autocomplete="off">
+        <button class="action search-close" style="display:none" id="search-close" type="button" aria-label="Tutup pencarian">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18"></path><path d="M6 6l12 12"></path></svg>
+        </button>
+      </form>
+
+      <div class="top-actions" aria-label="Aksi header">
+        <button class="action search-toggle" id="search-toggle" type="button" aria-label="Buka pencarian" aria-expanded="false">
+          <svg class="icon-search" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6"></circle><path d="M20 20l-4.35-4.35"></path></svg>
+          <svg class="icon-close" viewBox="0 0 24 24" aria-hidden="true" style="display:none"><path d="M18 6L6 18"></path><path d="M6 6l12 12"></path></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero" id="gamepad">
+      <span class="kicker">Preview terintegrasi</span>
+      <h1>Daftar gamepad dengan search, sort, dan filter ringan.</h1>
+      <p>Search mengikuti pola M2D Link Hub: di desktop tampil sebagai search box, sedangkan di mobile hanya muncul sebagai ikon yang membuka field pencarian di header.</p>
+    </section>
+
+    <section class="toolbar" aria-label="Toolbar filter">
+      <div class="chips" id="filter-chips">
+        <button class="chip active" type="button" data-filter="all">All</button>
+        <button class="chip" type="button" data-filter="bluetooth">Bluetooth</button>
+        <button class="chip" type="button" data-filter="wired">Wired</button>
+        <button class="chip" type="button" data-filter="hall">Hall Effect</button>
+        <button class="chip" type="button" data-filter="recommended">Recommended</button>
+      </div>
+      <select id="sort-select" class="sort-select" aria-label="Urutkan item">
+        <option value="default">Urutkan: Default</option>
+        <option value="price-asc">Harga termurah</option>
+        <option value="price-desc">Harga tertinggi</option>
+        <option value="az">Nama A-Z</option>
+        <option value="za">Nama Z-A</option>
+      </select>
+      <div class="results-note" id="results-note">6 item</div>
+    </section>
+
+    <section class="list" id="product-list">
+      <div class="section-title">
+        <h2>Gamepad pilihan</h2>
+        <span>Preview data</span>
+      </div>
+
+      <article class="entry" data-name="NovaPad S2" data-price="299000" data-tags="bluetooth android compact recommended">
+        <div class="thumb"><img src="https://images.pexels.com/photos/845255/pexels-photo-845255.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Game controller hitam di atas permukaan terang"></div>
+        <div class="entry-main"><div class="entry-head"><h3>NovaPad S2</h3><span class="price">Mulai Rp299 rb</span></div><div class="meta">Bluetooth / Android / Compact / Recommended</div><p>Gamepad ringkas untuk emulasi dan main santai, cocok diposisikan sebagai opsi aman untuk banyak pengguna.</p><div class="links"><a class="market shopee" href="#">Shopee</a><a class="market tokopedia" href="#">Tokopedia</a><a class="market lazada" href="#">Lazada</a><button class="more-btn" type="button" aria-expanded="false">+</button><span class="more-links"><a class="market tiktok" href="#">TikTok Shop</a><a class="market blibli" href="#">Blibli</a></span></div></div>
+      </article>
+
+      <article class="entry" data-name="Axis Pro HE" data-price="649000" data-tags="wired hall pc premium recommended">
+        <div class="thumb"><img src="https://images.pexels.com/photos/442576/pexels-photo-442576.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Game controller di samping laptop"></div>
+        <div class="entry-main"><div class="entry-head"><h3>Axis Pro HE</h3><span class="price">Mulai Rp649 rb</span></div><div class="meta">Wired / Hall Effect / PC / Recommended</div><p>Varian premium untuk yang ingin stick lebih presisi dan rasa build yang lebih mantap.</p><div class="links"><a class="market shopee" href="#">Shopee</a><a class="market tokopedia" href="#">Tokopedia</a><a class="market lazada" href="#">Lazada</a><button class="more-btn" type="button" aria-expanded="false">+</button><span class="more-links"><a class="market tiktok" href="#">TikTok Shop</a><a class="market blibli" href="#">Blibli</a></span></div></div>
+      </article>
+
+      <article class="entry" data-name="DriftZero Lite" data-price="249000" data-tags="bluetooth ios wireless budget">
+        <div class="thumb"><img src="https://images.pexels.com/photos/275033/pexels-photo-275033.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Controller gaming dengan pencahayaan biru"></div>
+        <div class="entry-main"><div class="entry-head"><h3>DriftZero Lite</h3><span class="price">Mulai Rp249 rb</span></div><div class="meta">Bluetooth / iOS / Wireless</div><p>Contoh item harga lebih ramah untuk koleksi afiliasi yang menargetkan pembelian cepat.</p><div class="links"><a class="market shopee" href="#">Shopee</a><a class="market tokopedia" href="#">Tokopedia</a><a class="market lazada" href="#">Lazada</a><button class="more-btn" type="button" aria-expanded="false">+</button><span class="more-links"><a class="market tiktok" href="#">TikTok Shop</a><a class="market blibli" href="#">Blibli</a></span></div></div>
+      </article>
+
+      <article class="entry" data-name="ClipGo Mobile" data-price="429000" data-tags="bluetooth android telescopic mobile">
+        <div class="thumb"><img src="https://images.pexels.com/photos/3165335/pexels-photo-3165335.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Controller game di meja setup gaming"></div>
+        <div class="entry-main"><div class="entry-head"><h3>ClipGo Mobile</h3><span class="price">Mulai Rp429 rb</span></div><div class="meta">Bluetooth / Android / Mobile</div><p>Bagus untuk kategori gamepad Android karena bentuk dan konteks pakainya langsung jelas.</p><div class="links"><a class="market shopee" href="#">Shopee</a><a class="market tokopedia" href="#">Tokopedia</a><a class="market lazada" href="#">Lazada</a><button class="more-btn" type="button" aria-expanded="false">+</button><span class="more-links"><a class="market tiktok" href="#">TikTok Shop</a><a class="market blibli" href="#">Blibli</a></span></div></div>
+      </article>
+
+      <article class="entry" data-name="RetroDock 8Bit" data-price="559000" data-tags="wired retro pc 2.4g">
+        <div class="thumb"><img src="https://images.pexels.com/photos/1293261/pexels-photo-1293261.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Controller putih hitam dengan latar gelap"></div>
+        <div class="entry-main"><div class="entry-head"><h3>RetroDock 8Bit</h3><span class="price">Mulai Rp559 rb</span></div><div class="meta">Wired / 2.4G / PC</div><p>Contoh item untuk pengunjung yang suka nuansa retro dan ekosistem emulasi atau handheld.</p><div class="links"><a class="market shopee" href="#">Shopee</a><a class="market tokopedia" href="#">Tokopedia</a><a class="market lazada" href="#">Lazada</a><button class="more-btn" type="button" aria-expanded="false">+</button><span class="more-links"><a class="market tiktok" href="#">TikTok Shop</a><a class="market blibli" href="#">Blibli</a></span></div></div>
+      </article>
+
+      <article class="entry" data-name="PulseLink X" data-price="479000" data-tags="bluetooth pc universal">
+        <div class="thumb thumb-white"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgnqvEps1Q5wS_E_7cxlQm4rBzveT-dFf2RCXfd8ld-nxwyWmMn1AY2bGkIjhfA8lu1qyZPjFysnbpSlqhad9PaCEU0Hnk6wu14Xec3pGXkp2z21j2D-AV-_0zv0eOOMkZQBJ-7p71vRBBZ2GYcffH-VRMnL2am3P0joUcGtESHqmo3uVq1daAelqiSO9g/s320-rw/wgp12s.jpeg" alt="PulseLink X dengan latar putih"></div>
+        <div class="entry-main"><div class="entry-head"><h3>PulseLink X</h3><span class="price">Mulai Rp479 rb</span></div><div class="meta">Bluetooth / PC / Universal</div><p>Model universal yang bisa dipakai sebagai anchor item saat daftar ingin terlihat seimbang.</p><div class="links"><a class="market shopee" href="#">Shopee</a><a class="market tokopedia" href="#">Tokopedia</a><a class="market lazada" href="#">Lazada</a><button class="more-btn" type="button" aria-expanded="false">+</button><span class="more-links"><a class="market tiktok" href="#">TikTok Shop</a><a class="market blibli" href="#">Blibli</a></span></div></div>
+      </article>
+    </section>
+
+    <div class="empty" id="empty-state">Tidak ada item yang cocok dengan pencarian atau filter saat ini.</div>
+    <div class="footer-note">Dibuat pelan-pelan, dirapikan seperlunya.</div>
+  </main>
+  <script>
+const body = document.body;
+    const desktopSearch = document.getElementById('desktop-search-input');
+    const mobileSearch = document.getElementById('mobile-search-input');
+    const searchToggle = document.getElementById('search-toggle');
+    const sortSelect = document.getElementById('sort-select');
+    const mobileSearchbar = document.getElementById('mobile-searchbar');
+    const searchClose = document.getElementById('search-close');
+    const siteHeader = document.querySelector('.site-header');
+    const resultsNote = document.getElementById('results-note');
+    const productList = document.getElementById('product-list');
+    const emptyState = document.getElementById('empty-state');
+    const entries = Array.from(productList.querySelectorAll('.entry'));
+    const chips = Array.from(document.querySelectorAll('.chip'));
+    let activeFilter = 'all';
+    let query = '';
+
+    const syncQuery = (value, source) => {
+      query = value.trim().toLowerCase();
+      if (source !== desktopSearch) desktopSearch.value = value;
+      if (source !== mobileSearch) mobileSearch.value = value;
+      runFilterSort();
+    };
+
+    const matchesFilter = (entry) => {
+      if (activeFilter === 'all') return true;
+      return (entry.dataset.tags || '').toLowerCase().includes(activeFilter);
+    };
+
+    const matchesQuery = (entry) => {
+      if (!query) return true;
+      return entry.textContent.toLowerCase().includes(query);
+    };
+
+    const applySort = (items) => {
+      const mode = sortSelect.value;
+      const arr = [...items];
+      if (mode === 'price-asc') arr.sort((a,b) => +a.dataset.price - +b.dataset.price);
+      if (mode === 'price-desc') arr.sort((a,b) => +b.dataset.price - +a.dataset.price);
+      if (mode === 'az') arr.sort((a,b) => a.dataset.name.localeCompare(b.dataset.name));
+      if (mode === 'za') arr.sort((a,b) => b.dataset.name.localeCompare(a.dataset.name));
+      return arr;
+    };
+
+    const runFilterSort = () => {
+      const visible = entries.filter(e => matchesFilter(e) && matchesQuery(e));
+      entries.forEach(e => e.style.display = 'none');
+      applySort(visible).forEach(e => {
+        e.style.display = '';
+        productList.appendChild(e);
+      });
+      resultsNote.textContent = `${visible.length} item`;
+      emptyState.style.display = visible.length ? 'none' : 'block';
+    };
+
+    desktopSearch.addEventListener('input', (e) => syncQuery(e.target.value, desktopSearch));
+    mobileSearch.addEventListener('input', (e) => syncQuery(e.target.value, mobileSearch));
+    document.getElementById('mobile-searchbar').addEventListener('submit', (e) => e.preventDefault());
+    sortSelect.addEventListener('change', runFilterSort);
+
+    chips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        chips.forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        activeFilter = chip.dataset.filter;
+        runFilterSort();
+      });
+    });
+
+    document.querySelectorAll('.more-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const more = btn.nextElementSibling;
+        const open = more.classList.toggle('is-open');
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        btn.textContent = open ? '−' : '+';
+      });
+    });
+
+    const openMobileSearch = () => {
+      body.classList.add('mobile-search-open');
+      mobileSearchbar.classList.add('is-open');
+      searchToggle.setAttribute('aria-expanded', 'true');
+      searchToggle.setAttribute('aria-label', 'Tutup pencarian');
+      siteHeader?.classList.remove('is-hidden');
+      mobileSearch.focus();
+    };
+
+    const closeMobileSearch = () => {
+      body.classList.remove('mobile-search-open');
+      mobileSearchbar.classList.remove('is-open');
+      searchToggle.setAttribute('aria-expanded', 'false');
+      searchToggle.setAttribute('aria-label', 'Buka pencarian');
+      mobileSearch.blur();
+    };
+
+    searchToggle?.addEventListener('click', () => {
+      if (body.classList.contains('mobile-search-open')) {
+        closeMobileSearch();
+      } else {
+        openMobileSearch();
+      }
+    });
+
+    searchClose?.addEventListener('click', closeMobileSearch);
+
+    let lastScrollY = window.scrollY;
+    let ticking = false;
+
+    const updateHeader = () => {
+      const currentY = window.scrollY;
+      const nearTop = currentY < 16;
+      const scrollingDown = currentY > lastScrollY;
+
+      if (body.classList.contains('mobile-search-open')) {
+        siteHeader?.classList.remove('is-hidden');
+      } else if (nearTop || !scrollingDown) {
+        siteHeader?.classList.remove('is-hidden');
+      } else {
+        siteHeader?.classList.add('is-hidden');
+      }
+
+      lastScrollY = currentY;
+      ticking = false;
+    };
+
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateHeader);
+        ticking = true;
+      }
+    };
+
+    runFilterSort();
+    updateHeader();
+    window.addEventListener('scroll', onScroll, { passive: true });
+  </script>
+</body>
+</html>
