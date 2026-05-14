@@ -365,3 +365,55 @@
     display: none;
   }
 }
+
+
+@media (max-width: 720px) {
+  .toolbar-mobile-head {
+    display: grid;
+    grid-template-columns: minmax(0,1fr) minmax(0,1fr);
+    gap: .55rem;
+    align-items: center;
+  }
+
+  .toolbar-chip-toggle,
+  .toolbar-sort-toggle {
+    position: relative;
+  }
+
+  .toolbar .chips {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .45rem;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transition: max-height .22s ease, opacity .18s ease, margin-top .18s ease;
+    margin-top: 0;
+  }
+
+  body.mobile-chips-open .toolbar .chips {
+    max-height: 180px;
+    opacity: 1;
+    pointer-events: auto;
+    margin-top: .05rem;
+  }
+
+  .toolbar-sort-panel {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .toolbar .sort-select {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    pointer-events: auto;
+  }
+}

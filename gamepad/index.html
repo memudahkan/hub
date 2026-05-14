@@ -67,7 +67,7 @@
           <span>Filter</span>
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16"></path><path d="M7 12h10"></path><path d="M10 17h4"></path></svg>
         </button>
-        <button class="toolbar-sort-toggle" id="toolbar-sort-toggle" type="button" aria-expanded="false" aria-controls="toolbar-sort-panel">
+        <button class="toolbar-sort-toggle" id="toolbar-sort-toggle" type="button" aria-label="Urutkan item">
           <span class="toolbar-sort-label" id="toolbar-sort-label">Urutkan</span>
           <span class="toolbar-sort-note" id="toolbar-sort-note">6 item</span>
         </button>
@@ -153,6 +153,7 @@
     const toolbarSortToggle = document.getElementById('toolbar-sort-toggle');
     const toolbarSortLabel = document.getElementById('toolbar-sort-label');
     const toolbarSortNote = document.getElementById('toolbar-sort-note');
+    const toolbarChipLabel = toolbarChipToggle?.querySelector('span');
     const productList = document.getElementById('product-list');
     const emptyState = document.getElementById('empty-state');
     const entries = Array.from(productList.querySelectorAll('.entry'));
@@ -195,15 +196,15 @@
         'az': 'Nama A-Z',
         'za': 'Nama Z-A'
       };
+      const activeChip = chips.find(chip => chip.classList.contains('active'));
+      if (toolbarChipLabel) toolbarChipLabel.textContent = activeChip ? activeChip.textContent.trim() : 'Filter';
       if (toolbarSortLabel) toolbarSortLabel.textContent = labels[sortSelect.value] || 'Urutkan';
       if (toolbarSortNote) toolbarSortNote.textContent = `${count} item`;
     };
 
-    const closeMobileToolbarPanels = (except = '') => {
-      if (except !== 'chips') body.classList.remove('mobile-chips-open');
-      if (except !== 'sort') body.classList.remove('mobile-sort-open');
-      toolbarChipToggle?.setAttribute('aria-expanded', body.classList.contains('mobile-chips-open') ? 'true' : 'false');
-      toolbarSortToggle?.setAttribute('aria-expanded', body.classList.contains('mobile-sort-open') ? 'true' : 'false');
+    const closeMobileToolbarPanels = () => {
+      body.classList.remove('mobile-chips-open');
+      toolbarChipToggle?.setAttribute('aria-expanded', 'false');
     };
 
     const runFilterSort = () => {
@@ -223,7 +224,6 @@
     document.getElementById('mobile-searchbar').addEventListener('submit', (e) => e.preventDefault());
     sortSelect.addEventListener('change', () => {
       runFilterSort();
-      closeMobileToolbarPanels();
     });
 
     chips.forEach(chip => {
@@ -232,7 +232,6 @@
         chip.classList.add('active');
         activeFilter = chip.dataset.filter;
         runFilterSort();
-        closeMobileToolbarPanels();
       });
     });
 
@@ -276,17 +275,14 @@
     toolbarChipToggle?.addEventListener('click', () => {
       if (window.innerWidth > 720) return;
       const willOpen = !body.classList.contains('mobile-chips-open');
-      closeMobileToolbarPanels(willOpen ? 'chips' : '');
       body.classList.toggle('mobile-chips-open', willOpen);
       toolbarChipToggle.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
     });
 
     toolbarSortToggle?.addEventListener('click', () => {
       if (window.innerWidth > 720) return;
-      const willOpen = !body.classList.contains('mobile-sort-open');
-      closeMobileToolbarPanels(willOpen ? 'sort' : '');
-      body.classList.toggle('mobile-sort-open', willOpen);
-      toolbarSortToggle.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+      sortSelect?.focus();
+      sortSelect?.click();
     });
 
     let lastScrollY = window.scrollY;
