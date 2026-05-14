@@ -67,10 +67,19 @@
           <span>Filter</span>
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16"></path><path d="M7 12h10"></path><path d="M10 17h4"></path></svg>
         </button>
-        <button class="toolbar-sort-toggle" id="toolbar-sort-toggle" type="button" aria-label="Urutkan item">
-          <span class="toolbar-sort-label" id="toolbar-sort-label">Urutkan</span>
-          <span class="toolbar-sort-note" id="toolbar-sort-note">6 item</span>
-        </button>
+        <div class="toolbar-sort-toggle-wrap">
+          <button class="toolbar-sort-toggle" id="toolbar-sort-toggle" type="button" aria-label="Urutkan item">
+            <span class="toolbar-sort-label" id="toolbar-sort-label">Urutkan</span>
+            <span class="toolbar-sort-note" id="toolbar-sort-note">6 item</span>
+          </button>
+          <select id="sort-select-mobile-proxy" class="sort-select-mobile-proxy" aria-label="Urutkan item mobile">
+            <option value="default">Urutkan: Default</option>
+            <option value="price-asc">Harga termurah</option>
+            <option value="price-desc">Harga tertinggi</option>
+            <option value="az">Nama A-Z</option>
+            <option value="za">Nama Z-A</option>
+          </select>
+        </div>
       </div>
       <div class="toolbar-desktop-row">
         <div class="chips" id="filter-chips">
@@ -151,6 +160,7 @@
     const resultsNote = document.getElementById('results-note');
     const toolbarChipToggle = document.getElementById('toolbar-chip-toggle');
     const toolbarSortToggle = document.getElementById('toolbar-sort-toggle');
+    const toolbarSortProxy = document.getElementById('sort-select-mobile-proxy');
     const toolbarSortLabel = document.getElementById('toolbar-sort-label');
     const toolbarSortNote = document.getElementById('toolbar-sort-note');
     const toolbarChipLabel = toolbarChipToggle?.querySelector('span');
@@ -200,6 +210,7 @@
       if (toolbarChipLabel) toolbarChipLabel.textContent = activeChip ? activeChip.textContent.trim() : 'Filter';
       if (toolbarSortLabel) toolbarSortLabel.textContent = labels[sortSelect.value] || 'Urutkan';
       if (toolbarSortNote) toolbarSortNote.textContent = `${count} item`;
+      if (toolbarSortProxy) toolbarSortProxy.value = sortSelect.value;
     };
 
     const closeMobileToolbarPanels = () => {
@@ -223,6 +234,12 @@
     mobileSearch.addEventListener('input', (e) => syncQuery(e.target.value, mobileSearch));
     document.getElementById('mobile-searchbar').addEventListener('submit', (e) => e.preventDefault());
     sortSelect.addEventListener('change', () => {
+      runFilterSort();
+      if (toolbarSortProxy && toolbarSortProxy.value !== sortSelect.value) toolbarSortProxy.value = sortSelect.value;
+    });
+
+    toolbarSortProxy?.addEventListener('change', (e) => {
+      sortSelect.value = e.target.value;
       runFilterSort();
     });
 
@@ -281,8 +298,8 @@
 
     toolbarSortToggle?.addEventListener('click', () => {
       if (window.innerWidth > 720) return;
-      sortSelect?.focus();
-      sortSelect?.click();
+      toolbarSortProxy?.focus();
+      toolbarSortProxy?.click();
     });
 
     let lastScrollY = window.scrollY;
