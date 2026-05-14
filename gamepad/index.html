@@ -27,7 +27,6 @@
   <link rel="stylesheet" href="/assets/css/gamepad.css">
  </head>
 <body class="page-emulator">
-  <input type="checkbox" id="mobile-panel-toggle" class="mobile-panel-toggle" hidden>
   <header class="topbar site-header">
     <div class="wrap topbar-inner">
       <a class="brand" href="#" aria-label="M2D Link Hub home">
@@ -41,7 +40,7 @@
 
       <form class="mobile-searchbar" id="mobile-searchbar" role="search">
         <input id="mobile-search-input" type="search" placeholder="Cari gamepad..." autocomplete="off">
-        <button class="action search-close" id="search-close" type="button" aria-label="Tutup pencarian">
+        <button class="action search-close" style="display:none" id="search-close" type="button" aria-label="Tutup pencarian">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18"></path><path d="M6 6l12 12"></path></svg>
         </button>
       </form>
@@ -51,9 +50,6 @@
           <svg class="icon-search" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6"></circle><path d="M20 20l-4.35-4.35"></path></svg>
           <svg class="icon-close" viewBox="0 0 24 24" aria-hidden="true" style="display:none"><path d="M18 6L6 18"></path><path d="M6 6l12 12"></path></svg>
         </button>
-        <label for="mobile-panel-toggle" class="action menu-toggle" aria-label="Buka filter dan urutan">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16"></path><path d="M4 12h16"></path><path d="M4 17h16"></path></svg>
-        </label>
       </div>
     </div>
   </header>
@@ -65,7 +61,12 @@
       <p>Search mengikuti pola M2D Link Hub: di desktop tampil sebagai search box, sedangkan di mobile hanya muncul sebagai ikon yang membuka field pencarian di header.</p>
     </section>
 
-    <section class="toolbar" aria-label="Toolbar filter">
+    <button class="toolbar-mobile-toggle" id="toolbar-mobile-toggle" type="button" aria-expanded="false" aria-controls="toolbar-main">
+      <span>Filter & urutkan</span>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5"></path></svg>
+    </button>
+
+    <section class="toolbar" id="toolbar-main" aria-label="Toolbar filter">
       <div class="chips" id="filter-chips">
         <button class="chip active" type="button" data-filter="all">All</button>
         <button class="chip" type="button" data-filter="bluetooth">Bluetooth</button>
@@ -224,14 +225,24 @@
       mobileSearch.blur();
     };
 
-    const mobilePanelToggle = document.getElementById('mobile-panel-toggle');
+    const toolbarMobileToggle = document.getElementById('toolbar-mobile-toggle');
+    const toolbarMain = document.getElementById('toolbar-main');
 
-    const closeMobilePanel = () => {
-      if (mobilePanelToggle) mobilePanelToggle.checked = false;
+    const closeMobileToolbar = () => {
+      if (window.innerWidth > 720) return;
+      body.classList.remove('mobile-toolbar-open');
+      toolbarMobileToggle?.setAttribute('aria-expanded', 'false');
+    };
+
+    const toggleMobileToolbar = () => {
+      if (window.innerWidth > 720) return;
+      const willOpen = !body.classList.contains('mobile-toolbar-open');
+      body.classList.toggle('mobile-toolbar-open', willOpen);
+      toolbarMobileToggle?.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
     };
 
     searchToggle?.addEventListener('click', () => {
-      closeMobilePanel();
+      closeMobileToolbar();
       if (body.classList.contains('mobile-search-open')) {
         closeMobileSearch();
       } else {
@@ -240,13 +251,7 @@
     });
 
     searchClose?.addEventListener('click', closeMobileSearch);
-
-    mobilePanelToggle?.addEventListener('change', () => {
-      if (mobilePanelToggle.checked) {
-        closeMobileSearch();
-        siteHeader?.classList.remove('is-hidden');
-      }
-    });
+    toolbarMobileToggle?.addEventListener('click', toggleMobileToolbar);
 
     let lastScrollY = window.scrollY;
     let ticking = false;
@@ -256,7 +261,7 @@
       const nearTop = currentY < 16;
       const scrollingDown = currentY > lastScrollY;
 
-      if (body.classList.contains('mobile-search-open') || (mobilePanelToggle && mobilePanelToggle.checked)) {
+      if (body.classList.contains('mobile-search-open')) {
         siteHeader?.classList.remove('is-hidden');
       } else if (nearTop || !scrollingDown) {
         siteHeader?.classList.remove('is-hidden');
@@ -276,7 +281,10 @@
     };
 
     window.addEventListener('resize', () => {
-      if (window.innerWidth > 720) closeMobilePanel();
+      if (window.innerWidth > 720) {
+        body.classList.remove('mobile-toolbar-open');
+        toolbarMobileToggle?.setAttribute('aria-expanded', 'false');
+      }
     });
 
     runFilterSort();
