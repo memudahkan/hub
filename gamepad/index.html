@@ -64,7 +64,7 @@
     <section class="toolbar" aria-label="Toolbar filter" id="toolbar-main">
       <div class="toolbar-mobile-head">
         <button class="toolbar-chip-toggle" id="toolbar-chip-toggle" type="button" aria-expanded="false" aria-controls="filter-chips">
-          <span>Filter</span>
+          <span class="toolbar-chip-label">Filter</span>
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16"></path><path d="M7 12h10"></path><path d="M10 17h4"></path></svg>
         </button>
         <div class="toolbar-sort-toggle-wrap">
@@ -82,7 +82,7 @@
         </div>
       </div>
       <div class="toolbar-desktop-row">
-        <div class="chips" id="filter-chips">
+        <div class="chips toolbar-chips" id="filter-chips">
           <button class="chip active" type="button" data-filter="all">All</button>
           <button class="chip" type="button" data-filter="bluetooth">Bluetooth</button>
           <button class="chip" type="button" data-filter="wired">Wired</button>
@@ -90,14 +90,14 @@
           <button class="chip" type="button" data-filter="recommended">Recommended</button>
         </div>
         <div class="toolbar-sort-panel" id="toolbar-sort-panel">
-          <select id="sort-select" class="sort-select" aria-label="Urutkan item">
+          <select id="sort-select" class="sort-select toolbar-desktop-sort" aria-label="Urutkan item">
             <option value="default">Urutkan: Default</option>
             <option value="price-asc">Harga termurah</option>
             <option value="price-desc">Harga tertinggi</option>
             <option value="az">Nama A-Z</option>
             <option value="za">Nama Z-A</option>
           </select>
-          <div class="results-note" id="results-note">6 item</div>
+          <div class="results-note toolbar-desktop-note" id="results-note">6 item</div>
         </div>
       </div>
     </section>
@@ -163,7 +163,7 @@
     const toolbarSortProxy = document.getElementById('sort-select-mobile-proxy');
     const toolbarSortLabel = document.getElementById('toolbar-sort-label');
     const toolbarSortNote = document.getElementById('toolbar-sort-note');
-    const toolbarChipLabel = toolbarChipToggle?.querySelector('span');
+    const toolbarChipLabel = document.querySelector('.toolbar-chip-label');
     const productList = document.getElementById('product-list');
     const emptyState = document.getElementById('empty-state');
     const entries = Array.from(productList.querySelectorAll('.entry'));
