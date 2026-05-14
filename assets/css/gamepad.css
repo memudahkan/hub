@@ -319,16 +319,16 @@
 }
 
 @media (max-width: 720px) {
-  .toolbar {
+  .chips {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: .45rem;
   }
 
-  .chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: .45rem;
+  .chip {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
   }
 
   .toolbar-meta {
@@ -336,16 +336,16 @@
     align-items: center;
     justify-content: space-between;
     gap: .6rem;
+    margin-top: .1rem;
   }
 
   .sort-select {
     width: auto;
     max-width: fit-content;
-    min-height: 30px;
   }
 
   .results-note {
-    line-height: 1;
     white-space: nowrap;
+    line-height: 1;
   }
 }
