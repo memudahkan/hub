@@ -251,11 +251,8 @@
 
 
 .toolbar-mobile-head,
-.toolbar-desktop-row {
-  display: contents;
-}
-
-.toolbar-sort-wrap {
+.toolbar-desktop-row,
+.toolbar-sort-panel {
   display: contents;
 }
 
@@ -266,6 +263,7 @@
 
 @media (max-width: 720px) {
   .toolbar {
+    display: grid;
     grid-template-columns: 1fr;
     gap: .55rem;
   }
@@ -289,9 +287,9 @@
     align-items: center;
     justify-content: space-between;
     gap: 10px;
+    width: 100%;
     font-size: .84rem;
     font-weight: 700;
-    width: 100%;
   }
 
   .toolbar-chip-toggle svg {
@@ -303,17 +301,6 @@
     stroke-linejoin: round;
     fill: none;
     flex: 0 0 auto;
-  }
-
-  .toolbar-sort-toggle {
-    justify-content: space-between;
-  }
-
-  .toolbar-sort-label,
-  .toolbar-sort-note {
-    display: inline-flex;
-    align-items: center;
-    min-width: 0;
   }
 
   .toolbar-sort-note {
@@ -352,7 +339,7 @@
     text-align: center;
   }
 
-  .toolbar-sort-wrap {
+  .toolbar-sort-panel {
     display: grid;
     grid-template-columns: 1fr;
     max-height: 0;
@@ -362,7 +349,7 @@
     transition: max-height .22s ease, opacity .18s ease;
   }
 
-  body.mobile-sort-open .toolbar-sort-wrap {
+  body.mobile-sort-open .toolbar-sort-panel {
     max-height: 80px;
     opacity: 1;
     pointer-events: auto;
