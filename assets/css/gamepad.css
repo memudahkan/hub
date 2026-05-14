@@ -318,34 +318,38 @@
   }
 }
 
+
 @media (max-width: 720px) {
-  .chips {
+  .toolbar {
+    grid-template-columns: 1fr auto auto;
+    align-items: center;
+    gap: .45rem .55rem;
+  }
+
+  .toolbar .chips {
+    grid-column: 1 / -1;
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: .45rem;
   }
 
-  .chip {
+  .toolbar .chip {
     width: 100%;
     justify-content: center;
     text-align: center;
   }
 
-  .toolbar-meta {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: .6rem;
-    margin-top: .1rem;
-  }
-
-  .sort-select {
+  .toolbar .sort-select {
+    grid-column: 1 / 2;
     width: auto;
-    max-width: fit-content;
+    max-width: none;
+    justify-self: start;
   }
 
-  .results-note {
+  .toolbar .results-note {
+    grid-column: 3 / 4;
+    justify-self: end;
+    line-height: 30px;
     white-space: nowrap;
-    line-height: 1;
   }
 }
