@@ -317,3 +317,35 @@
     line-height: 1.4;
   }
 }
+
+@media (max-width: 720px) {
+  .toolbar {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: .45rem;
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .45rem;
+  }
+
+  .toolbar-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .6rem;
+  }
+
+  .sort-select {
+    width: auto;
+    max-width: fit-content;
+    min-height: 30px;
+  }
+
+  .results-note {
+    line-height: 1;
+    white-space: nowrap;
+  }
+}
