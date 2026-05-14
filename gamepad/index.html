@@ -61,12 +61,7 @@
       <p>Search mengikuti pola M2D Link Hub: di desktop tampil sebagai search box, sedangkan di mobile hanya muncul sebagai ikon yang membuka field pencarian di header.</p>
     </section>
 
-    <button class="toolbar-mobile-toggle" id="toolbar-mobile-toggle" type="button" aria-expanded="false" aria-controls="toolbar-main">
-      <span>Filter & urutkan</span>
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5"></path></svg>
-    </button>
-
-    <section class="toolbar" id="toolbar-main" aria-label="Toolbar filter">
+    <section class="toolbar" aria-label="Toolbar filter">
       <div class="chips" id="filter-chips">
         <button class="chip active" type="button" data-filter="all">All</button>
         <button class="chip" type="button" data-filter="bluetooth">Bluetooth</button>
@@ -140,6 +135,10 @@
     const searchClose = document.getElementById('search-close');
     const siteHeader = document.querySelector('.site-header');
     const resultsNote = document.getElementById('results-note');
+    const toolbarChipToggle = document.getElementById('toolbar-chip-toggle');
+    const toolbarSortToggle = document.getElementById('toolbar-sort-toggle');
+    const toolbarSortLabel = document.getElementById('toolbar-sort-label');
+    const toolbarSortNote = document.getElementById('toolbar-sort-note');
     const productList = document.getElementById('product-list');
     const emptyState = document.getElementById('empty-state');
     const entries = Array.from(productList.querySelectorAll('.entry'));
@@ -174,6 +173,25 @@
       return arr;
     };
 
+    const updateToolbarMeta = (count) => {
+      const labels = {
+        'default': 'Urutkan',
+        'price-asc': 'Termurah',
+        'price-desc': 'Termahal',
+        'az': 'Nama A-Z',
+        'za': 'Nama Z-A'
+      };
+      if (toolbarSortLabel) toolbarSortLabel.textContent = labels[sortSelect.value] || 'Urutkan';
+      if (toolbarSortNote) toolbarSortNote.textContent = `${count} item`;
+    };
+
+    const closeMobileToolbarPanels = (except = '') => {
+      if (except !== 'chips') body.classList.remove('mobile-chips-open');
+      if (except !== 'sort') body.classList.remove('mobile-sort-open');
+      toolbarChipToggle?.setAttribute('aria-expanded', body.classList.contains('mobile-chips-open') ? 'true' : 'false');
+      toolbarSortToggle?.setAttribute('aria-expanded', body.classList.contains('mobile-sort-open') ? 'true' : 'false');
+    };
+
     const runFilterSort = () => {
       const visible = entries.filter(e => matchesFilter(e) && matchesQuery(e));
       entries.forEach(e => e.style.display = 'none');
@@ -182,13 +200,17 @@
         productList.appendChild(e);
       });
       resultsNote.textContent = `${visible.length} item`;
+      updateToolbarMeta(visible.length);
       emptyState.style.display = visible.length ? 'none' : 'block';
     };
 
     desktopSearch.addEventListener('input', (e) => syncQuery(e.target.value, desktopSearch));
     mobileSearch.addEventListener('input', (e) => syncQuery(e.target.value, mobileSearch));
     document.getElementById('mobile-searchbar').addEventListener('submit', (e) => e.preventDefault());
-    sortSelect.addEventListener('change', runFilterSort);
+    sortSelect.addEventListener('change', () => {
+      runFilterSort();
+      closeMobileToolbarPanels();
+    });
 
     chips.forEach(chip => {
       chip.addEventListener('click', () => {
@@ -196,6 +218,7 @@
         chip.classList.add('active');
         activeFilter = chip.dataset.filter;
         runFilterSort();
+        closeMobileToolbarPanels();
       });
     });
 
@@ -225,24 +248,7 @@
       mobileSearch.blur();
     };
 
-    const toolbarMobileToggle = document.getElementById('toolbar-mobile-toggle');
-    const toolbarMain = document.getElementById('toolbar-main');
-
-    const closeMobileToolbar = () => {
-      if (window.innerWidth > 720) return;
-      body.classList.remove('mobile-toolbar-open');
-      toolbarMobileToggle?.setAttribute('aria-expanded', 'false');
-    };
-
-    const toggleMobileToolbar = () => {
-      if (window.innerWidth > 720) return;
-      const willOpen = !body.classList.contains('mobile-toolbar-open');
-      body.classList.toggle('mobile-toolbar-open', willOpen);
-      toolbarMobileToggle?.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
-    };
-
     searchToggle?.addEventListener('click', () => {
-      closeMobileToolbar();
       if (body.classList.contains('mobile-search-open')) {
         closeMobileSearch();
       } else {
@@ -251,7 +257,22 @@
     });
 
     searchClose?.addEventListener('click', closeMobileSearch);
-    toolbarMobileToggle?.addEventListener('click', toggleMobileToolbar);
+
+    toolbarChipToggle?.addEventListener('click', () => {
+      if (window.innerWidth > 720) return;
+      const willOpen = !body.classList.contains('mobile-chips-open');
+      closeMobileToolbarPanels(willOpen ? 'chips' : '');
+      body.classList.toggle('mobile-chips-open', willOpen);
+      toolbarChipToggle.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+    });
+
+    toolbarSortToggle?.addEventListener('click', () => {
+      if (window.innerWidth > 720) return;
+      const willOpen = !body.classList.contains('mobile-sort-open');
+      closeMobileToolbarPanels(willOpen ? 'sort' : '');
+      body.classList.toggle('mobile-sort-open', willOpen);
+      toolbarSortToggle.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+    });
 
     let lastScrollY = window.scrollY;
     let ticking = false;
@@ -281,10 +302,7 @@
     };
 
     window.addEventListener('resize', () => {
-      if (window.innerWidth > 720) {
-        body.classList.remove('mobile-toolbar-open');
-        toolbarMobileToggle?.setAttribute('aria-expanded', 'false');
-      }
+      if (window.innerWidth > 720) closeMobileToolbarPanels();
     });
 
     runFilterSort();
