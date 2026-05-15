@@ -619,3 +619,20 @@
     cursor: pointer;
   }
 }
+
+.market.is-disabled,
+.market[aria-disabled="true"] {
+  filter: grayscale(0.2);
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+  box-shadow: none;
+}
+
+.market.is-disabled:hover,
+.market.is-disabled:focus-visible,
+.market[aria-disabled="true"]:hover,
+.market[aria-disabled="true"]:focus-visible {
+  transform: none;
+  outline: none;
+}
