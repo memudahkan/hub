@@ -169,6 +169,84 @@
       background: color-mix(in srgb, var(--surface-2) 92%, transparent); color: var(--muted); font-size: .84rem; font-weight: 700;
     }
     .chip.active { background: var(--accent-soft); color: var(--accent); border-color: transparent; }
+
+.chips {
+  align-items: center;
+}
+
+.chip-dropdown {
+  position: relative;
+  display: inline-flex;
+}
+
+.chip-more {
+  white-space: nowrap;
+}
+
+.chip-more.is-active {
+  background: var(--accent-soft);
+  color: var(--accent);
+  border-color: transparent;
+}
+
+.more-filters {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  display: none;
+  flex-direction: column;
+  gap: .35rem;
+  padding: .5rem;
+  min-width: 190px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow);
+  z-index: 24;
+}
+
+.more-filters.is-open {
+  display: flex;
+}
+
+.more-filters .chip {
+  width: 100%;
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.more-filters .chip.active {
+  background: var(--accent-soft);
+  color: var(--accent);
+  border-color: transparent;
+}
+
+@media (max-width: 720px) {
+  .chip-dropdown {
+    display: contents;
+  }
+
+  .chip-more {
+    display: none;
+  }
+
+  .more-filters {
+    position: static;
+    display: contents;
+    padding: 0;
+    min-width: 0;
+    border: 0;
+    box-shadow: none;
+    background: none;
+  }
+
+  .more-filters .chip {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+}
+
     .list { display: grid; gap: .75rem; }
     .section-title { display: none; align-items: center; justify-content: space-between; gap: 1rem; margin: .1rem 0 0; padding: .1rem 0; }
     .section-title h2 { margin: 0; font-size: 1.02rem; letter-spacing: -.02em; }
@@ -217,6 +295,42 @@
     .footer-note { margin-top: .95rem; padding-top: .95rem; border-top: 1px solid var(--border); color: var(--muted); font-size: .9rem; }
     .top-actions { display: none; }
 
+.market.video {
+  background: #f2b3b0;
+  color: #7b2f2b;
+}
+
+.market.video:hover,
+.market.video:focus-visible {
+  background: #ecaaa6;
+  border-color: transparent;
+}
+
+@media (prefers-color-scheme: dark) {
+  .market.video {
+    background: #6a4a4a;
+    color: #f5dede;
+  }
+
+  .market.video:hover,
+  .market.video:focus-visible {
+    background: #5d4040;
+    color: #fff0f0;
+  }
+}
+
+.market.video .btn-icon {
+  width: 14px;
+  height: 14px;
+  margin-right: 6px;
+  flex: 0 0 auto;
+  display: block;
+}
+
+.market.video .btn-icon path {
+  fill: currentColor;
+}
+
     @media (max-width: 720px) {
       .top-actions { display: flex; }
       .search-toggle { display: inline-flex; }
@@ -243,6 +357,7 @@
       .brand { font-size: 1rem; }
       .entry-head { display: block; }
       .price { display: inline-flex; margin-top: .4rem; }
+      .chip {min-height: 35px;}
     }
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
@@ -328,7 +443,7 @@
   }
 
   body.mobile-chips-open .toolbar .chips {
-    max-height: 180px;
+    max-height: 420px;
     opacity: 1;
     pointer-events: auto;
   }
@@ -393,7 +508,7 @@
   }
 
   body.mobile-chips-open .toolbar .chips {
-    max-height: 180px;
+    max-height: 420px;
     opacity: 1;
     pointer-events: auto;
     margin-top: .05rem;
