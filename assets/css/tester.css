@@ -1,0 +1,1250 @@
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  color-scheme: dark light;
+
+  --bg: #0f1316;
+  --card: #151a1f;
+  --card-soft: #1b2128;
+  --line: rgba(255, 255, 255, 0.09);
+  --text: #f4f7fb;
+  --muted: #9ca7b4;
+  --active: #f5f7fb;
+  --active-text: #0f1316;
+  --accent: #7dd3fc;
+  --accent-soft: rgba(125, 211, 252, 0.34);
+  --shadow: rgba(0, 0, 0, 0.32);
+
+  --radius-lg: 12px;
+  --radius-md: 9px;
+  --radius-sm: 7px;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #f3f6f8;
+    --card: #ffffff;
+    --card-soft: #eef3f6;
+    --line: rgba(15, 19, 22, 0.1);
+    --text: #101419;
+    --muted: #687381;
+    --active: #101419;
+    --active-text: #ffffff;
+    --accent: #0284c7;
+    --accent-soft: rgba(2, 132, 199, 0.28);
+    --shadow: rgba(15, 23, 42, 0.1);
+  }
+}
+
+body {
+  margin: 0;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background:
+    radial-gradient(circle at top left, color-mix(in srgb, var(--accent) 18%, transparent), transparent 26rem),
+    linear-gradient(180deg, color-mix(in srgb, var(--card-soft) 20%, transparent), transparent 18rem),
+    var(--bg);
+  color: var(--text);
+}
+
+.app {
+  width: min(1180px, 100%);
+  margin: 0 auto;
+  padding: 20px 20px 2.2rem;
+}
+
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 6px;
+  margin-bottom: 18px;
+}
+
+.eyebrow {
+  width: fit-content;
+  margin: 0 0 8px;
+  padding: 5px 9px;
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 24%, transparent);
+  border-radius: 8px;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.075em;
+  text-transform: uppercase;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  margin-bottom: 8px;
+  font-size: clamp(32px, 7vw, 52px);
+  line-height: 1;
+  letter-spacing: -0.055em;
+}
+
+h2 {
+  margin-bottom: 8px;
+  font-size: 20px;
+}
+
+h3 {
+  margin: 18px 0 10px;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.subtitle {
+  max-width: 560px;
+  margin: 14px 0 0;
+  color: var(--muted);
+}
+
+.card {
+  background: color-mix(in srgb, var(--card) 94%, transparent);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  box-shadow: 0 16px 45px var(--shadow);
+}
+
+.status-card,
+.tester-card,
+.raw-card {
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--card) 96%, transparent), color-mix(in srgb, var(--card-soft) 72%, transparent));
+}
+
+.status-card {
+  display: grid;
+  grid-template-columns: 1.1fr 1.5fr 1.4fr;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.label,
+.meta-label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+#status {
+  margin-bottom: 0;
+}
+
+.device-name {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+.gamepad-switcher {
+  display: grid;
+  gap: 8px;
+  min-width: min(390px, 100%);
+}
+
+.gamepad-switcher .label {
+  margin-bottom: 0;
+}
+
+.gamepad-tabs {
+  display: inline-flex;
+  width: fit-content;
+  max-width: 100%;
+  padding: 4px;
+  overflow-x: auto;
+  background: color-mix(in srgb, var(--card-soft) 84%, transparent);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  gap: 4px;
+}
+
+.gamepad-tab {
+  appearance: none;
+  border: 0;
+  border-radius: 999px;
+  padding: 9px 14px;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    transform 0.12s ease,
+    background 0.12s ease,
+    color 0.12s ease;
+}
+
+.gamepad-tab:hover {
+  transform: translateY(-1px);
+}
+
+.gamepad-tab.active {
+  background: var(--active);
+  color: var(--active-text);
+  box-shadow: 0 8px 22px color-mix(in srgb, var(--active) 18%, transparent);
+}
+
+.gamepad-tab:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.gamepad-select {
+  display: none;
+  width: 100%;
+  padding: 11px 12px;
+  background: color-mix(in srgb, var(--card) 88%, transparent);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  color: var(--text);
+  font: inherit;
+  font-weight: 700;
+}
+
+.meta-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.meta-grid div {
+  padding: 12px;
+  background: color-mix(in srgb, var(--card-soft) 88%, transparent);
+  border-radius: var(--radius-md);
+}
+
+.tester-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(290px, 0.6fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.tester-card {
+  display: grid;
+  gap: 16px;
+}
+
+.section-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.section-head p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.section-head.compact {
+  margin-bottom: 12px;
+}
+
+.stick-test-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.mode-tabs {
+  display: inline-flex;
+  width: fit-content;
+  padding: 4px;
+  background: color-mix(in srgb, var(--card-soft) 84%, transparent);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.mode-tab {
+  appearance: none;
+  border: 0;
+  border-radius: 999px;
+  padding: 8px 12px;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  transition:
+    transform 0.12s ease,
+    background 0.12s ease,
+    color 0.12s ease;
+}
+
+.mode-tab:hover {
+  transform: translateY(-1px);
+}
+
+.mode-tab.active {
+  background: var(--active);
+  color: var(--active-text);
+  box-shadow: 0 8px 22px color-mix(in srgb, var(--active) 18%, transparent);
+}
+
+.stick-stage {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.stick-card,
+.trigger-card,
+.tester-section,
+.vibration-panel {
+  background: color-mix(in srgb, var(--card-soft) 88%, transparent);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 14px;
+  box-shadow: 0 16px 45px var(--shadow);
+}
+
+.stick-card {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+}
+
+.stick-readout {
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 3px;
+  height: 72px;
+  text-align: center;
+  overflow: hidden;
+}
+
+.readout-label {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.stick-readout strong {
+  color: var(--text);
+  font-size: 20px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.stick-readout small {
+  width: 190px;
+  max-width: 100%;
+  color: var(--accent);
+  font-size: 12px;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.axis-readout {
+  color: var(--muted);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+.stick-zone {
+  position: relative;
+  width: 168px;
+  height: 168px;
+  overflow: visible;
+  border: 2px solid color-mix(in srgb, var(--accent) 20%, var(--line));
+  border-radius: 50%;
+  background:
+    linear-gradient(90deg, transparent calc(50% - 1px), color-mix(in srgb, var(--muted) 28%, transparent) calc(50% - 1px), color-mix(in srgb, var(--muted) 28%, transparent) calc(50% + 1px), transparent calc(50% + 1px)),
+    linear-gradient(0deg, transparent calc(50% - 1px), color-mix(in srgb, var(--muted) 28%, transparent) calc(50% - 1px), color-mix(in srgb, var(--muted) 28%, transparent) calc(50% + 1px), transparent calc(50% + 1px)),
+    var(--card);
+  box-shadow:
+    inset 0 0 0 6px color-mix(in srgb, var(--card-soft) 80%, transparent),
+    inset 0 0 24px color-mix(in srgb, var(--muted) 12%, transparent);
+}
+
+.stick-zone::after {
+  content: "";
+  position: absolute;
+  inset: 26px;
+  z-index: 0;
+  border: 1px dashed color-mix(in srgb, var(--muted) 35%, transparent);
+  border-radius: 50%;
+}
+
+.stick-mode-circularity .stick-zone::after,
+.stick-mode-path .stick-zone::after {
+  opacity: 0;
+}
+
+.stick-mode-circularity .stick-zone,
+.stick-mode-path .stick-zone {
+  background:
+    linear-gradient(90deg, transparent calc(50% - 1px), color-mix(in srgb, var(--muted) 22%, transparent) calc(50% - 1px), color-mix(in srgb, var(--muted) 22%, transparent) calc(50% + 1px), transparent calc(50% + 1px)),
+    linear-gradient(0deg, transparent calc(50% - 1px), color-mix(in srgb, var(--muted) 22%, transparent) calc(50% - 1px), color-mix(in srgb, var(--muted) 22%, transparent) calc(50% + 1px), transparent calc(50% + 1px)),
+    var(--card);
+  border-color: color-mix(in srgb, var(--accent) 42%, var(--line));
+  box-shadow: none;
+}
+
+.stick-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  clip-path: circle(50% at 50% 50%);
+  pointer-events: none;
+}
+
+.stick-dot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 2;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--card);
+  outline: 2px solid color-mix(in srgb, var(--bg) 70%, transparent);
+  outline-offset: -1px;
+  border-radius: 50%;
+  background: var(--active);
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--active) 36%, transparent);
+}
+
+.stick-overlay {
+  position: absolute;
+  left: 50%;
+  bottom: 13px;
+  z-index: 4;
+  display: none;
+  min-width: 78px;
+  padding: 6px 9px;
+  border: 1px solid color-mix(in srgb, var(--line) 72%, transparent);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--card) 82%, transparent);
+  text-align: center;
+  transform: translateX(-50%);
+  pointer-events: none;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 10px 24px color-mix(in srgb, #000 18%, transparent);
+}
+
+.stick-overlay span {
+  display: block;
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.07em;
+  line-height: 1.05;
+}
+
+.stick-overlay strong {
+  display: block;
+  margin-top: 2px;
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 900;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.stick-mode-circularity .stick-overlay,
+.stick-mode-path .stick-overlay {
+  display: block;
+}
+
+.stick-mode-path .stick-overlay strong {
+  font-size: 14px;
+}
+
+.trigger-stage {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.trigger-card {
+  display: grid;
+  gap: 8px;
+}
+
+.pad-button {
+  display: grid;
+  place-items: center;
+  min-height: 42px;
+  padding: 10px;
+  background: color-mix(in srgb, var(--card) 88%, transparent);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 800;
+  user-select: none;
+  transition:
+    transform 0.08s ease,
+    background 0.08s ease,
+    color 0.08s ease,
+    border-color 0.08s ease;
+}
+
+.pad-button.active {
+  transform: translateY(1px) scale(0.96);
+  background: var(--active);
+  border-color: var(--active);
+  color: var(--active-text);
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--active) 10%, transparent),
+    0 10px 22px color-mix(in srgb, var(--active) 16%, transparent);
+}
+
+.trigger {
+  min-height: 46px;
+}
+
+.button-stage {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(74px, 1fr));
+  gap: 8px;
+}
+
+.button-tile {
+  min-height: 46px;
+}
+
+.bar {
+  height: 10px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--card) 88%, transparent);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+}
+
+.bar span {
+  display: block;
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), color-mix(in srgb, var(--accent) 62%, var(--active)));
+  border-radius: inherit;
+}
+
+.trigger-card small {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.vibration-panel {
+  padding: 16px;
+}
+
+.vibration-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.vibration-head h3 {
+  margin-top: 0;
+}
+
+.vibration-head p {
+  margin-bottom: 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.support-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 112px;
+  padding: 8px 12px;
+  background: color-mix(in srgb, var(--card) 88%, transparent);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--text);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.vibration-controls {
+  display: grid;
+  gap: 12px;
+}
+
+.duration-field {
+  display: grid;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.duration-field span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.duration-field input {
+  width: 96px;
+  padding: 10px 12px;
+  background: color-mix(in srgb, var(--card) 88%, transparent);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  color: var(--text);
+  font: inherit;
+  font-variant-numeric: tabular-nums;
+}
+
+.vibration-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.mini-btn {
+  appearance: none;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 8px 12px;
+  background: color-mix(in srgb, var(--card) 88%, transparent);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  transition:
+    transform 0.12s ease,
+    background 0.12s ease,
+    color 0.12s ease,
+    border-color 0.12s ease;
+}
+
+.mini-btn:hover {
+  transform: translateY(-1px);
+}
+
+.mini-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.ghost-btn {
+  background: transparent;
+}
+
+.raw-card {
+  position: sticky;
+  top: 16px;
+}
+
+.raw-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+  gap: 8px;
+}
+
+.raw-button,
+.raw-axis {
+  display: grid;
+  gap: 4px;
+  justify-items: center;
+  align-content: center;
+  min-height: 58px;
+  padding: 9px 8px;
+  background: color-mix(in srgb, var(--card) 88%, transparent);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  color: var(--muted);
+  font-size: 12px;
+  text-align: center;
+}
+
+.raw-button strong,
+.raw-axis strong {
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.raw-button span,
+.raw-axis span {
+  color: var(--muted);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+.raw-button.active {
+  background: var(--active);
+  border-color: var(--active);
+  color: var(--active-text);
+}
+
+.raw-button.active strong,
+.raw-button.active span {
+  color: var(--active-text);
+}
+
+.note {
+  margin: 14px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+@media (max-width: 900px) {
+  .app {
+    padding: 12px;
+  }
+
+  .hero,
+  .status-card,
+  .tester-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .hero {
+    display: grid;
+    align-items: stretch;
+    gap: 14px;
+    padding-top: 0;
+    margin-bottom: 12px;
+  }
+
+  h1 {
+    font-size: 34px;
+  }
+
+  .subtitle {
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  .gamepad-switcher {
+    min-width: 0;
+  }
+
+  .gamepad-tabs {
+    display: none;
+  }
+
+  .gamepad-select {
+    display: block;
+  }
+
+  .status-card {
+    gap: 14px;
+    padding: 14px;
+    margin-bottom: 12px;
+  }
+
+  .meta-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .meta-grid div {
+    padding: 10px;
+    min-height: 64px;
+  }
+
+  .section-head {
+    display: grid;
+    gap: 12px;
+  }
+
+  .stick-test-toolbar {
+    justify-content: stretch;
+  }
+
+  .mode-tabs {
+    width: 100%;
+  }
+
+  .mode-tab {
+    flex: 1;
+  }
+
+  .stick-test-toolbar .mini-btn {
+    width: 100%;
+  }
+
+  .raw-card {
+    position: static;
+  }
+}
+
+@media (max-width: 620px) {
+  .stick-stage,
+  .trigger-stage {
+    grid-template-columns: 1fr;
+  }
+
+  .stick-zone {
+    width: 180px;
+    height: 180px;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 32px;
+  }
+
+  .eyebrow {
+    font-size: 11px;
+  }
+
+  .card {
+    padding: 14px;
+  }
+
+  .stick-zone {
+    width: 168px;
+    height: 168px;
+  }
+
+  .stick-overlay {
+    bottom: 11px;
+    min-width: 72px;
+    padding: 5px 8px;
+  }
+
+  .stick-overlay strong {
+    font-size: 15px;
+  }
+
+  .stick-mode-path .stick-overlay strong {
+    font-size: 13px;
+  }
+
+  .button-stage {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .raw-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .vibration-head {
+    display: grid;
+  }
+
+  .vibration-buttons {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* Circularity overlay: no background, white text like common tester UI */
+.stick-mode-circularity .stick-overlay {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  text-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.86),
+    0 0 12px rgba(0, 0, 0, 0.72) !important;
+}
+
+.stick-mode-circularity .stick-overlay span,
+.stick-mode-circularity .stick-overlay strong {
+  color: #ffffff !important;
+}
+
+/* Path overlay remains hidden so it does not cover the drawn path */
+.stick-mode-path .stick-overlay {
+  display: none !important;
+}
+
+
+/* v7: bigger circularity text, no background/shadow, readable on stronger fill */
+.stick-mode-circularity .stick-overlay {
+  bottom: 18px;
+  min-width: 92px;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  text-shadow: none !important;
+}
+
+.stick-mode-circularity .stick-overlay span {
+  color: #ffffff !important;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  line-height: 1.05;
+}
+
+.stick-mode-circularity .stick-overlay strong {
+  margin-top: 3px;
+  color: #ffffff !important;
+  font-size: 26px;
+  font-weight: 900;
+  line-height: 0.95;
+}
+
+@media (max-width: 480px) {
+  .stick-mode-circularity .stick-overlay {
+    bottom: 17px;
+    min-width: 86px;
+  }
+
+  .stick-mode-circularity .stick-overlay span {
+    font-size: 11px;
+  }
+
+  .stick-mode-circularity .stick-overlay strong {
+    font-size: 24px;
+  }
+}
+
+
+/* Pressed history state: color change, no check mark */
+.pad-button.seen:not(.active) {
+  background: color-mix(in srgb, var(--accent) 20%, var(--card)) !important;
+  border-color: color-mix(in srgb, var(--accent) 62%, var(--line)) !important;
+  color: color-mix(in srgb, var(--text) 88%, var(--accent)) !important;
+}
+
+.raw-button.seen:not(.active) {
+  background: color-mix(in srgb, var(--accent) 16%, var(--card)) !important;
+  border-color: color-mix(in srgb, var(--accent) 58%, var(--line)) !important;
+}
+
+.raw-button.seen:not(.active) strong,
+.raw-button.seen:not(.active) span {
+  color: color-mix(in srgb, var(--text) 88%, var(--accent)) !important;
+}
+
+
+/* v9: darker circularity fill + clean white AVG text */
+.stick-mode-circularity .stick-overlay {
+  bottom: 18px;
+  min-width: 92px;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.38) !important;
+}
+
+.stick-mode-circularity .stick-overlay span {
+  color: #ffffff !important;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  line-height: 1.05;
+}
+
+.stick-mode-circularity .stick-overlay strong {
+  margin-top: 3px;
+  color: #ffffff !important;
+  font-size: 26px;
+  font-weight: 900;
+  line-height: 0.95;
+}
+
+.stick-mode-path .stick-overlay {
+  display: none !important;
+}
+
+@media (max-width: 480px) {
+  .stick-mode-circularity .stick-overlay {
+    bottom: 17px;
+    min-width: 86px;
+  }
+
+  .stick-mode-circularity .stick-overlay span {
+    font-size: 11px;
+  }
+
+  .stick-mode-circularity .stick-overlay strong {
+    font-size: 24px;
+  }
+}
+
+
+/* v10: darker circularity fill for white text readability */
+:root {
+  --accent-soft: rgba(30, 58, 138, 0.78);
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --accent-soft: rgba(30, 64, 175, 0.72);
+  }
+}
+
+.stick-mode-circularity .stick-overlay {
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.32) !important;
+}
+
+.stick-mode-circularity .stick-overlay span,
+.stick-mode-circularity .stick-overlay strong {
+  color: #ffffff !important;
+}
+
+
+/* v15 safeguard: AVG overlay without background, Path overlay hidden */
+.stick-mode-circularity .stick-overlay {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+.stick-mode-path .stick-overlay {
+  display: none !important;
+}
+
+/* v15 safeguard: button history is color-only, no checkmark */
+.pad-button.seen:not(.active) {
+  background: color-mix(in srgb, var(--accent) 20%, var(--card)) !important;
+  border-color: color-mix(in srgb, var(--accent) 62%, var(--line)) !important;
+  color: color-mix(in srgb, var(--text) 88%, var(--accent)) !important;
+}
+
+.raw-button.seen:not(.active) {
+  background: color-mix(in srgb, var(--accent) 16%, var(--card)) !important;
+  border-color: color-mix(in srgb, var(--accent) 58%, var(--line)) !important;
+}
+
+.raw-button.seen:not(.active) strong,
+.raw-button.seen:not(.active) span {
+  color: color-mix(in srgb, var(--text) 88%, var(--accent)) !important;
+}
+
+
+/* v16: section action button */
+.action-head {
+  align-items: center;
+}
+
+.action-head .mini-btn {
+  white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+  .action-head .mini-btn {
+    width: 100%;
+  }
+}
+
+
+/* v18: cleaner mobile dropdown with ellipsis and padded arrow */
+.gamepad-select {
+  min-width: 0;
+  padding-right: 44px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@supports (appearance: none) {
+  .gamepad-select {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image:
+      linear-gradient(45deg, transparent 50%, var(--muted) 50%),
+      linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+    background-position:
+      calc(100% - 22px) 50%,
+      calc(100% - 16px) 50%;
+    background-size:
+      6px 6px,
+      6px 6px;
+    background-repeat: no-repeat;
+  }
+}
+
+@media (max-width: 900px) {
+  .gamepad-select {
+    max-width: 100%;
+    min-height: 46px;
+    padding: 11px 44px 11px 14px;
+    line-height: 1.25;
+  }
+}
+
+
+/* v19: fixed desktop tab slots so layout does not jump */
+.gamepad-tabs {
+  width: 100%;
+  justify-content: stretch;
+}
+
+.gamepad-tab {
+  flex: 1 0 0;
+  text-align: center;
+}
+
+.gamepad-tab.placeholder-tab {
+  opacity: 0.42;
+  background: transparent;
+  color: color-mix(in srgb, var(--muted) 72%, transparent);
+  border: 1px dashed color-mix(in srgb, var(--line) 74%, transparent);
+}
+
+.gamepad-tab.placeholder-tab:hover {
+  transform: none;
+}
+
+@media (min-width: 901px) {
+  .gamepad-switcher {
+    min-width: min(480px, 100%);
+  }
+
+  .gamepad-tabs {
+    width: min(480px, 100%);
+  }
+}
+
+
+/* v20: simpler vibration tester */
+.support-status {
+  display: grid;
+  gap: 3px;
+  justify-items: end;
+  min-width: 96px;
+  color: var(--muted);
+  text-align: right;
+}
+
+.support-label {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.support-status strong {
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.vibration-buttons {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.vibration-buttons .mini-btn {
+  min-height: 40px;
+}
+
+@media (max-width: 620px) {
+  .support-status {
+    justify-items: start;
+    text-align: left;
+  }
+
+  .vibration-buttons {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+
+/* v21: common-style vibration presets */
+.vibration-buttons {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+#infiniteVibrateBtn.active {
+  background: var(--active);
+  border-color: var(--active);
+  color: var(--active-text);
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--active) 10%, transparent),
+    0 10px 22px color-mix(in srgb, var(--active) 16%, transparent);
+}
+
+@media (max-width: 620px) {
+  .vibration-buttons {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  #stopVibrateBtn {
+    grid-column: span 2;
+  }
+}
+
+
+/* v23: gamepad tab lights up while a button is pressed */
+.gamepad-tab.input-active {
+  background: color-mix(in srgb, var(--accent) 30%, var(--card-soft));
+  border-color: color-mix(in srgb, var(--accent) 68%, var(--line));
+  color: var(--text);
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--accent) 12%, transparent),
+    0 8px 20px color-mix(in srgb, var(--accent) 18%, transparent);
+}
+
+.gamepad-tab.active.input-active {
+  background: var(--active);
+  color: var(--active-text);
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent),
+    0 8px 22px color-mix(in srgb, var(--active) 18%, transparent);
+}
+
+
+.status-value {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+@media (max-width: 900px) {
+  .status-value {
+    font-size: 14px;
+    line-height: 1.35;
+  }
+}
