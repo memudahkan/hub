@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gamepad Tester • M2D Link Hub</title>
+  <meta name="description" content="Gamepad Tester Online versi Memudahkan.">
+  <link rel="canonical" href="https://hub.memudahkan.com/gamepad/tester/">
+  <meta name="robots" content="index, follow">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Gamepad Tester • M2D Link Hub">
+  <meta property="og:locale" content="id_ID">
+  <meta property="og:title" content="Gamepad Tester • M2D Link Hub">
+  <meta property="og:description" content="Laman web untuk mengetes gamepad atau controller game versi Memudahkan - Tes Tombol, Stick, Trigger, dan Getar">
+  <meta property="og:url" content="https://hub.memudahkan.com/gamepad/">
+  <meta property="og:image" content="https://hub.memudahkan.com/assets/images/og/m2d-link-hub-preview.png">
+  <link rel="icon" href="/assets/favicon/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon/favicon-48x48.png">
+  <link rel="apple-touch-icon" href="/assets/favicon/apple-touch-icon.png">
+  <meta name="theme-color" content="#0f1316">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/shared.css" />
+  <link rel="stylesheet" href="/assets/css/tester.css">
+</head>
+<body>
+  <main class="app">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">Gratis tanpa iklan</p>
+        <h1>M2D Gamepad Tester</h1>
+        <p class="subtitle">
+          Sambungkan gamepad, lalu tekan tombol apa saja agar browser mendeteksi input.
+        </p>
+      </div>
+
+      <div class="gamepad-switcher">
+        <p class="label">Gamepad aktif</p>
+
+        <div id="gamepadTabs" class="gamepad-tabs" role="tablist">
+          <button class="gamepad-tab active" type="button" disabled>
+            Belum terdeteksi
+          </button>
+        </div>
+
+        <select id="gamepadSelect" class="gamepad-select" aria-label="Pilih gamepad">
+          <option value="">Belum terdeteksi</option>
+        </select>
+      </div>
+    </header>
+
+    <section class="card status-card">
+      <div>
+        <p class="label">Status</p>
+        <p id="status" class="status-value">Menunggu gamepad...</p>
+      </div>
+
+      <div>
+        <p class="label">Nama Gamepad</p>
+        <p id="gamepadName" class="device-name">Belum terdeteksi</p>
+      </div>
+
+      <div class="meta-grid">
+        <div>
+          <span class="meta-label">Mapping</span>
+          <strong id="mapping">-</strong>
+        </div>
+
+        <div>
+          <span class="meta-label">Buttons</span>
+          <strong id="buttonCount">-</strong>
+        </div>
+
+        <div>
+          <span class="meta-label">Axes</span>
+          <strong id="axisCount">-</strong>
+        </div>
+
+        <div>
+          <span class="meta-label">Vibration</span>
+          <strong id="vibrationSupport">-</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="tester-layout">
+      <section class="card tester-card">
+        <div class="section-head">
+          <div>
+            <h2>Stick Tester</h2>
+            <p>Cek fungsi, circularity, dan path gerakan stick.</p>
+          </div>
+
+          <div class="stick-test-toolbar">
+            <div class="mode-tabs" role="tablist" aria-label="Stick test mode">
+              <button class="mode-tab active" type="button" data-stick-mode="off">Off</button>
+              <button class="mode-tab" type="button" data-stick-mode="circularity">Circularity</button>
+              <button class="mode-tab" type="button" data-stick-mode="path">Path</button>
+            </div>
+
+            <button id="resetStickTest" class="mini-btn" type="button">
+              Reset Test
+            </button>
+          </div>
+        </div>
+
+        <div class="stick-stage">
+          <article class="stick-card">
+            <div class="stick-readout">
+              <span class="readout-label">Left Stick</span>
+              <strong id="leftStickTestValue">Off</strong>
+              <small id="leftStickTestInfo">Stick test: Off</small>
+            </div>
+
+            <div class="stick-zone">
+              <canvas id="leftStickCanvas" class="stick-canvas"></canvas>
+              <div id="leftStickDot" class="stick-dot"></div>
+
+              <div class="stick-overlay">
+                <span id="leftStickOverlayLabel">AVG ERROR</span>
+                <strong id="leftStickOverlayValue">-</strong>
+              </div>
+            </div>
+
+            <small id="leftStickValue" class="axis-readout">X: 0.00 / Y: 0.00</small>
+          </article>
+
+          <article class="stick-card">
+            <div class="stick-readout">
+              <span class="readout-label">Right Stick</span>
+              <strong id="rightStickTestValue">Off</strong>
+              <small id="rightStickTestInfo">Stick test: Off</small>
+            </div>
+
+            <div class="stick-zone">
+              <canvas id="rightStickCanvas" class="stick-canvas"></canvas>
+              <div id="rightStickDot" class="stick-dot"></div>
+
+              <div class="stick-overlay">
+                <span id="rightStickOverlayLabel">AVG ERROR</span>
+                <strong id="rightStickOverlayValue">-</strong>
+              </div>
+            </div>
+
+            <small id="rightStickValue" class="axis-readout">X: 0.00 / Y: 0.00</small>
+          </article>
+        </div>
+
+        <section class="tester-section">
+          <div class="section-head compact">
+            <div>
+              <h2>Triggers</h2>
+              <p>Analog trigger dan nilai tekanannya.</p>
+            </div>
+          </div>
+
+          <div class="trigger-stage">
+            <div class="trigger-card">
+              <div id="btn6" class="pad-button trigger">LT</div>
+              <div class="bar">
+                <span id="ltBar"></span>
+              </div>
+              <small id="ltValue">0.00</small>
+            </div>
+
+            <div class="trigger-card">
+              <div id="btn7" class="pad-button trigger">RT</div>
+              <div class="bar">
+                <span id="rtBar"></span>
+              </div>
+              <small id="rtValue">0.00</small>
+            </div>
+          </div>
+        </section>
+
+        <section class="tester-section">
+          <div class="section-head compact action-head">
+            <div>
+              <h2>Buttons</h2>
+              <p>Tekan tombol gamepad untuk memastikan fungsionalitasnya.</p>
+            </div>
+
+            <button id="clearButtonHistory" class="mini-btn ghost-btn" type="button">
+              Clear Pressed
+            </button>
+          </div>
+
+          <div class="button-stage">
+            <div id="btn0" class="pad-button button-tile">A</div>
+            <div id="btn1" class="pad-button button-tile">B</div>
+            <div id="btn2" class="pad-button button-tile">X</div>
+            <div id="btn3" class="pad-button button-tile">Y</div>
+
+            <div id="btn4" class="pad-button button-tile">LB</div>
+            <div id="btn5" class="pad-button button-tile">RB</div>
+
+            <div id="btn8" class="pad-button button-tile">Back</div>
+            <div id="btn9" class="pad-button button-tile">Start</div>
+            <div id="btn10" class="pad-button button-tile">LS</div>
+            <div id="btn11" class="pad-button button-tile">RS</div>
+            <div id="btn16" class="pad-button button-tile">Home</div>
+
+            <div id="btn12" class="pad-button button-tile">D-Up</div>
+            <div id="btn13" class="pad-button button-tile">D-Down</div>
+            <div id="btn14" class="pad-button button-tile">D-Left</div>
+            <div id="btn15" class="pad-button button-tile">D-Right</div>
+          </div>
+        </section>
+
+        <section class="vibration-panel">
+          <div class="vibration-head">
+            <div>
+              <h3>Vibration Test</h3>
+              <p>
+                Tergantung pada browser, sistem operasi,
+                mode koneksi, device, dan gamepadnya.
+              </p>
+            </div>
+
+            <div class="support-status">
+              <span class="support-label">Status</span>
+              <strong id="vibrationPanelStatus">-</strong>
+            </div>
+          </div>
+
+          <div class="vibration-controls">
+            <div class="vibration-buttons">
+              <button id="lightVibrateBtn" class="mini-btn" type="button" disabled>
+                Light
+              </button>
+
+              <button id="heavyVibrateBtn" class="mini-btn" type="button" disabled>
+                Heavy
+              </button>
+
+              <button id="fullVibrateBtn" class="mini-btn" type="button" disabled>
+                Full
+              </button>
+
+              <button id="infiniteVibrateBtn" class="mini-btn" type="button" disabled>
+                Infinite
+              </button>
+
+              <button id="stopVibrateBtn" class="mini-btn ghost-btn" type="button" disabled>
+                Stop
+              </button>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <section class="card raw-card">
+        <h2>Raw Input</h2>
+
+        <h3>Buttons</h3>
+        <div id="rawButtons" class="raw-grid"></div>
+
+        <h3>Axes</h3>
+        <div id="rawAxes" class="raw-grid"></div>
+
+        <p class="note">
+          Raw Input menampilkan nilai asli dari browser. Jika mapping visual tidak cocok,
+          gunakan bagian ini sebagai acuan utama.
+        </p>
+      </section>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+  <div class="container footer-inner">
+    <p>Dibuat pelan-pelan, dirapikan seperlunya</p>
+    <p>© 2026 Memudahkan with 💚</p>
+  </div>
+  </footer>
+
+  <script src="/assets/js/tester.js"></script>
+</body>
+</html>
