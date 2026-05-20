@@ -1248,3 +1248,28 @@ h3 {
     line-height: 1.35;
   }
 }
+
+@media (max-width: 900px) {
+  .stick-test-toolbar {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .mode-tabs {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .mode-tab {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+
+  #resetStickTest {
+    width: 100%;
+  }
+}
