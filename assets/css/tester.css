@@ -1276,3 +1276,66 @@ h3 {
     width: 100%;
   }
 }
+
+@media (min-width: 901px) {
+  .status-card {
+    grid-template-columns: 1fr 1.3fr 1.6fr;
+    align-items: start;
+    padding: 16px 18px;
+  }
+
+  .meta-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .meta-grid div {
+    min-height: auto;
+    padding: 10px 12px;
+  }
+
+  .meta-label {
+    margin-bottom: 5px;
+    font-size: 11px;
+  }
+
+  .meta-grid strong {
+    font-size: 15px;
+    line-height: 1.2;
+  }
+}
+
+@media (max-width: 900px) {
+  .status-card {
+    gap: 12px;
+    padding: 14px;
+  }
+
+  .meta-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .meta-grid div {
+    min-height: 58px;
+    padding: 9px 10px;
+    display: grid;
+    align-content: center;
+  }
+
+  .meta-label {
+    margin-bottom: 4px;
+    font-size: 10px;
+  }
+
+  .meta-grid strong {
+    font-size: 14px;
+    line-height: 1.2;
+  }
+}
+
+@media (max-width: 360px) {
+  .meta-grid {
+    grid-template-columns: 1fr;
+  }
+}
