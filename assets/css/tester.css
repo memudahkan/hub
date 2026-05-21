@@ -196,7 +196,8 @@ h3 {
 }
 
 .gamepad-tab:hover {
-  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+  background: color-mix(in srgb, var(--accent) 10%, var(--card-soft));
 }
 
 .gamepad-tab.active {
@@ -300,7 +301,8 @@ h3 {
 }
 
 .mode-tab:hover {
-  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+  background: color-mix(in srgb, var(--accent) 10%, var(--card-soft));
 }
 
 .mode-tab.active {
@@ -660,7 +662,8 @@ h3 {
 }
 
 .mini-btn:hover {
-  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+  background: color-mix(in srgb, var(--accent) 10%, var(--card-soft));
 }
 
 .mini-btn:disabled {
