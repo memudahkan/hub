@@ -87,6 +87,215 @@ const standardButtonLabels = [
   "Home"
 ];
 
+
+
+function injectButtonLayoutStyles() {
+  if (document.querySelector("#buttonLayoutStyles")) return;
+
+  const style = document.createElement("style");
+  style.id = "buttonLayoutStyles";
+  style.textContent = `
+    .ps-icon {
+      display: inline-grid;
+      place-items: center;
+      width: 22px;
+      height: 22px;
+      vertical-align: middle;
+    }
+
+    .ps-icon svg {
+      width: 100%;
+      height: 100%;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2.4;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .ps-cross { color: #5aa7ff; }
+    .ps-circle { color: #ff5f6d; }
+    .ps-square { color: #ff72d2; }
+    .ps-triangle { color: #5ee48c; }
+
+    .raw-button strong {
+      min-height: 1em;
+    }
+  `;
+
+  document.head.appendChild(style);
+}
+
+function psIcon(type) {
+  const icons = {
+    cross: `
+      <span class="ps-icon ps-cross" aria-label="Cross">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M6 6L18 18M18 6L6 18" />
+        </svg>
+      </span>
+    `,
+    circle: `
+      <span class="ps-icon ps-circle" aria-label="Circle">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="7" />
+        </svg>
+      </span>
+    `,
+    square: `
+      <span class="ps-icon ps-square" aria-label="Square">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="6" y="6" width="12" height="12" rx="1.5" />
+        </svg>
+      </span>
+    `,
+    triangle: `
+      <span class="ps-icon ps-triangle" aria-label="Triangle">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 5L20 19H4L12 5Z" />
+        </svg>
+      </span>
+    `
+  };
+
+  return icons[type] || "";
+}
+
+const buttonLayouts = {
+  xbox: [
+    { text: "A", html: "A" },
+    { text: "B", html: "B" },
+    { text: "X", html: "X" },
+    { text: "Y", html: "Y" },
+    { text: "LB", html: "LB" },
+    { text: "RB", html: "RB" },
+    { text: "LT", html: "LT" },
+    { text: "RT", html: "RT" },
+    { text: "Back", html: "Back" },
+    { text: "Start", html: "Start" },
+    { text: "LS", html: "LS" },
+    { text: "RS", html: "RS" },
+    { text: "D-Up", html: "D-Up" },
+    { text: "D-Down", html: "D-Down" },
+    { text: "D-Left", html: "D-Left" },
+    { text: "D-Right", html: "D-Right" },
+    { text: "Home", html: "Home" }
+  ],
+
+  playstation: [
+    { text: "Cross", html: psIcon("cross") },
+    { text: "Circle", html: psIcon("circle") },
+    { text: "Square", html: psIcon("square") },
+    { text: "Triangle", html: psIcon("triangle") },
+    { text: "L1", html: "L1" },
+    { text: "R1", html: "R1" },
+    { text: "L2", html: "L2" },
+    { text: "R2", html: "R2" },
+    { text: "Share", html: "Share" },
+    { text: "Options", html: "Options" },
+    { text: "L3", html: "L3" },
+    { text: "R3", html: "R3" },
+    { text: "D-Up", html: "D-Up" },
+    { text: "D-Down", html: "D-Down" },
+    { text: "D-Left", html: "D-Left" },
+    { text: "D-Right", html: "D-Right" },
+    { text: "PS", html: "PS" }
+  ],
+
+  nintendo: [
+    { text: "B", html: "B" },
+    { text: "A", html: "A" },
+    { text: "Y", html: "Y" },
+    { text: "X", html: "X" },
+    { text: "L", html: "L" },
+    { text: "R", html: "R" },
+    { text: "ZL", html: "ZL" },
+    { text: "ZR", html: "ZR" },
+    { text: "-", html: "-" },
+    { text: "+", html: "+" },
+    { text: "LS", html: "LS" },
+    { text: "RS", html: "RS" },
+    { text: "D-Up", html: "D-Up" },
+    { text: "D-Down", html: "D-Down" },
+    { text: "D-Left", html: "D-Left" },
+    { text: "D-Right", html: "D-Right" },
+    { text: "Home", html: "Home" }
+  ]
+};
+
+let currentButtonLayoutName = "";
+
+function detectButtonLayout(pad) {
+  const id = (pad?.id || "").toLowerCase();
+
+  // XInput/Xbox menang dulu, karena gamepad bentuk PS bisa saja sedang mode Xbox.
+  if (
+    id.includes("xbox") ||
+    id.includes("xinput") ||
+    id.includes("x-input") ||
+    id.includes("x360")
+  ) {
+    return "xbox";
+  }
+
+  if (
+    id.includes("dualsense") ||
+    id.includes("dualshock") ||
+    id.includes("sony") ||
+    id.includes("playstation") ||
+    id.includes("wireless controller")
+  ) {
+    return "playstation";
+  }
+
+  if (
+    id.includes("switch") ||
+    id.includes("nintendo") ||
+    id.includes("pro controller") ||
+    id.includes("joy-con") ||
+    id.includes("joycon")
+  ) {
+    return "nintendo";
+  }
+
+  return "xbox";
+}
+
+function getButtonLabel(index) {
+  const labels = buttonLayouts[currentButtonLayoutName] || buttonLayouts.xbox;
+  return labels[index] || { text: `B${index}`, html: `B${index}` };
+}
+
+function updateButtonLabels(pad) {
+  injectButtonLayoutStyles();
+
+  const layoutName = detectButtonLayout(pad);
+
+  if (layoutName === currentButtonLayoutName) return;
+
+  currentButtonLayoutName = layoutName;
+
+  const labels = buttonLayouts[layoutName] || buttonLayouts.xbox;
+
+  labels.forEach((label, index) => {
+    const visualButton = document.querySelector(`#btn${index}`);
+    if (!visualButton) return;
+
+    visualButton.innerHTML = label.html;
+    visualButton.title = label.text;
+  });
+
+  rawButtonItems.forEach((item, index) => {
+    const label = getButtonLabel(index);
+    const labelEl = item.querySelector("strong");
+
+    if (labelEl) {
+      labelEl.textContent = label.text;
+    }
+  });
+}
+
+
 function createCircularityData() {
   return {
     bins: Array(CIRCULARITY_BINS).fill(0),
@@ -329,6 +538,7 @@ function updateInfo(pad) {
   vibrationPanelStatus.textContent = vibrationText;
 
   setVibrationControls(hasVibration);
+  updateButtonLabels(pad);
 }
 
 function setVibrationControls(enabled) {
@@ -408,9 +618,14 @@ function trimRawItems(map, count) {
 
 function updateRawButtons(pad) {
   pad.buttons.forEach((button, index) => {
-    const label = standardButtonLabels[index] || `B${index}`;
-    const item = ensureRawButtonItem(index, label);
+    const label = getButtonLabel(index);
+    const item = ensureRawButtonItem(index, label.text);
+    const labelEl = item.querySelector("strong");
     const valueEl = item.querySelector("span");
+
+    if (labelEl && labelEl.textContent !== label.text) {
+      labelEl.textContent = label.text;
+    }
 
     const isActive = button.pressed || button.value > 0.5;
 
