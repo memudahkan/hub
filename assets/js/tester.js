@@ -52,6 +52,15 @@ let stickMode = "off";
 let infiniteVibrationTimer = null;
 const seenButtons = new Set();
 
+let lastFrameTime = 0;
+let lastControlsRenderTime = 0;
+
+const FRAME_INTERVAL = 1000 / 30;
+const CONTROLS_RENDER_INTERVAL = 500;
+
+const rawButtonItems = new Map();
+const rawAxisItems = new Map();
+
 const CIRCULARITY_BINS = 72;
 const CIRCULARITY_MIN_RADIUS = 0.35;
 const CIRCULARITY_ERROR_SAMPLE_MIN_RADIUS = 0.92;
@@ -281,6 +290,8 @@ function setEmptyState(message = "Menunggu gamepad...") {
 
   rawButtonsEl.innerHTML = "";
   rawAxesEl.innerHTML = "";
+  rawButtonItems.clear();
+  rawAxisItems.clear();
 
   setVibrationControls(false);
 
@@ -344,12 +355,62 @@ function updateVisualButtons(pad) {
   });
 }
 
-function updateRawButtons(pad) {
-  rawButtonsEl.innerHTML = "";
+function setTextIfChanged(element, text) {
+  if (element.textContent !== text) {
+    element.textContent = text;
+  }
+}
 
+function ensureRawButtonItem(index, label) {
+  if (rawButtonItems.has(index)) {
+    return rawButtonItems.get(index);
+  }
+
+  const item = document.createElement("div");
+  item.className = "raw-button";
+  item.innerHTML = `
+    <strong>${label}</strong>
+    <span>0.00</span>
+  `;
+
+  rawButtonsEl.appendChild(item);
+  rawButtonItems.set(index, item);
+
+  return item;
+}
+
+function ensureRawAxisItem(index) {
+  if (rawAxisItems.has(index)) {
+    return rawAxisItems.get(index);
+  }
+
+  const item = document.createElement("div");
+  item.className = "raw-axis";
+  item.innerHTML = `
+    <strong>Axis ${index}</strong>
+    <span>0.0000</span>
+  `;
+
+  rawAxesEl.appendChild(item);
+  rawAxisItems.set(index, item);
+
+  return item;
+}
+
+function trimRawItems(map, count) {
+  for (const [index, item] of map) {
+    if (index >= count) {
+      item.remove();
+      map.delete(index);
+    }
+  }
+}
+
+function updateRawButtons(pad) {
   pad.buttons.forEach((button, index) => {
-    const item = document.createElement("div");
-    item.className = "raw-button";
+    const label = standardButtonLabels[index] || `B${index}`;
+    const item = ensureRawButtonItem(index, label);
+    const valueEl = item.querySelector("span");
 
     const isActive = button.pressed || button.value > 0.5;
 
@@ -360,31 +421,21 @@ function updateRawButtons(pad) {
     item.classList.toggle("active", isActive);
     item.classList.toggle("seen", seenButtons.has(index));
 
-    const label = standardButtonLabels[index] || `B${index}`;
-
-    item.innerHTML = `
-      <strong>${label}</strong>
-      <span>${button.value.toFixed(2)}</span>
-    `;
-
-    rawButtonsEl.appendChild(item);
+    setTextIfChanged(valueEl, button.value.toFixed(2));
   });
+
+  trimRawItems(rawButtonItems, pad.buttons.length);
 }
 
 function updateRawAxes(pad) {
-  rawAxesEl.innerHTML = "";
-
   pad.axes.forEach((value, index) => {
-    const item = document.createElement("div");
-    item.className = "raw-axis";
+    const item = ensureRawAxisItem(index);
+    const valueEl = item.querySelector("span");
 
-    item.innerHTML = `
-      <strong>Axis ${index}</strong>
-      <span>${value.toFixed(4)}</span>
-    `;
-
-    rawAxesEl.appendChild(item);
+    setTextIfChanged(valueEl, value.toFixed(4));
   });
+
+  trimRawItems(rawAxisItems, pad.axes.length);
 }
 
 function updateAxes(pad) {
@@ -892,8 +943,20 @@ function clearButtonHistory() {
   });
 }
 
-function update() {
-  renderGamepadControls();
+function update(timestamp = 0) {
+  requestAnimationFrame(update);
+
+  if (timestamp - lastFrameTime < FRAME_INTERVAL) {
+    return;
+  }
+
+  lastFrameTime = timestamp;
+
+  if (timestamp - lastControlsRenderTime > CONTROLS_RENDER_INTERVAL) {
+    renderGamepadControls();
+    lastControlsRenderTime = timestamp;
+  }
+
   updateGamepadTabActivity();
   autoSwitchGamepadByButtonPress();
 
@@ -901,7 +964,6 @@ function update() {
 
   if (!pad) {
     setEmptyState();
-    requestAnimationFrame(update);
     return;
   }
 
@@ -910,8 +972,6 @@ function update() {
   updateRawButtons(pad);
   updateAxes(pad);
   updateTriggers(pad);
-
-  requestAnimationFrame(update);
 }
 
 async function runVibration(durationSeconds = 1, strong = 1.0, weak = 0.8) {
