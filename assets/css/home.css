@@ -196,11 +196,7 @@
   }
 }
 
-.about-box h2 {
+.about-box :is(h2, p) {
     margin: 0 0 4px;
-}
-
-.about-box p {
-    margin: 0;
 }
 
