@@ -195,3 +195,12 @@
     align-items: flex-start;
   }
 }
+
+.about-box h2 {
+    margin: 0 0 4px;
+}
+
+.about-box p {
+    margin: 0;
+}
+
