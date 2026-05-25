@@ -46,6 +46,53 @@ const rightStickOverlayValue = document.querySelector("#rightStickOverlayValue")
 const resetStickTestBtn = document.querySelector("#resetStickTest");
 const clearButtonHistoryBtn = document.querySelector("#clearButtonHistory");
 
+// ===== Gamepad stats to Google Sheet =====
+const GAMEPAD_STATS_ENDPOINT = "https://script.google.com/macros/s/AKfycbx3fZUJpHSwSLlNoXwGVYGmwqVYfz9QHqchvQKgJjuB6nEhmI-OQTBVN1eHtttqVu2G/exec";
+const GAMEPAD_STATS_TOKEN = "skipping7-metro-floe5-status4";
+
+const GAMEPAD_STATS_STORAGE_KEY = "m2d-reported-gamepads";
+
+const reportedGamepads = new Set(
+  JSON.parse(localStorage.getItem(GAMEPAD_STATS_STORAGE_KEY) || "[]")
+);
+
+function saveReportedGamepads() {
+  localStorage.setItem(
+    GAMEPAD_STATS_STORAGE_KEY,
+    JSON.stringify([...reportedGamepads])
+  );
+}
+
+function reportGamepadOnce(pad) {
+  if (!pad || !pad.id) return;
+  if (!GAMEPAD_STATS_ENDPOINT || GAMEPAD_STATS_ENDPOINT.includes("PASTE_")) return;
+
+  const key = `${pad.id}|${pad.mapping}|${pad.buttons.length}|${pad.axes.length}`;
+
+  if (reportedGamepads.has(key)) {
+    return;
+  }
+
+  reportedGamepads.add(key);
+  saveReportedGamepads();
+
+  fetch(GAMEPAD_STATS_ENDPOINT, {
+    method: "POST",
+    mode: "no-cors",
+    body: JSON.stringify({
+      token: GAMEPAD_STATS_TOKEN,
+      gamepadId: pad.id,
+      mapping: pad.mapping || "unknown",
+      buttons: pad.buttons.length,
+      axes: pad.axes.length,
+      vibration: pad.vibrationActuator ? "supported" : "not supported",
+      page: location.pathname
+    })
+  }).catch(() => {
+    // Kalau gagal kirim, tester tetap jalan.
+  });
+}
+
 let activeGamepadIndex = null;
 let lastGamepadSignature = "";
 let stickMode = "off";
@@ -539,6 +586,7 @@ function updateInfo(pad) {
 
   setVibrationControls(hasVibration);
   updateButtonLabels(pad);
+  reportGamepadOnce(pad);
 }
 
 function setVibrationControls(enabled) {
