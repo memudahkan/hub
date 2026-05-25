@@ -63,6 +63,41 @@ function saveReportedGamepads() {
   );
 }
 
+function getBrowserInfo() {
+  const ua = navigator.userAgent;
+
+  let browser = "Unknown";
+  let os = "Unknown";
+
+  if (ua.includes("Edg/")) {
+    browser = "Microsoft Edge";
+  } else if (ua.includes("OPR/") || ua.includes("Opera")) {
+    browser = "Opera";
+  } else if (ua.includes("Firefox/")) {
+    browser = "Firefox";
+  } else if (ua.includes("Chrome/")) {
+    browser = "Chrome";
+  } else if (ua.includes("Safari/")) {
+    browser = "Safari";
+  }
+
+  if (ua.includes("Windows NT 10.0")) {
+    os = "Windows 10/11";
+  } else if (ua.includes("Windows NT")) {
+    os = "Windows";
+  } else if (ua.includes("Android")) {
+    os = "Android";
+  } else if (ua.includes("iPhone") || ua.includes("iPad")) {
+    os = "iOS/iPadOS";
+  } else if (ua.includes("Mac OS X")) {
+    os = "macOS";
+  } else if (ua.includes("Linux")) {
+    os = "Linux";
+  }
+
+  return { browser, os };
+}
+
 function reportGamepadOnce(pad) {
   if (!pad || !pad.id) return;
   if (!GAMEPAD_STATS_ENDPOINT || GAMEPAD_STATS_ENDPOINT.includes("PASTE_")) return;
@@ -76,18 +111,21 @@ function reportGamepadOnce(pad) {
   reportedGamepads.add(key);
   saveReportedGamepads();
 
+  const browserInfo = getBrowserInfo();
   fetch(GAMEPAD_STATS_ENDPOINT, {
     method: "POST",
     mode: "no-cors",
-    body: JSON.stringify({
-      token: GAMEPAD_STATS_TOKEN,
-      gamepadId: pad.id,
-      mapping: pad.mapping || "unknown",
-      buttons: pad.buttons.length,
-      axes: pad.axes.length,
-      vibration: pad.vibrationActuator ? "supported" : "not supported",
-      page: location.pathname
-    })
+body: JSON.stringify({
+  token: GAMEPAD_STATS_TOKEN,
+  gamepadId: pad.id,
+  mapping: pad.mapping || "unknown",
+  buttons: pad.buttons.length,
+  axes: pad.axes.length,
+  vibration: pad.vibrationActuator ? "supported" : "not supported",
+  browser: browserInfo.browser,
+  os: browserInfo.os,
+  page: location.pathname
+})
   }).catch(() => {
     // Kalau gagal kirim, tester tetap jalan.
   });
