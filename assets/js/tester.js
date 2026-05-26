@@ -133,8 +133,10 @@ body: JSON.stringify({
 
 let activeGamepadIndex = null;
 let lastGamepadSignature = "";
+let lastInfoSignature = "";
 let stickMode = "off";
 let infiniteVibrationTimer = null;
+let isPageVisible = !document.hidden;
 const seenButtons = new Set();
 
 let lastFrameTime = 0;
@@ -168,7 +170,7 @@ const CIRCULARITY_ERROR_SAMPLE_MIN_RADIUS = 0.92;
 const CIRCULARITY_ERROR_SAMPLE_MAX_RADIUS = 1.15;
 const CIRCULARITY_ERROR_SCALE = 1;
 const PATH_MIN_DISTANCE = 0.01;
-const PATH_MAX_POINTS = 1400;
+const PATH_MAX_POINTS = 800;
 
 const circularityData = {
   left: createCircularityData(),
@@ -437,6 +439,19 @@ function getGamepadSignature(gamepads) {
     .join("|");
 }
 
+function getInfoSignature(pad) {
+  if (!pad) return "";
+
+  return [
+    pad.index,
+    pad.id,
+    pad.mapping || "unknown",
+    pad.buttons.length,
+    pad.axes.length,
+    Boolean(pad.vibrationActuator)
+  ].join("|");
+}
+
 function renderGamepadControls(force = false) {
   const gamepads = getGamepads();
   const signature = getGamepadSignature(gamepads);
@@ -584,12 +599,14 @@ function updateGamepadTabActivity() {
 
 function switchGamepad(index) {
   stopInfiniteVibration(true);
+  lastInfoSignature = "";
   activeGamepadIndex = Number(index);
   resetStickTest();
   syncActiveControlState();
 }
 
 function setEmptyState(message = "Menunggu gamepad...") {
+  lastInfoSignature = "";
   statusEl.textContent = message;
   gamepadNameEl.textContent = "Belum terdeteksi";
   gamepadNameEl.title = "";
@@ -629,6 +646,14 @@ function setEmptyState(message = "Menunggu gamepad...") {
 }
 
 function updateInfo(pad) {
+  const signature = getInfoSignature(pad);
+
+  if (signature === lastInfoSignature) {
+    return;
+  }
+
+  lastInfoSignature = signature;
+
   setTextIfChanged(statusEl, "Gamepad terdeteksi");
 
   const gamepadName = pad.id && pad.id.trim()
@@ -921,7 +946,7 @@ function calculateCircularity(data) {
   const filledBins = data.bins.filter((value) => value > 0);
   const coverage = (filledBins.length / CIRCULARITY_BINS) * 100;
 
-  // Tetap tahan hasil sampai putaran cukup penuh.
+  // v18 Tetap tahan hasil sampai putaran cukup penuh.
   // Formula error-nya mengikuti HT; gate ini hanya untuk UX tampilan.
   if (filledBins.length < CIRCULARITY_BINS * 0.75) {
     return null;
@@ -1200,23 +1225,7 @@ function drawCircularityFill(canvas, data) {
   ctx.arc(centerX, centerY, idealRadius, 0, Math.PI * 2);
   ctx.stroke();
 
-  // Titik sampel tepi.
-  ctx.globalAlpha = 0.46;
-  ctx.fillStyle = accentColor;
-
-  data.bins.forEach((radiusValue, index) => {
-    if (radiusValue <= 0) return;
-
-    const angle = index * step;
-    const normalizedValue = Math.max(0, radiusValue / maxRadius);
-    const sectorRadius = normalizedValue * radius;
-    const x = centerX + Math.cos(angle) * sectorRadius;
-    const y = centerY + Math.sin(angle) * sectorRadius;
-
-    ctx.beginPath();
-    ctx.arc(x, y, 1.8 * dpr, 0, Math.PI * 2);
-    ctx.fill();
-  });
+  // Titik sampel tepi dinonaktifkan untuk mengurangi beban canvas.
 
   ctx.restore();
 }
@@ -1347,6 +1356,11 @@ function sampleCircularityData(pad) {
 function update(timestamp = 0) {
   requestAnimationFrame(update);
 
+  // Saat tab/background tidak aktif, hentikan semua kerja tester.
+  if (!isPageVisible) {
+    return;
+  }
+
   const pad = getActiveGamepad();
 
   // Sampling circularity ringan tetap mengikuti requestAnimationFrame.
@@ -1359,27 +1373,30 @@ function update(timestamp = 0) {
 
   lastFrameTime = timestamp;
 
+  const gamepads = getGamepads();
+
   if (timestamp - lastControlsRenderTime > CONTROLS_RENDER_INTERVAL) {
     renderGamepadControls();
     lastControlsRenderTime = timestamp;
   }
 
-  updateGamepadTabActivity();
-  autoSwitchGamepadByButtonPress();
+  // Fitur ini hanya perlu diproses saat ada lebih dari 1 gamepad.
+  if (gamepads.length > 1) {
+    updateGamepadTabActivity();
+    autoSwitchGamepadByButtonPress();
+  }
 
-  const activePad = getActiveGamepad();
-
-  if (!activePad) {
+  if (!pad) {
     setEmptyStateOnce();
     return;
   }
 
   resetRuntimeStateForActiveGamepad();
-  updateInfo(activePad);
-  updateVisualButtons(activePad);
-  updateRawButtons(activePad);
-  updateAxes(activePad);
-  updateTriggers(activePad);
+  updateInfo(pad);
+  updateVisualButtons(pad);
+  updateRawButtons(pad);
+  updateAxes(pad);
+  updateTriggers(pad);
 }
 
 async function runVibration(durationSeconds = 1, strong = 1.0, weak = 0.8) {
@@ -1503,12 +1520,14 @@ stopVibrateBtn.addEventListener("click", () => {
 });
 
 window.addEventListener("gamepadconnected", (event) => {
+  lastInfoSignature = "";
   activeGamepadIndex = event.gamepad.index;
   renderGamepadControls(true);
   statusEl.textContent = "Gamepad terhubung";
 });
 
 window.addEventListener("gamepaddisconnected", (event) => {
+  lastInfoSignature = "";
   if (activeGamepadIndex === event.gamepad.index) {
     stopInfiniteVibration(true);
     activeGamepadIndex = null;
@@ -1519,12 +1538,21 @@ window.addEventListener("gamepaddisconnected", (event) => {
 });
 
 document.addEventListener("visibilitychange", () => {
+  isPageVisible = !document.hidden;
+
   if (document.hidden) {
     stopInfiniteVibration(true);
+    return;
   }
+
+  // Saat tab aktif lagi, render ulang kontrol dan reset timer supaya update tidak terasa telat.
+  lastFrameTime = 0;
+  lastControlsRenderTime = 0;
+  renderGamepadControls(true);
 });
 
 window.addEventListener("pagehide", () => {
+  isPageVisible = false;
   stopInfiniteVibration(true);
 });
 
