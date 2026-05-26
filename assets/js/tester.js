@@ -1,4 +1,3 @@
-/* M2D Gamepad Tester v21 - adaptive HT-style circularity visual */
 const statusEl = document.querySelector("#status");
 const gamepadNameEl = document.querySelector("#gamepadName");
 const mappingEl = document.querySelector("#mapping");
@@ -947,7 +946,7 @@ function calculateCircularity(data) {
   const filledBins = data.bins.filter((value) => value > 0);
   const coverage = (filledBins.length / CIRCULARITY_BINS) * 100;
 
-  // Tetap tahan hasil sampai putaran cukup penuh.
+  // v18 Tetap tahan hasil sampai putaran cukup penuh.
   // Formula error-nya mengikuti HT; gate ini hanya untuk UX tampilan.
   if (filledBins.length < CIRCULARITY_BINS * 0.75) {
     return null;
@@ -1138,118 +1137,95 @@ function drawCircularityFill(canvas, data) {
 
   const step = (Math.PI * 2) / data.bins.length;
 
-  // v21: adaptive HT-like visual.
-  // Kalau stick hampir bulat, radius 1.000 tetap memenuhi lingkaran referensi.
-  // Kalau ada overshoot besar, lingkaran 1.000 diskalakan turun agar bentuk aktual
-  // bisa terlihat keluar melewati lingkaran ideal tanpa terpotong canvas.
-  const padding = 8 * dpr;
-  const plotRadius = Math.max(1, radius - padding);
+  // Visual circularity tidak boleh clamp semua nilai di atas 1 menjadi lingkaran penuh.
+  // Jika max radius > 1, seluruh bentuk dinormalisasi ke max radius agar area yang
+  // lebih pendek tetap terlihat "kempot" dan area overshoot jadi mencapai tepi.
   const maxRadius = Math.max(1, ...filledBins);
-  const overshootScale = maxRadius > 1.08
-    ? Math.min(maxRadius, Math.SQRT2)
-    : 1;
-  const idealRadius = plotRadius / overshootScale;
-
-  const points = data.bins.map((radiusValue, index) => {
-    if (radiusValue <= 0) return null;
-
-    const angle = index * step;
-    const pointRadius = Math.min(radiusValue * idealRadius, plotRadius);
-
-    return {
-      angle,
-      rawRadius: radiusValue,
-      x: centerX + Math.cos(angle) * pointRadius,
-      y: centerY + Math.sin(angle) * pointRadius
-    };
-  });
-
-  const validPoints = points.filter(Boolean);
-
-  if (!validPoints.length) return;
+  const idealRadius = radius / maxRadius;
 
   ctx.save();
 
-  // Lingkaran ideal radius 1.000 sebagai referensi.
+  // Lingkaran ideal radius 1.000 sebagai patokan halus.
   ctx.beginPath();
   ctx.arc(centerX, centerY, idealRadius, 0, Math.PI * 2);
-  ctx.fillStyle = colorMixFallback(fillColor, 0.14);
+  ctx.fillStyle = colorMixFallback(fillColor, 0.34);
   ctx.fill();
 
-  ctx.globalAlpha = 0.68;
-  ctx.lineWidth = 1.15 * dpr;
-  ctx.strokeStyle = colorMixFallback(accentColor, 0.55);
-  ctx.stroke();
+  // Coverage aktual per sektor.
+  data.bins.forEach((radiusValue, index) => {
+    if (radiusValue <= 0) return;
 
-  // Spokes tipis dari pusat ke kontur aktual.
-  ctx.globalAlpha = 0.13;
-  ctx.lineWidth = 1 * dpr;
-  ctx.strokeStyle = accentColor;
+    const startAngle = index * step - step * 0.55;
+    const endAngle = index * step + step * 0.55;
+    const normalizedValue = Math.max(0, radiusValue / maxRadius);
+    const sectorRadius = normalizedValue * radius;
 
-  validPoints.forEach((point) => {
     ctx.beginPath();
     ctx.moveTo(centerX, centerY);
-    ctx.lineTo(point.x, point.y);
-    ctx.stroke();
+    ctx.arc(centerX, centerY, sectorRadius, startAngle, endAngle);
+    ctx.closePath();
+    ctx.fillStyle = fillColor;
+    ctx.fill();
   });
 
-  // Bentuk utama actual range.
-  ctx.globalAlpha = 0.74;
-  ctx.beginPath();
-
-  validPoints.forEach((point, index) => {
-    if (index === 0) {
-      ctx.moveTo(point.x, point.y);
-    } else {
-      ctx.lineTo(point.x, point.y);
-    }
-  });
-
-  ctx.closePath();
-  ctx.fillStyle = fillColor;
-  ctx.fill();
-
-  // Area overshoot di luar lingkaran ideal dibuat lebih tegas.
+  // Area overshoot di luar radius ideal diberi warna lebih pekat agar bentuk tidak
+  // terlihat selalu sempurna saat ada bagian yang melewati radius 1.
   data.bins.forEach((radiusValue, index) => {
     if (radiusValue <= 1) return;
 
-    const startAngle = index * step - step * 0.5;
-    const endAngle = index * step + step * 0.5;
-    const outerRadius = Math.min(radiusValue * idealRadius, plotRadius);
+    const startAngle = index * step - step * 0.55;
+    const endAngle = index * step + step * 0.55;
+    const outerRadius = Math.max(0, radiusValue / maxRadius) * radius;
 
     ctx.beginPath();
     ctx.arc(centerX, centerY, outerRadius, startAngle, endAngle);
     ctx.arc(centerX, centerY, idealRadius, endAngle, startAngle, true);
     ctx.closePath();
-    ctx.globalAlpha = 0.34;
     ctx.fillStyle = accentColor;
+    ctx.globalAlpha = 0.28;
     ctx.fill();
+    ctx.globalAlpha = 1;
   });
 
-  // Outline actual range supaya bentuk kotak/bulatnya lebih jelas.
-  ctx.globalAlpha = 0.96;
-  ctx.lineWidth = 1.8 * dpr;
-  ctx.strokeStyle = accentColor;
+  // Outline aktual circularity.
   ctx.beginPath();
 
-  validPoints.forEach((point, index) => {
-    if (index === 0) {
-      ctx.moveTo(point.x, point.y);
+  let started = false;
+
+  data.bins.forEach((radiusValue, index) => {
+    if (radiusValue <= 0) return;
+
+    const angle = index * step;
+    const normalizedValue = Math.max(0, radiusValue / maxRadius);
+    const sectorRadius = normalizedValue * radius;
+    const x = centerX + Math.cos(angle) * sectorRadius;
+    const y = centerY + Math.sin(angle) * sectorRadius;
+
+    if (!started) {
+      ctx.moveTo(x, y);
+      started = true;
     } else {
-      ctx.lineTo(point.x, point.y);
+      ctx.lineTo(x, y);
     }
   });
 
-  ctx.closePath();
-  ctx.stroke();
+  if (started) {
+    ctx.closePath();
+    ctx.globalAlpha = 0.95;
+    ctx.lineWidth = 1.4 * dpr;
+    ctx.strokeStyle = accentColor;
+    ctx.stroke();
+  }
 
-  // Garis ideal di atas fill agar radius 1.000 tetap terlihat.
-  ctx.globalAlpha = 0.7;
-  ctx.lineWidth = 1.1 * dpr;
+  // Garis ideal radius 1.000.
+  ctx.globalAlpha = 0.55;
+  ctx.lineWidth = 1 * dpr;
   ctx.strokeStyle = "#ffffff";
   ctx.beginPath();
   ctx.arc(centerX, centerY, idealRadius, 0, Math.PI * 2);
   ctx.stroke();
+
+  // Titik sampel tepi dinonaktifkan untuk mengurangi beban canvas.
 
   ctx.restore();
 }
