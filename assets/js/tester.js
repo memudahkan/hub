@@ -1,4 +1,4 @@
-/* M2D Gamepad Tester v19 - HT-style circularity visual */
+/* M2D Gamepad Tester v20 - HT-style circularity visual with overshoot */
 const statusEl = document.querySelector("#status");
 const gamepadNameEl = document.querySelector("#gamepadName");
 const mappingEl = document.querySelector("#mapping");
@@ -1138,24 +1138,27 @@ function drawCircularityFill(canvas, data) {
 
   const step = (Math.PI * 2) / data.bins.length;
 
-  // v19: HT-like visual.
-  // Tampilkan kontur jangkauan aktual stick, bukan sekadar sector fill radial.
-  // Jika diagonal mencapai 1.414, bentuknya akan terlihat lebih kotak/square-ish.
-  const maxRadius = Math.max(1, ...filledBins);
-  const idealRadius = radius / maxRadius;
+  // v20: HT-like visual dengan overshoot.
+  // Radius ideal 1.000 dibuat tetap, bukan ikut dinormalisasi ke max sample.
+  // Jadi kalau diagonal mencapai 1.414, kontur aktual akan keluar melewati
+  // lingkaran ideal seperti visual HT, bukan membuat lingkaran ideal mengecil.
+  const padding = 8 * dpr;
+  const plotRadius = Math.max(1, radius - padding);
+
+  // Sisakan ruang untuk nilai diagonal sekitar sqrt(2) = 1.414.
+  const idealRadius = plotRadius / Math.SQRT2;
 
   const points = data.bins.map((radiusValue, index) => {
     if (radiusValue <= 0) return null;
 
     const angle = index * step;
-    const normalizedValue = Math.max(0, radiusValue / maxRadius);
+    const pointRadius = radiusValue * idealRadius;
 
     return {
       angle,
-      radius: normalizedValue * radius,
       rawRadius: radiusValue,
-      x: centerX + Math.cos(angle) * normalizedValue * radius,
-      y: centerY + Math.sin(angle) * normalizedValue * radius
+      x: centerX + Math.cos(angle) * pointRadius,
+      y: centerY + Math.sin(angle) * pointRadius
     };
   });
 
@@ -1168,16 +1171,16 @@ function drawCircularityFill(canvas, data) {
   // Lingkaran ideal radius 1.000 sebagai referensi.
   ctx.beginPath();
   ctx.arc(centerX, centerY, idealRadius, 0, Math.PI * 2);
-  ctx.fillStyle = colorMixFallback(fillColor, 0.18);
+  ctx.fillStyle = colorMixFallback(fillColor, 0.16);
   ctx.fill();
 
-  ctx.globalAlpha = 0.65;
-  ctx.lineWidth = 1.2 * dpr;
+  ctx.globalAlpha = 0.68;
+  ctx.lineWidth = 1.15 * dpr;
   ctx.strokeStyle = colorMixFallback(accentColor, 0.55);
   ctx.stroke();
 
-  // Spokes halus agar arah bin tetap terbaca, mirip tester umum.
-  ctx.globalAlpha = 0.14;
+  // Spokes tipis dari pusat ke kontur aktual.
+  ctx.globalAlpha = 0.13;
   ctx.lineWidth = 1 * dpr;
   ctx.strokeStyle = accentColor;
 
@@ -1189,7 +1192,7 @@ function drawCircularityFill(canvas, data) {
   });
 
   // Bentuk utama actual range.
-  ctx.globalAlpha = 0.78;
+  ctx.globalAlpha = 0.72;
   ctx.beginPath();
 
   validPoints.forEach((point, index) => {
@@ -1210,7 +1213,7 @@ function drawCircularityFill(canvas, data) {
 
     const startAngle = index * step - step * 0.5;
     const endAngle = index * step + step * 0.5;
-    const outerRadius = Math.max(0, radiusValue / maxRadius) * radius;
+    const outerRadius = radiusValue * idealRadius;
 
     ctx.beginPath();
     ctx.arc(centerX, centerY, outerRadius, startAngle, endAngle);
@@ -1222,8 +1225,8 @@ function drawCircularityFill(canvas, data) {
   });
 
   // Outline actual range supaya bentuk kotak/bulatnya lebih jelas.
-  ctx.globalAlpha = 0.95;
-  ctx.lineWidth = 1.7 * dpr;
+  ctx.globalAlpha = 0.96;
+  ctx.lineWidth = 1.8 * dpr;
   ctx.strokeStyle = accentColor;
   ctx.beginPath();
 
@@ -1239,7 +1242,7 @@ function drawCircularityFill(canvas, data) {
   ctx.stroke();
 
   // Garis ideal di atas fill agar radius 1.000 tetap terlihat.
-  ctx.globalAlpha = 0.55;
+  ctx.globalAlpha = 0.7;
   ctx.lineWidth = 1.1 * dpr;
   ctx.strokeStyle = "#ffffff";
   ctx.beginPath();
