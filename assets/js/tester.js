@@ -1,3 +1,4 @@
+/* M2D Gamepad Tester v19.2b - overshoot visual clean + desktop name reserve */
 const statusEl = document.querySelector("#status");
 const gamepadNameEl = document.querySelector("#gamepadName");
 const mappingEl = document.querySelector("#mapping");
@@ -946,7 +947,7 @@ function calculateCircularity(data) {
   const filledBins = data.bins.filter((value) => value > 0);
   const coverage = (filledBins.length / CIRCULARITY_BINS) * 100;
 
-  // v18 Tetap tahan hasil sampai putaran cukup penuh.
+  // Tetap tahan hasil sampai putaran cukup penuh agar tidak terasa seperti hasil final palsu.
   // Formula error-nya mengikuti HT; gate ini hanya untuk UX tampilan.
   if (filledBins.length < CIRCULARITY_BINS * 0.75) {
     return null;
@@ -1117,10 +1118,41 @@ function getCanvasMetrics(canvas) {
   };
 }
 
+
+function getStickCanvasPlotMetrics(canvas) {
+  const metrics = getCanvasMetrics(canvas);
+  const zone = canvas.closest(".stick-zone") || canvas.parentElement;
+  const zoneRect = zone ? zone.getBoundingClientRect() : canvas.getBoundingClientRect();
+
+  const idealRadius =
+    Math.min(zoneRect.width, zoneRect.height) * metrics.dpr / 2;
+
+  // Canvas v19.2 dibuat lebih besar via CSS, jadi data radius > 1.000
+  // bisa tergambar keluar dari lingkaran ideal tanpa mengecilkan lingkaran.
+  const plotRadius =
+    Math.min(metrics.width, metrics.height) / 2 - 2 * metrics.dpr;
+
+  return {
+    ...metrics,
+    idealRadius,
+    plotRadius: Math.max(idealRadius, plotRadius)
+  };
+}
+
 function drawCircularityFill(canvas, data) {
   if (!canvas) return;
 
-  const { ctx, width, height, dpr, centerX, centerY, radius } = getCanvasMetrics(canvas);
+  const {
+    ctx,
+    width,
+    height,
+    dpr,
+    centerX,
+    centerY,
+    idealRadius,
+    plotRadius
+  } = getStickCanvasPlotMetrics(canvas);
+
   const filledBins = data.bins.filter((value) => value > 0);
 
   ctx.clearRect(0, 0, width, height);
@@ -1137,28 +1169,25 @@ function drawCircularityFill(canvas, data) {
 
   const step = (Math.PI * 2) / data.bins.length;
 
-  // Visual circularity tidak boleh clamp semua nilai di atas 1 menjadi lingkaran penuh.
-  // Jika max radius > 1, seluruh bentuk dinormalisasi ke max radius agar area yang
-  // lebih pendek tetap terlihat "kempot" dan area overshoot jadi mencapai tepi.
-  const maxRadius = Math.max(1, ...filledBins);
-  const idealRadius = radius / maxRadius;
-
   ctx.save();
 
-  // Lingkaran ideal radius 1.000 sebagai patokan halus.
+  // v19.2: circularity memakai canvas kotak yang lebih besar.
+  // Lingkaran ideal tetap radius 1.000, sementara radius > 1.000
+  // boleh keluar menuju area kotak di sekelilingnya.
   ctx.beginPath();
   ctx.arc(centerX, centerY, idealRadius, 0, Math.PI * 2);
-  ctx.fillStyle = colorMixFallback(fillColor, 0.34);
+  ctx.fillStyle = colorMixFallback(fillColor, 0.22);
   ctx.fill();
 
-  // Coverage aktual per sektor.
+  // Coverage aktual per sektor, tanpa normalisasi ke max radius.
+  ctx.globalAlpha = 1;
+
   data.bins.forEach((radiusValue, index) => {
     if (radiusValue <= 0) return;
 
     const startAngle = index * step - step * 0.55;
     const endAngle = index * step + step * 0.55;
-    const normalizedValue = Math.max(0, radiusValue / maxRadius);
-    const sectorRadius = normalizedValue * radius;
+    const sectorRadius = Math.min(radiusValue * idealRadius, plotRadius);
 
     ctx.beginPath();
     ctx.moveTo(centerX, centerY);
@@ -1168,26 +1197,25 @@ function drawCircularityFill(canvas, data) {
     ctx.fill();
   });
 
-  // Area overshoot di luar radius ideal diberi warna lebih pekat agar bentuk tidak
-  // terlihat selalu sempurna saat ada bagian yang melewati radius 1.
+  // Area overshoot di luar radius ideal diberi warna lebih tegas.
   data.bins.forEach((radiusValue, index) => {
     if (radiusValue <= 1) return;
 
     const startAngle = index * step - step * 0.55;
     const endAngle = index * step + step * 0.55;
-    const outerRadius = Math.max(0, radiusValue / maxRadius) * radius;
+    const outerRadius = Math.min(radiusValue * idealRadius, plotRadius);
 
     ctx.beginPath();
     ctx.arc(centerX, centerY, outerRadius, startAngle, endAngle);
     ctx.arc(centerX, centerY, idealRadius, endAngle, startAngle, true);
     ctx.closePath();
     ctx.fillStyle = accentColor;
-    ctx.globalAlpha = 0.28;
+    ctx.globalAlpha = 0.30;
     ctx.fill();
     ctx.globalAlpha = 1;
   });
 
-  // Outline aktual circularity.
+  // Outline actual range supaya bentuk square-ish terlihat saat diagonal overshoot.
   ctx.beginPath();
 
   let started = false;
@@ -1196,10 +1224,9 @@ function drawCircularityFill(canvas, data) {
     if (radiusValue <= 0) return;
 
     const angle = index * step;
-    const normalizedValue = Math.max(0, radiusValue / maxRadius);
-    const sectorRadius = normalizedValue * radius;
-    const x = centerX + Math.cos(angle) * sectorRadius;
-    const y = centerY + Math.sin(angle) * sectorRadius;
+    const pointRadius = Math.min(radiusValue * idealRadius, plotRadius);
+    const x = centerX + Math.cos(angle) * pointRadius;
+    const y = centerY + Math.sin(angle) * pointRadius;
 
     if (!started) {
       ctx.moveTo(x, y);
@@ -1211,21 +1238,19 @@ function drawCircularityFill(canvas, data) {
 
   if (started) {
     ctx.closePath();
-    ctx.globalAlpha = 0.95;
-    ctx.lineWidth = 1.4 * dpr;
+    ctx.globalAlpha = 0.96;
+    ctx.lineWidth = 1.6 * dpr;
     ctx.strokeStyle = accentColor;
     ctx.stroke();
   }
 
-  // Garis ideal radius 1.000.
-  ctx.globalAlpha = 0.55;
-  ctx.lineWidth = 1 * dpr;
+  // Garis ideal radius 1.000 tetap di atas fill.
+  ctx.globalAlpha = 0.64;
+  ctx.lineWidth = 1.1 * dpr;
   ctx.strokeStyle = "#ffffff";
   ctx.beginPath();
   ctx.arc(centerX, centerY, idealRadius, 0, Math.PI * 2);
   ctx.stroke();
-
-  // Titik sampel tepi dinonaktifkan untuk mengurangi beban canvas.
 
   ctx.restore();
 }
@@ -1245,7 +1270,16 @@ function colorMixFallback(color, alpha) {
 function drawPath(canvas, data) {
   if (!canvas) return;
 
-  const { ctx, width, height, dpr, centerX, centerY, radius } = getCanvasMetrics(canvas);
+  const {
+    ctx,
+    width,
+    height,
+    dpr,
+    centerX,
+    centerY,
+    idealRadius,
+    plotRadius
+  } = getStickCanvasPlotMetrics(canvas);
 
   ctx.clearRect(0, 0, width, height);
 
@@ -1257,14 +1291,22 @@ function drawPath(canvas, data) {
 
   ctx.save();
 
+  // Referensi radius ideal 1.000.
+  ctx.globalAlpha = 0.24;
+  ctx.lineWidth = 1 * dpr;
+  ctx.strokeStyle = accentColor;
+  ctx.beginPath();
+  ctx.arc(centerX, centerY, idealRadius, 0, Math.PI * 2);
+  ctx.stroke();
+
   ctx.lineWidth = 2 * dpr;
   ctx.strokeStyle = accentColor;
   ctx.globalAlpha = 0.86;
   ctx.beginPath();
 
   data.points.forEach((point, index) => {
-    const x = centerX + point.x * radius;
-    const y = centerY + point.y * radius;
+    const x = centerX + point.x * idealRadius;
+    const y = centerY + point.y * idealRadius;
 
     if (index === 0) {
       ctx.moveTo(x, y);
@@ -1279,8 +1321,8 @@ function drawPath(canvas, data) {
   ctx.fillStyle = accentColor;
 
   data.points.forEach((point) => {
-    const x = centerX + point.x * radius;
-    const y = centerY + point.y * radius;
+    const x = centerX + point.x * idealRadius;
+    const y = centerY + point.y * idealRadius;
 
     ctx.beginPath();
     ctx.arc(x, y, 1.8 * dpr, 0, Math.PI * 2);
