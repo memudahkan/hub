@@ -140,7 +140,7 @@ const seenButtons = new Set();
 let lastFrameTime = 0;
 let lastControlsRenderTime = 0;
 
-const FRAME_INTERVAL = 1000 / 60;
+const FRAME_INTERVAL = 1000 / 30;
 const CONTROLS_RENDER_INTERVAL = 500;
 
 const rawButtonItems = new Map();
@@ -753,8 +753,14 @@ function updateAxes(pad) {
 
   updateRawAxes(pad);
 
-  updateStickTestData("left", lx, ly);
-  updateStickTestData("right", rx, ry);
+  // Circularity disampling di loop ringan sebelum throttle UI,
+  // supaya hasil lebih cepat mendekati HT tanpa render 60 FPS.
+  // Path tetap disampling di loop UI 30 FPS agar jumlah titik tidak cepat membengkak.
+  if (stickMode !== "circularity") {
+    updateStickTestData("left", lx, ly);
+    updateStickTestData("right", rx, ry);
+  }
+
   renderStickTest();
 }
 
@@ -815,7 +821,7 @@ function updateCircularity(side, x, y) {
     angle += Math.PI * 2;
   }
 
-  // HardwareTester-style angle bucket:
+  // HT-style angle bucket:
   // angle dibulatkan ke kelipatan PI/16, bukan floor per sektor.
   const bin = Math.round(angle / step) % CIRCULARITY_BINS;
 
@@ -855,8 +861,8 @@ function calculateCircularity(data) {
   const filledBins = data.bins.filter((value) => value > 0);
   const coverage = (filledBins.length / CIRCULARITY_BINS) * 100;
 
-  // Tetap tahan hasil sampai putaran cukup penuh agar tidak terasa seperti hasil final palsu.
-  // Formula error-nya mengikuti HardwareTester; gate ini hanya untuk UX tampilan.
+  // Tetap tahan hasil sampai putaran cukup penuh.
+  // Formula error-nya mengikuti HT; gate ini hanya untuk UX tampilan.
   if (filledBins.length < CIRCULARITY_BINS * 0.75) {
     return null;
   }
@@ -867,7 +873,7 @@ function calculateCircularity(data) {
 
   if (average === 0) return null;
 
-  // HardwareTester-style circularity error:
+  // HT-style circularity error:
   // RMS dari deviasi radius maksimum per angle-bin terhadap radius ideal 1.000.
   const squaredErrors = filledBins.map((value) => Math.pow(1 - value, 2));
 
@@ -1243,8 +1249,26 @@ function clearButtonHistory() {
   });
 }
 
+function sampleCircularityData(pad) {
+  if (!pad || stickMode !== "circularity") return;
+
+  const lx = pad.axes[0] || 0;
+  const ly = pad.axes[1] || 0;
+  const rx = pad.axes[2] || 0;
+  const ry = pad.axes[3] || 0;
+
+  updateCircularity("left", lx, ly);
+  updateCircularity("right", rx, ry);
+}
+
 function update(timestamp = 0) {
   requestAnimationFrame(update);
+
+  const pad = getActiveGamepad();
+
+  // Sampling circularity ringan tetap mengikuti requestAnimationFrame.
+  // Yang berat seperti DOM, raw input, dan canvas tetap dibatasi FRAME_INTERVAL.
+  sampleCircularityData(pad);
 
   if (timestamp - lastFrameTime < FRAME_INTERVAL) {
     return;
@@ -1260,18 +1284,18 @@ function update(timestamp = 0) {
   updateGamepadTabActivity();
   autoSwitchGamepadByButtonPress();
 
-  const pad = getActiveGamepad();
+  const activePad = getActiveGamepad();
 
-  if (!pad) {
+  if (!activePad) {
     setEmptyState();
     return;
   }
 
-  updateInfo(pad);
-  updateVisualButtons(pad);
-  updateRawButtons(pad);
-  updateAxes(pad);
-  updateTriggers(pad);
+  updateInfo(activePad);
+  updateVisualButtons(activePad);
+  updateRawButtons(activePad);
+  updateAxes(activePad);
+  updateTriggers(activePad);
 }
 
 async function runVibration(durationSeconds = 1, strong = 1.0, weak = 0.8) {
