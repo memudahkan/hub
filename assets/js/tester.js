@@ -1,4 +1,4 @@
-/* M2D Gamepad Tester v19.2b - overshoot visual clean + desktop name reserve */
+/* M2D Gamepad Tester v19.2c - overshoot visual clean + desktop name reserve */
 const statusEl = document.querySelector("#status");
 const gamepadNameEl = document.querySelector("#gamepadName");
 const mappingEl = document.querySelector("#mapping");
@@ -947,7 +947,7 @@ function calculateCircularity(data) {
   const filledBins = data.bins.filter((value) => value > 0);
   const coverage = (filledBins.length / CIRCULARITY_BINS) * 100;
 
-  // Tetap tahan hasil sampai putaran cukup penuh agar tidak terasa seperti hasil final palsu.
+  // Tetap tahan hasil sampai putaran hampir penuh.
   // Formula error-nya mengikuti HT; gate ini hanya untuk UX tampilan.
   if (filledBins.length < CIRCULARITY_BINS * 0.75) {
     return null;
