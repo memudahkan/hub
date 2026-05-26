@@ -1,4 +1,4 @@
-/* M2D Gamepad Tester v20 - HT-style circularity visual with overshoot */
+/* M2D Gamepad Tester v21 - adaptive HT-style circularity visual */
 const statusEl = document.querySelector("#status");
 const gamepadNameEl = document.querySelector("#gamepadName");
 const mappingEl = document.querySelector("#mapping");
@@ -1138,21 +1138,23 @@ function drawCircularityFill(canvas, data) {
 
   const step = (Math.PI * 2) / data.bins.length;
 
-  // v20: HT-like visual dengan overshoot.
-  // Radius ideal 1.000 dibuat tetap, bukan ikut dinormalisasi ke max sample.
-  // Jadi kalau diagonal mencapai 1.414, kontur aktual akan keluar melewati
-  // lingkaran ideal seperti visual HT, bukan membuat lingkaran ideal mengecil.
+  // v21: adaptive HT-like visual.
+  // Kalau stick hampir bulat, radius 1.000 tetap memenuhi lingkaran referensi.
+  // Kalau ada overshoot besar, lingkaran 1.000 diskalakan turun agar bentuk aktual
+  // bisa terlihat keluar melewati lingkaran ideal tanpa terpotong canvas.
   const padding = 8 * dpr;
   const plotRadius = Math.max(1, radius - padding);
-
-  // Sisakan ruang untuk nilai diagonal sekitar sqrt(2) = 1.414.
-  const idealRadius = plotRadius / Math.SQRT2;
+  const maxRadius = Math.max(1, ...filledBins);
+  const overshootScale = maxRadius > 1.08
+    ? Math.min(maxRadius, Math.SQRT2)
+    : 1;
+  const idealRadius = plotRadius / overshootScale;
 
   const points = data.bins.map((radiusValue, index) => {
     if (radiusValue <= 0) return null;
 
     const angle = index * step;
-    const pointRadius = radiusValue * idealRadius;
+    const pointRadius = Math.min(radiusValue * idealRadius, plotRadius);
 
     return {
       angle,
@@ -1171,7 +1173,7 @@ function drawCircularityFill(canvas, data) {
   // Lingkaran ideal radius 1.000 sebagai referensi.
   ctx.beginPath();
   ctx.arc(centerX, centerY, idealRadius, 0, Math.PI * 2);
-  ctx.fillStyle = colorMixFallback(fillColor, 0.16);
+  ctx.fillStyle = colorMixFallback(fillColor, 0.14);
   ctx.fill();
 
   ctx.globalAlpha = 0.68;
@@ -1192,7 +1194,7 @@ function drawCircularityFill(canvas, data) {
   });
 
   // Bentuk utama actual range.
-  ctx.globalAlpha = 0.72;
+  ctx.globalAlpha = 0.74;
   ctx.beginPath();
 
   validPoints.forEach((point, index) => {
@@ -1213,7 +1215,7 @@ function drawCircularityFill(canvas, data) {
 
     const startAngle = index * step - step * 0.5;
     const endAngle = index * step + step * 0.5;
-    const outerRadius = radiusValue * idealRadius;
+    const outerRadius = Math.min(radiusValue * idealRadius, plotRadius);
 
     ctx.beginPath();
     ctx.arc(centerX, centerY, outerRadius, startAngle, endAngle);
