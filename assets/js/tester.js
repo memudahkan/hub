@@ -146,11 +146,11 @@ const CONTROLS_RENDER_INTERVAL = 500;
 const rawButtonItems = new Map();
 const rawAxisItems = new Map();
 
-const CIRCULARITY_BINS = 72;
-const CIRCULARITY_MIN_RADIUS = 0.35;
+const CIRCULARITY_BINS = 32;
+const CIRCULARITY_MIN_RADIUS = 0.2;
 const CIRCULARITY_ERROR_SAMPLE_MIN_RADIUS = 0.92;
 const CIRCULARITY_ERROR_SAMPLE_MAX_RADIUS = 1.15;
-const CIRCULARITY_ERROR_SCALE = 1.35;
+const CIRCULARITY_ERROR_SCALE = 1;
 const PATH_MIN_DISTANCE = 0.01;
 const PATH_MAX_POINTS = 1400;
 
@@ -806,25 +806,24 @@ function updateStickTestData(side, x, y) {
 function updateCircularity(side, x, y) {
   const radius = Math.hypot(x, y);
 
-  if (radius < CIRCULARITY_MIN_RADIUS) return;
+  if (radius <= CIRCULARITY_MIN_RADIUS) return;
 
+  const step = (Math.PI * 2) / CIRCULARITY_BINS;
   let angle = Math.atan2(y, x);
 
   if (angle < 0) {
     angle += Math.PI * 2;
   }
 
-  const bin = Math.floor((angle / (Math.PI * 2)) * CIRCULARITY_BINS);
-  const safeBin = Math.min(CIRCULARITY_BINS - 1, Math.max(0, bin));
+  // HardwareTester-style angle bucket:
+  // angle dibulatkan ke kelipatan PI/16, bukan floor per sektor.
+  const bin = Math.round(angle / step) % CIRCULARITY_BINS;
 
   const data = circularityData[side];
 
-  // Bins menyimpan radius maksimum per sudut untuk visual coverage.
-  data.bins[safeBin] = Math.max(data.bins[safeBin], radius);
+  // Simpan radius maksimum per arah/bin.
+  data.bins[bin] = Math.max(data.bins[bin], radius);
   data.samples += 1;
-
-  // AVG error dihitung dari sampel gerakan dekat tepi luar,
-  // tapi hasil baru ditampilkan setelah coverage cukup.
 }
 
 function updatePath(side, x, y) {
@@ -856,7 +855,8 @@ function calculateCircularity(data) {
   const filledBins = data.bins.filter((value) => value > 0);
   const coverage = (filledBins.length / CIRCULARITY_BINS) * 100;
 
-  // Jangan tampilkan hasil final sebelum putaran cukup penuh.
+  // Tetap tahan hasil sampai putaran cukup penuh agar tidak terasa seperti hasil final palsu.
+  // Formula error-nya mengikuti HardwareTester; gate ini hanya untuk UX tampilan.
   if (filledBins.length < CIRCULARITY_BINS * 0.75) {
     return null;
   }
@@ -867,19 +867,18 @@ function calculateCircularity(data) {
 
   if (average === 0) return null;
 
-  // Stable circularity error:
-  // Hitung dari peta radius maksimum per sudut/bin, bukan dari sampel waktu.
-  // Dengan begitu hasil tidak berubah banyak hanya karena stick diputar cepat/pelan.
-  const binErrors = filledBins.map((value) => Math.abs(value - 1));
+  // HardwareTester-style circularity error:
+  // RMS dari deviasi radius maksimum per angle-bin terhadap radius ideal 1.000.
+  const squaredErrors = filledBins.map((value) => Math.pow(1 - value, 2));
 
-  const rmsError =
+  const error =
     Math.sqrt(
-      binErrors.reduce((sum, value) => sum + value * value, 0) /
-      binErrors.length
+      squaredErrors.reduce((sum, value) => sum + value, 0) /
+      squaredErrors.length
     ) * 100;
 
   return {
-    error: rmsError * CIRCULARITY_ERROR_SCALE,
+    error,
     coverage,
     min,
     max,
