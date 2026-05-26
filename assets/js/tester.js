@@ -140,7 +140,7 @@ const seenButtons = new Set();
 let lastFrameTime = 0;
 let lastControlsRenderTime = 0;
 
-const FRAME_INTERVAL = 1000 / 30;
+const FRAME_INTERVAL = 1000 / 60;
 const CONTROLS_RENDER_INTERVAL = 500;
 
 const rawButtonItems = new Map();
