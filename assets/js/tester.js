@@ -146,6 +146,22 @@ const CONTROLS_RENDER_INTERVAL = 500;
 const rawButtonItems = new Map();
 const rawAxisItems = new Map();
 
+let lastEmptyMessage = "";
+let lastCircularityPadIndex = null;
+
+const AXIS_VISUAL_EPSILON = 0.003;
+const CIRCULARITY_SAMPLE_EPSILON = 0.002;
+
+const lastStickVisual = {
+  left: { x: null, y: null },
+  right: { x: null, y: null }
+};
+
+const lastCircularitySample = {
+  left: { x: null, y: null },
+  right: { x: null, y: null }
+};
+
 const CIRCULARITY_BINS = 32;
 const CIRCULARITY_MIN_RADIUS = 0.2;
 const CIRCULARITY_ERROR_SAMPLE_MIN_RADIUS = 0.92;
@@ -576,6 +592,7 @@ function switchGamepad(index) {
 function setEmptyState(message = "Menunggu gamepad...") {
   statusEl.textContent = message;
   gamepadNameEl.textContent = "Belum terdeteksi";
+  gamepadNameEl.title = "";
   mappingEl.textContent = "-";
   buttonCountEl.textContent = "-";
   axisCountEl.textContent = "-";
@@ -602,25 +619,34 @@ function setEmptyState(message = "Menunggu gamepad...") {
     button.classList.remove("active");
   });
 
+  lastStickVisual.left.x = null;
+  lastStickVisual.left.y = null;
+  lastStickVisual.right.x = null;
+  lastStickVisual.right.y = null;
+  resetCircularitySampleCache();
+
   renderStickTest();
 }
 
 function updateInfo(pad) {
-  statusEl.textContent = "Gamepad terdeteksi";
+  setTextIfChanged(statusEl, "Gamepad terdeteksi");
 
-  gamepadNameEl.textContent = pad.id && pad.id.trim()
+  const gamepadName = pad.id && pad.id.trim()
     ? pad.id
     : "Gamepad terdeteksi tanpa nama";
 
-  mappingEl.textContent = pad.mapping || "unknown";
-  buttonCountEl.textContent = pad.buttons.length;
-  axisCountEl.textContent = pad.axes.length;
+  setTextIfChanged(gamepadNameEl, gamepadName);
+  gamepadNameEl.title = gamepadName;
+
+  setTextIfChanged(mappingEl, pad.mapping || "unknown");
+  setTextIfChanged(buttonCountEl, String(pad.buttons.length));
+  setTextIfChanged(axisCountEl, String(pad.axes.length));
 
   const hasVibration = Boolean(pad.vibrationActuator);
   const vibrationText = hasVibration ? "supported" : "not supported";
 
-  vibrationSupportEl.textContent = vibrationText;
-  vibrationPanelStatus.textContent = vibrationText;
+  setTextIfChanged(vibrationSupportEl, vibrationText);
+  setTextIfChanged(vibrationPanelStatus, vibrationText);
 
   setVibrationControls(hasVibration);
   updateButtonLabels(pad);
@@ -655,6 +681,28 @@ function setTextIfChanged(element, text) {
   if (element.textContent !== text) {
     element.textContent = text;
   }
+}
+
+function setEmptyStateOnce(message = "Menunggu gamepad...") {
+  if (lastEmptyMessage === message) return;
+
+  lastEmptyMessage = message;
+  setEmptyState(message);
+}
+
+function resetRuntimeStateForActiveGamepad() {
+  lastEmptyMessage = "";
+}
+
+function hasMeaningfulStickChange(last, x, y, epsilon) {
+  if (last.x === null || last.y === null) return true;
+
+  return Math.hypot(x - last.x, y - last.y) > epsilon;
+}
+
+function rememberStickPosition(last, x, y) {
+  last.x = x;
+  last.y = y;
 }
 
 function ensureRawButtonItem(index, label) {
@@ -745,23 +793,31 @@ function updateAxes(pad) {
   const rx = pad.axes[2] || 0;
   const ry = pad.axes[3] || 0;
 
-  updateStick(leftStickDot, lx, ly);
-  updateStick(rightStickDot, rx, ry);
+  if (hasMeaningfulStickChange(lastStickVisual.left, lx, ly, AXIS_VISUAL_EPSILON)) {
+    updateStick(leftStickDot, lx, ly);
+    rememberStickPosition(lastStickVisual.left, lx, ly);
+  }
 
-  leftStickValue.textContent = `X: ${lx.toFixed(2)} / Y: ${ly.toFixed(2)}`;
-  rightStickValue.textContent = `X: ${rx.toFixed(2)} / Y: ${ry.toFixed(2)}`;
+  if (hasMeaningfulStickChange(lastStickVisual.right, rx, ry, AXIS_VISUAL_EPSILON)) {
+    updateStick(rightStickDot, rx, ry);
+    rememberStickPosition(lastStickVisual.right, rx, ry);
+  }
+
+  setTextIfChanged(leftStickValue, `X: ${lx.toFixed(2)} / Y: ${ly.toFixed(2)}`);
+  setTextIfChanged(rightStickValue, `X: ${rx.toFixed(2)} / Y: ${ry.toFixed(2)}`);
 
   updateRawAxes(pad);
 
-  // Circularity disampling di loop ringan sebelum throttle UI,
-  // supaya hasil lebih cepat mendekati HT tanpa render 60 FPS.
+  // Circularity disampling di loop ringan sebelum throttle UI.
   // Path tetap disampling di loop UI 30 FPS agar jumlah titik tidak cepat membengkak.
   if (stickMode !== "circularity") {
     updateStickTestData("left", lx, ly);
     updateStickTestData("right", rx, ry);
   }
 
-  renderStickTest();
+  if (stickMode !== "off") {
+    renderStickTest();
+  }
 }
 
 function updateStick(dotEl, x, y) {
@@ -791,9 +847,13 @@ function updateTriggers(pad) {
 function updateTrigger(barEl, valueEl, value) {
   const safeValue = Math.max(0, Math.min(1, value));
   const percent = Math.round(safeValue * 100);
+  const widthText = `${percent}%`;
 
-  barEl.style.width = `${percent}%`;
-  valueEl.textContent = safeValue.toFixed(2);
+  if (barEl.style.width !== widthText) {
+    barEl.style.width = widthText;
+  }
+
+  setTextIfChanged(valueEl, safeValue.toFixed(2));
 }
 
 function updateStickTestData(side, x, y) {
@@ -1221,6 +1281,13 @@ function drawPath(canvas, data) {
   ctx.restore();
 }
 
+function resetCircularitySampleCache() {
+  lastCircularitySample.left.x = null;
+  lastCircularitySample.left.y = null;
+  lastCircularitySample.right.x = null;
+  lastCircularitySample.right.y = null;
+}
+
 function setStickMode(mode) {
   stickMode = mode;
 
@@ -1238,6 +1305,7 @@ function resetStickTest() {
   pathData.left = createPathData();
   pathData.right = createPathData();
 
+  resetCircularitySampleCache();
   renderStickTest();
 }
 
@@ -1252,13 +1320,28 @@ function clearButtonHistory() {
 function sampleCircularityData(pad) {
   if (!pad || stickMode !== "circularity") return;
 
+  if (lastCircularityPadIndex !== pad.index) {
+    lastCircularityPadIndex = pad.index;
+    lastCircularitySample.left.x = null;
+    lastCircularitySample.left.y = null;
+    lastCircularitySample.right.x = null;
+    lastCircularitySample.right.y = null;
+  }
+
   const lx = pad.axes[0] || 0;
   const ly = pad.axes[1] || 0;
   const rx = pad.axes[2] || 0;
   const ry = pad.axes[3] || 0;
 
-  updateCircularity("left", lx, ly);
-  updateCircularity("right", rx, ry);
+  if (hasMeaningfulStickChange(lastCircularitySample.left, lx, ly, CIRCULARITY_SAMPLE_EPSILON)) {
+    updateCircularity("left", lx, ly);
+    rememberStickPosition(lastCircularitySample.left, lx, ly);
+  }
+
+  if (hasMeaningfulStickChange(lastCircularitySample.right, rx, ry, CIRCULARITY_SAMPLE_EPSILON)) {
+    updateCircularity("right", rx, ry);
+    rememberStickPosition(lastCircularitySample.right, rx, ry);
+  }
 }
 
 function update(timestamp = 0) {
@@ -1287,10 +1370,11 @@ function update(timestamp = 0) {
   const activePad = getActiveGamepad();
 
   if (!activePad) {
-    setEmptyState();
+    setEmptyStateOnce();
     return;
   }
 
+  resetRuntimeStateForActiveGamepad();
   updateInfo(activePad);
   updateVisualButtons(activePad);
   updateRawButtons(activePad);
