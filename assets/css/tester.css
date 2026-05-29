@@ -1,3 +1,4 @@
+/* M2D Gamepad Tester v19.3b - light stick press color */
 * {
   box-sizing: border-box;
 }
@@ -1275,5 +1276,54 @@ h3 {
 @media (max-width: 360px) {
   .meta-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+/* v19.3: L3 / R3 stick press indicator */
+.stick-zone.stick-pressed {
+  border-color: color-mix(in srgb, var(--active) 72%, var(--line));
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--active) 14%, transparent),
+    0 0 22px color-mix(in srgb, var(--active) 20%, transparent),
+    inset 0 0 0 6px color-mix(in srgb, var(--card-soft) 80%, transparent),
+    inset 0 0 24px color-mix(in srgb, var(--muted) 12%, transparent);
+}
+
+.stick-zone.stick-pressed .stick-dot {
+  background: var(--accent);
+  box-shadow: 0 0 20px color-mix(in srgb, var(--accent) 42%, transparent);
+  transform: translate(-50%, -50%) scale(0.9);
+}
+
+.stick-mode-circularity .stick-zone.stick-pressed,
+.stick-mode-path .stick-zone.stick-pressed {
+  border-color: color-mix(in srgb, var(--active) 78%, var(--line));
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--active) 14%, transparent),
+    0 0 22px color-mix(in srgb, var(--active) 20%, transparent);
+}
+
+/* v19.3b: light mode L3 / R3 indicator uses stick blue instead of black */
+@media (prefers-color-scheme: light) {
+  .stick-zone.stick-pressed {
+    border-color: color-mix(in srgb, var(--accent) 72%, var(--line));
+    box-shadow:
+      0 0 0 4px color-mix(in srgb, var(--accent) 14%, transparent),
+      0 0 22px color-mix(in srgb, var(--accent) 20%, transparent),
+      inset 0 0 0 6px color-mix(in srgb, var(--card-soft) 80%, transparent),
+      inset 0 0 24px color-mix(in srgb, var(--muted) 12%, transparent);
+  }
+
+  .stick-zone.stick-pressed .stick-dot {
+    background: var(--accent);
+    box-shadow: 0 0 20px color-mix(in srgb, var(--accent) 42%, transparent);
+  }
+
+  .stick-mode-circularity .stick-zone.stick-pressed,
+  .stick-mode-path .stick-zone.stick-pressed {
+    border-color: color-mix(in srgb, var(--accent) 78%, var(--line));
+    box-shadow:
+      0 0 0 4px color-mix(in srgb, var(--accent) 14%, transparent),
+      0 0 22px color-mix(in srgb, var(--accent) 20%, transparent);
   }
 }
