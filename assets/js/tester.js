@@ -1,4 +1,4 @@
-/* M2D Gamepad Tester v19.2c - overshoot visual clean + desktop name reserve */
+/* M2D Gamepad Tester v19.3a - user-facing gamepad numbering */
 const statusEl = document.querySelector("#status");
 const gamepadNameEl = document.querySelector("#gamepadName");
 const mappingEl = document.querySelector("#mapping");
@@ -21,6 +21,8 @@ const rawAxesEl = document.querySelector("#rawAxes");
 
 const leftStickDot = document.querySelector("#leftStickDot");
 const rightStickDot = document.querySelector("#rightStickDot");
+const leftStickZone = leftStickDot?.closest(".stick-zone") || leftStickDot?.parentElement;
+const rightStickZone = rightStickDot?.closest(".stick-zone") || rightStickDot?.parentElement;
 const leftStickValue = document.querySelector("#leftStickValue");
 const rightStickValue = document.querySelector("#rightStickValue");
 
@@ -475,7 +477,7 @@ function renderGamepadControls(force = false) {
       tab.className = "gamepad-tab placeholder-tab";
       tab.type = "button";
       tab.disabled = true;
-      tab.textContent = `Gamepad ${slot}`;
+      tab.textContent = `Gamepad ${slot + 1}`;
       tab.title = "Belum terdeteksi";
       gamepadTabs.appendChild(tab);
     }
@@ -509,10 +511,10 @@ function renderGamepadControls(force = false) {
     if (pad) {
       const name = pad.id && pad.id.trim()
         ? pad.id
-        : `Gamepad ${pad.index}`;
+        : `Gamepad ${pad.index + 1}`;
 
       tab.className = "gamepad-tab";
-      tab.textContent = `Gamepad ${pad.index}`;
+      tab.textContent = `Gamepad ${pad.index + 1}`;
       tab.title = name;
 
       tab.addEventListener("click", () => {
@@ -521,7 +523,7 @@ function renderGamepadControls(force = false) {
     } else {
       tab.className = "gamepad-tab placeholder-tab";
       tab.disabled = true;
-      tab.textContent = `Gamepad ${slot}`;
+      tab.textContent = `Gamepad ${slot + 1}`;
       tab.title = "Belum terdeteksi";
     }
 
@@ -531,11 +533,11 @@ function renderGamepadControls(force = false) {
   gamepads.forEach((pad) => {
     const name = pad.id && pad.id.trim()
       ? pad.id
-      : `Gamepad ${pad.index}`;
+      : `Gamepad ${pad.index + 1}`;
 
     const option = document.createElement("option");
     option.value = String(pad.index);
-    option.textContent = `Gamepad ${pad.index} — ${name}`;
+    option.textContent = `Gamepad ${pad.index + 1} — ${name}`;
     gamepadSelect.appendChild(option);
   });
 
@@ -626,6 +628,8 @@ function setEmptyState(message = "Menunggu gamepad...") {
 
   updateStick(leftStickDot, 0, 0);
   updateStick(rightStickDot, 0, 0);
+  leftStickZone?.classList.remove("stick-pressed");
+  rightStickZone?.classList.remove("stick-pressed");
 
   leftStickValue.textContent = "X: 0.00 / Y: 0.00";
   rightStickValue.textContent = "X: 0.00 / Y: 0.00";
@@ -701,6 +705,18 @@ function updateVisualButtons(pad) {
     visualButton.classList.toggle("active", isActive);
     visualButton.classList.toggle("seen", seenButtons.has(index));
   });
+}
+
+function updateStickPressState(pad) {
+  const leftPressed = Boolean(
+    pad?.buttons[10] && (pad.buttons[10].pressed || pad.buttons[10].value > 0.5)
+  );
+  const rightPressed = Boolean(
+    pad?.buttons[11] && (pad.buttons[11].pressed || pad.buttons[11].value > 0.5)
+  );
+
+  leftStickZone?.classList.toggle("stick-pressed", leftPressed);
+  rightStickZone?.classList.toggle("stick-pressed", rightPressed);
 }
 
 function setTextIfChanged(element, text) {
@@ -1436,6 +1452,7 @@ function update(timestamp = 0) {
   resetRuntimeStateForActiveGamepad();
   updateInfo(pad);
   updateVisualButtons(pad);
+  updateStickPressState(pad);
   updateRawButtons(pad);
   updateAxes(pad);
   updateTriggers(pad);
