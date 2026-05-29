@@ -1,4 +1,5 @@
-    :root {
+/* Koleksi Gamepad M2D v2 - 29/05/2026 */
+:root {
       color-scheme: light dark;
       --bg: #f5f7fb;
       --surface: #ffffff;
@@ -750,4 +751,172 @@
 .market[aria-disabled="true"]:focus-visible {
   transform: none;
   outline: none;
+}
+
+/* Product description clamp + modal */
+.entry-desc-wrap {
+  margin: .45rem 0 0;
+  color: var(--muted);
+  font-size: .94rem;
+  line-height: 1.45;
+}
+
+.entry-desc-wrap .entry-desc {
+  display: block;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  color: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.entry-desc-wrap .entry-desc.is-overflowing {
+  cursor: pointer;
+}
+
+.entry-desc-wrap .entry-desc.is-overflowing:hover,
+.entry-desc-wrap .entry-desc.is-overflowing:focus-visible {
+  color: color-mix(in srgb, var(--muted) 76%, var(--accent));
+  outline: none;
+}
+
+.entry-desc-text {
+  white-space: normal;
+}
+
+.entry-desc-more {
+  width: 1em;
+  height: 1em;
+  margin-left: .08em;
+  display: inline-grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  line-height: 1;
+  vertical-align: -0.13em;
+}
+
+.entry-desc-more[hidden] {
+  display: none !important;
+}
+
+.entry-desc-more:hover,
+.entry-desc-more:focus-visible {
+  color: var(--accent);
+  outline: none;
+}
+
+.entry-desc-more svg {
+  width: 1em;
+  height: 1em;
+  stroke: currentColor;
+  stroke-width: 2.35;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+
+body.desc-modal-open {
+  overflow: hidden;
+}
+
+.desc-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  padding: 24px;
+  display: grid;
+  place-items: center;
+}
+
+.desc-modal[hidden] {
+  display: none !important;
+}
+
+.desc-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgb(0 0 0 / .48);
+  backdrop-filter: blur(3px);
+}
+
+.desc-modal-box {
+  position: relative;
+  z-index: 1;
+  width: min(520px, 100%);
+  max-height: min(78vh, 560px);
+  overflow: auto;
+  padding: 1.15rem;
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius) + 6px);
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: 0 24px 80px rgb(0 0 0 / .28);
+}
+
+.desc-modal-box h3 {
+  margin: 0 2.4rem .65rem 0;
+  font-size: 1.05rem;
+  line-height: 1.25;
+  letter-spacing: -.025em;
+}
+
+.desc-modal-box p {
+  margin: 0;
+  color: var(--muted);
+  font-size: .94rem;
+  line-height: 1.65;
+}
+
+.desc-modal-close {
+  position: absolute;
+  top: .75rem;
+  right: .75rem;
+  width: 2rem;
+  height: 2rem;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--surface-2) 88%, transparent);
+  color: var(--muted);
+  cursor: pointer;
+  line-height: 0;
+}
+
+.desc-modal-close svg {
+  width: 1rem;
+  height: 1rem;
+  stroke: currentColor;
+  stroke-width: 2.15;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+
+.desc-modal-close:hover,
+.desc-modal-close:focus-visible {
+  color: var(--text);
+  outline: none;
+  background: color-mix(in srgb, var(--surface-2) 100%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 35%, var(--border));
+}
+
+@media (max-width: 640px) {
+  .desc-modal {
+    padding: 16px;
+    place-items: center;
+  }
+
+  .desc-modal-box {
+    width: 100%;
+    max-height: 78vh;
+    border-radius: 18px;
+    transform: translateY(-4vh);
+  }
 }
