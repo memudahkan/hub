@@ -1,4 +1,4 @@
-/* M2D Gamepad Tester v19.3a - user-facing gamepad numbering */
+/* M2D Gamepad Tester v19.8i - samakan heading tes getar */
 const statusEl = document.querySelector("#status");
 const gamepadNameEl = document.querySelector("#gamepadName");
 const mappingEl = document.querySelector("#mapping");
@@ -11,7 +11,15 @@ const lightVibrateBtn = document.querySelector("#lightVibrateBtn");
 const heavyVibrateBtn = document.querySelector("#heavyVibrateBtn");
 const fullVibrateBtn = document.querySelector("#fullVibrateBtn");
 const infiniteVibrateBtn = document.querySelector("#infiniteVibrateBtn");
-const stopVibrateBtn = document.querySelector("#stopVibrateBtn");
+const toggleAdvancedVibrateBtn = document.querySelector("#toggleAdvancedVibrateBtn");
+const vibrationAdvancedPanel = document.querySelector("#vibrationAdvancedPanel");
+const leftMotorSlider = document.querySelector("#leftMotorSlider");
+const rightMotorSlider = document.querySelector("#rightMotorSlider");
+const leftMotorValue = document.querySelector("#leftMotorValue");
+const rightMotorValue = document.querySelector("#rightMotorValue");
+const leftMotorTestBtn = document.querySelector("#leftMotorTestBtn");
+const rightMotorTestBtn = document.querySelector("#rightMotorTestBtn");
+const triggerRumbleToggle = document.querySelector("#triggerRumbleToggle");
 
 const gamepadTabs = document.querySelector("#gamepadTabs");
 const gamepadSelect = document.querySelector("#gamepadSelect");
@@ -25,6 +33,8 @@ const leftStickZone = leftStickDot?.closest(".stick-zone") || leftStickDot?.pare
 const rightStickZone = rightStickDot?.closest(".stick-zone") || rightStickDot?.parentElement;
 const leftStickValue = document.querySelector("#leftStickValue");
 const rightStickValue = document.querySelector("#rightStickValue");
+const leftStickDrift = createDriftReadout(leftStickValue);
+const rightStickDrift = createDriftReadout(rightStickValue);
 
 const ltBar = document.querySelector("#ltBar");
 const rtBar = document.querySelector("#rtBar");
@@ -34,7 +44,7 @@ const rtValue = document.querySelector("#rtValue");
 const leftStickCanvas = document.querySelector("#leftStickCanvas");
 const rightStickCanvas = document.querySelector("#rightStickCanvas");
 
-const modeTabs = document.querySelectorAll(".mode-tab");
+const getModeTabs = () => document.querySelectorAll(".mode-tab");
 
 const leftStickTestValue = document.querySelector("#leftStickTestValue");
 const rightStickTestValue = document.querySelector("#rightStickTestValue");
@@ -48,6 +58,11 @@ const rightStickOverlayValue = document.querySelector("#rightStickOverlayValue")
 
 const resetStickTestBtn = document.querySelector("#resetStickTest");
 const clearButtonHistoryBtn = document.querySelector("#clearButtonHistory");
+
+if (clearButtonHistoryBtn) {
+  clearButtonHistoryBtn.textContent = "Bersihkan";
+  clearButtonHistoryBtn.title = "Bersihkan riwayat tombol yang pernah ditekan";
+}
 
 // ===== Gamepad stats to Google Sheet =====
 const GAMEPAD_STATS_ENDPOINT = "https://script.google.com/macros/s/AKfycbx3fZUJpHSwSLlNoXwGVYGmwqVYfz9QHqchvQKgJjuB6nEhmI-OQTBVN1eHtttqVu2G/exec";
@@ -147,6 +162,11 @@ let lastControlsRenderTime = 0;
 
 const FRAME_INTERVAL = 1000 / 30;
 const CONTROLS_RENDER_INTERVAL = 500;
+const TRIGGER_RUMBLE_INTERVAL = 1000 / 12;
+const TRIGGER_RUMBLE_DURATION = 140;
+const TRIGGER_RUMBLE_CHANGE_EPSILON = 0.04;
+const TRIGGER_RUMBLE_STOP_EPSILON = 0.03;
+const SINGLE_MOTOR_INTERVAL = 850;
 
 const rawButtonItems = new Map();
 const rawAxisItems = new Map();
@@ -175,6 +195,44 @@ const CIRCULARITY_ERROR_SCALE = 1;
 const PATH_MIN_DISTANCE = 0.01;
 const PATH_MAX_POINTS = 800;
 
+const STICK_TRAIL_MAX_POINTS = 18;
+const STICK_TRAIL_LIFETIME = 520;
+const STICK_TRAIL_DEADZONE = 0.05;
+const STICK_TRAIL_MIN_DISTANCE = 0.018;
+const DRIFT_STATUS_UPDATE_RADIUS = 0.12;
+const DRIFT_STATUS_STABLE_EPSILON = 0.004;
+const DRIFT_STATUS_STABLE_TIME = 500;
+const DRIFT_TEST_DURATION = 3000;
+const DRIFT_TEST_SAMPLE_INTERVAL = 1000 / 30;
+
+let driftTestState = "idle";
+let driftTestStartedAt = 0;
+let lastDriftSampleTime = 0;
+let driftTestResult = null;
+
+const driftTestData = {
+  left: createDriftTestData(),
+  right: createDriftTestData()
+};
+
+const triggerRumbleState = {
+  active: false,
+  lastUpdate: 0,
+  strong: 0,
+  weak: 0
+};
+
+const singleMotorRumbleState = {
+  side: null,
+  timer: null
+};
+
+const stickTrailData = {
+  left: createStickTrailData(),
+  right: createStickTrailData()
+};
+
+
 const circularityData = {
   left: createCircularityData(),
   right: createCircularityData()
@@ -193,7 +251,41 @@ const standardButtonLabels = [
   "Home"
 ];
 
+ensureDriftModeTab();
 
+
+
+function ensureDriftModeTab() {
+  const tabsContainer = document.querySelector(".mode-tabs");
+
+  if (!tabsContainer || tabsContainer.querySelector('[data-mode="drift"]')) {
+    return;
+  }
+
+  const driftTab = document.createElement("button");
+  driftTab.className = "mode-tab";
+  driftTab.type = "button";
+  driftTab.dataset.stickMode = "drift";
+  driftTab.textContent = "Drift";
+  driftTab.title = "Tes drift stick saat tidak disentuh";
+
+  tabsContainer.appendChild(driftTab);
+}
+
+function updateModeTabLabels() {
+  const circularityTab = document.querySelector('[data-stick-mode="circularity"]');
+
+  if (!circularityTab) {
+    return;
+  }
+
+  circularityTab.textContent = window.matchMedia("(max-width: 620px)").matches
+    ? "Circle"
+    : "Circularity";
+}
+
+updateModeTabLabels();
+window.addEventListener("resize", updateModeTabLabels);
 
 function injectButtonLayoutStyles() {
   if (document.querySelector("#buttonLayoutStyles")) return;
@@ -415,6 +507,20 @@ function createPathData() {
   };
 }
 
+function createStickTrailData() {
+  return {
+    points: []
+  };
+}
+
+function createDriftTestData() {
+  return {
+    samples: 0,
+    totalRadius: 0,
+    maxRadius: 0
+  };
+}
+
 function getGamepads() {
   if (!navigator.getGamepads) return [];
   return [...navigator.getGamepads()].filter(Boolean);
@@ -602,6 +708,8 @@ function updateGamepadTabActivity() {
 
 function switchGamepad(index) {
   stopInfiniteVibration(true);
+  stopTriggerRumble(true);
+  stopSingleMotorRumble(true);
   lastInfoSignature = "";
   activeGamepadIndex = Number(index);
   resetStickTest();
@@ -633,6 +741,7 @@ function setEmptyState(message = "Menunggu gamepad...") {
 
   leftStickValue.textContent = "X: 0.00 / Y: 0.00";
   rightStickValue.textContent = "X: 0.00 / Y: 0.00";
+  resetStickReadoutsForEmptyState();
 
   updateTrigger(ltBar, ltValue, 0);
   updateTrigger(rtBar, rtValue, 0);
@@ -646,6 +755,7 @@ function setEmptyState(message = "Menunggu gamepad...") {
   lastStickVisual.right.x = null;
   lastStickVisual.right.y = null;
   resetCircularitySampleCache();
+  resetStickTrail();
 
   renderStickTest();
 }
@@ -673,10 +783,13 @@ function updateInfo(pad) {
   setTextIfChanged(axisCountEl, String(pad.axes.length));
 
   const hasVibration = Boolean(pad.vibrationActuator);
-  const vibrationText = hasVibration ? "supported" : "not supported";
+  // Kartu status dibuat ringkas agar layout tidak turun.
+  const vibrationMetaText = hasVibration ? "Didukung" : "Tidak";
+  // Panel getar punya ruang lebih lega, jadi keterangannya dibuat lebih jelas.
+  const vibrationPanelText = hasVibration ? "Didukung" : "Tidak didukung";
 
-  setTextIfChanged(vibrationSupportEl, vibrationText);
-  setTextIfChanged(vibrationPanelStatus, vibrationText);
+  setTextIfChanged(vibrationSupportEl, vibrationMetaText);
+  setTextIfChanged(vibrationPanelStatus, vibrationPanelText);
 
   setVibrationControls(hasVibration);
   updateButtonLabels(pad);
@@ -688,7 +801,18 @@ function setVibrationControls(enabled) {
   heavyVibrateBtn.disabled = !enabled;
   fullVibrateBtn.disabled = !enabled;
   infiniteVibrateBtn.disabled = !enabled;
-  stopVibrateBtn.disabled = !enabled;
+  toggleAdvancedVibrateBtn.disabled = !enabled;
+  leftMotorSlider.disabled = !enabled;
+  rightMotorSlider.disabled = !enabled;
+  leftMotorTestBtn.disabled = !enabled;
+  rightMotorTestBtn.disabled = !enabled;
+  triggerRumbleToggle.disabled = !enabled;
+
+  if (!enabled) {
+    triggerRumbleToggle.checked = false;
+    stopTriggerRumble(false);
+    stopSingleMotorRumble(false);
+  }
 }
 
 function updateVisualButtons(pad) {
@@ -726,9 +850,11 @@ function setTextIfChanged(element, text) {
 }
 
 function setEmptyStateOnce(message = "Menunggu gamepad...") {
-  if (lastEmptyMessage === message) return;
+  const emptySignature = `${message}|${stickMode}`;
 
-  lastEmptyMessage = message;
+  if (lastEmptyMessage === emptySignature) return;
+
+  lastEmptyMessage = emptySignature;
   setEmptyState(message);
 }
 
@@ -829,6 +955,183 @@ function updateRawAxes(pad) {
   trimRawItems(rawAxisItems, pad.axes.length);
 }
 
+function createDriftReadout(anchorEl) {
+  if (!anchorEl) return null;
+
+  const existing = anchorEl.parentElement?.querySelector(".drift-readout");
+
+  if (existing) {
+    return existing;
+  }
+
+  const element = document.createElement("small");
+  element.className = "drift-readout normal";
+  element.textContent = "Drift: 0.0% · Normal";
+
+  anchorEl.insertAdjacentElement("afterend", element);
+
+  return element;
+}
+
+function getDriftStatus(driftPercent) {
+  if (driftPercent <= 3) {
+    return {
+      label: "Normal",
+      className: "normal"
+    };
+  }
+
+  if (driftPercent <= 7) {
+    return {
+      label: "Sedang",
+      className: "medium"
+    };
+  }
+
+  return {
+    label: "Tinggi",
+    className: "high"
+  };
+}
+
+function updateDriftReadout(element, x, y) {
+  if (!element) return;
+
+  if (stickMode === "drift") {
+    return;
+  }
+
+  const offsetPercent = Math.hypot(x, y) * 100;
+
+  element.classList.remove("normal", "medium", "high");
+  element.classList.add("pending");
+  setTextIfChanged(element, `Offset: ${offsetPercent.toFixed(1)}%`);
+}
+
+function resetStickReadoutsForEmptyState() {
+  [leftStickDrift, rightStickDrift].forEach((element) => {
+    if (!element) return;
+
+    element.classList.remove("normal", "medium", "high");
+    element.classList.add("pending");
+
+    if (stickMode === "drift") {
+      setTextIfChanged(element, "Drift: menunggu gamepad");
+      return;
+    }
+
+    setTextIfChanged(element, "Offset: 0.0%");
+  });
+}
+
+function resetDriftTest() {
+  driftTestState = "idle";
+  driftTestStartedAt = 0;
+  lastDriftSampleTime = 0;
+  driftTestResult = null;
+  driftTestData.left = createDriftTestData();
+  driftTestData.right = createDriftTestData();
+  clearDriftZoneClasses();
+}
+
+function startDriftTest() {
+  if (!getActiveGamepad()) {
+    return;
+  }
+
+  driftTestState = "running";
+  driftTestStartedAt = performance.now();
+  lastDriftSampleTime = 0;
+  driftTestResult = null;
+  driftTestData.left = createDriftTestData();
+  driftTestData.right = createDriftTestData();
+  renderStickTest();
+}
+
+function sampleDriftTestSide(side, x, y) {
+  const data = driftTestData[side];
+  const radius = Math.hypot(x, y);
+
+  data.samples += 1;
+  data.totalRadius += radius;
+  data.maxRadius = Math.max(data.maxRadius, radius);
+}
+
+function getDriftTestSideResult(side) {
+  const data = driftTestData[side];
+
+  if (!data.samples) {
+    return {
+      averagePercent: 0,
+      maxPercent: 0,
+      status: getDriftStatus(0)
+    };
+  }
+
+  const averagePercent = (data.totalRadius / data.samples) * 100;
+  const maxPercent = data.maxRadius * 100;
+
+  return {
+    averagePercent,
+    maxPercent,
+    status: getDriftStatus(averagePercent)
+  };
+}
+
+function finishDriftTest() {
+  driftTestState = "done";
+  driftTestResult = {
+    left: getDriftTestSideResult("left"),
+    right: getDriftTestSideResult("right")
+  };
+
+  renderStickTest();
+}
+
+function updateDriftMode(lx, ly, rx, ry) {
+  if (driftTestState !== "running") return;
+
+  const now = performance.now();
+
+  if (now - lastDriftSampleTime >= DRIFT_TEST_SAMPLE_INTERVAL) {
+    sampleDriftTestSide("left", lx, ly);
+    sampleDriftTestSide("right", rx, ry);
+    lastDriftSampleTime = now;
+  }
+
+  if (now - driftTestStartedAt >= DRIFT_TEST_DURATION) {
+    finishDriftTest();
+    return;
+  }
+
+  renderStickTest();
+}
+
+function formatDriftTestResult(result) {
+  return `${result.averagePercent.toFixed(1)}% · ${result.status.label}`;
+}
+
+function applyDriftResultClass(element, status) {
+  if (!element) return;
+
+  element.classList.remove("normal", "medium", "high", "pending");
+  element.classList.add(status.className);
+}
+
+function clearDriftZoneClasses() {
+  [leftStickZone, rightStickZone].forEach((zone) => {
+    zone?.classList.remove("drift-result-normal", "drift-result-medium", "drift-result-high");
+  });
+}
+
+function applyDriftZoneClass(zone, status) {
+  if (!zone || !status) return;
+
+  zone.classList.remove("drift-result-normal", "drift-result-medium", "drift-result-high");
+  zone.classList.add(`drift-result-${status.className}`);
+}
+
+
 function updateAxes(pad) {
   const lx = pad.axes[0] || 0;
   const ly = pad.axes[1] || 0;
@@ -847,8 +1150,28 @@ function updateAxes(pad) {
 
   setTextIfChanged(leftStickValue, `X: ${lx.toFixed(2)} / Y: ${ly.toFixed(2)}`);
   setTextIfChanged(rightStickValue, `X: ${rx.toFixed(2)} / Y: ${ry.toFixed(2)}`);
+  updateDriftReadout(leftStickDrift, lx, ly);
+  updateDriftReadout(rightStickDrift, rx, ry);
 
   updateRawAxes(pad);
+
+  if (stickMode === "off") {
+    updateStickTrail("left", lx, ly, leftStickCanvas);
+    updateStickTrail("right", rx, ry, rightStickCanvas);
+    return;
+  }
+
+  if (stickMode === "drift") {
+    updateDriftMode(lx, ly, rx, ry);
+
+    // Saat gamepad baru terdeteksi setelah tab Drift sudah aktif,
+    // refresh tombol Mulai Tes Drift agar tidak tertinggal disabled.
+    if (driftTestState !== "running") {
+      renderStickTest();
+    }
+
+    return;
+  }
 
   // Circularity disampling di loop ringan sebelum throttle UI.
   // Path tetap disampling di loop UI 30 FPS agar jumlah titik tidak cepat membengkak.
@@ -857,9 +1180,7 @@ function updateAxes(pad) {
     updateStickTestData("right", rx, ry);
   }
 
-  if (stickMode !== "off") {
-    renderStickTest();
-  }
+  renderStickTest();
 }
 
 function updateStick(dotEl, x, y) {
@@ -959,6 +1280,118 @@ function updatePath(side, x, y) {
   }
 }
 
+function resetStickTrail() {
+  stickTrailData.left.points = [];
+  stickTrailData.right.points = [];
+  clearCanvas(leftStickCanvas);
+  clearCanvas(rightStickCanvas);
+}
+
+function updateStickTrail(side, x, y, canvas) {
+  const data = stickTrailData[side];
+  const now = performance.now();
+  const radius = Math.hypot(x, y);
+
+  data.points = data.points.filter((point) => now - point.time <= STICK_TRAIL_LIFETIME);
+
+  if (radius >= STICK_TRAIL_DEADZONE) {
+    const last = data.points[data.points.length - 1];
+    const shouldAdd = !last ||
+      Math.hypot(x - last.x, y - last.y) >= STICK_TRAIL_MIN_DISTANCE;
+
+    if (shouldAdd) {
+      data.points.push({ x, y, time: now });
+    }
+
+    while (data.points.length > STICK_TRAIL_MAX_POINTS) {
+      data.points.shift();
+    }
+  }
+
+  drawStickTrail(canvas, data, now);
+}
+
+function drawStickTrail(canvas, data, now = performance.now()) {
+  if (!canvas) return;
+
+  const {
+    ctx,
+    width,
+    height,
+    dpr,
+    centerX,
+    centerY,
+    radius
+  } = getCanvasMetrics(canvas);
+
+  ctx.clearRect(0, 0, width, height);
+
+  if (!data.points.length) return;
+
+  const accentColor = getComputedStyle(document.documentElement)
+    .getPropertyValue("--accent")
+    .trim();
+
+  const visiblePoints = data.points
+    .map((point) => {
+      const age = now - point.time;
+      const life = Math.max(0, 1 - age / STICK_TRAIL_LIFETIME);
+
+      return {
+        ...point,
+        life,
+        xPos: centerX + Math.max(-1, Math.min(1, point.x)) * radius,
+        yPos: centerY + Math.max(-1, Math.min(1, point.y)) * radius
+      };
+    })
+    .filter((point) => point.life > 0);
+
+  data.points = data.points.filter((point) => now - point.time <= STICK_TRAIL_LIFETIME);
+
+  if (visiblePoints.length < 2) return;
+
+  ctx.save();
+  ctx.lineCap = "butt";
+  ctx.lineJoin = "round";
+  ctx.strokeStyle = accentColor;
+
+  // v19.4b: clean meteor trail.
+  // Semua trail memakai warna accent biru.
+  // Titik/glow terpisah dihapus; ujung segmen dibuat butt agar tidak tampak seperti titik putih.
+  for (let i = 1; i < visiblePoints.length; i += 1) {
+    const previous = visiblePoints[i - 1];
+    const current = visiblePoints[i];
+
+    const positionRatio = i / (visiblePoints.length - 1);
+    const ageFade = current.life;
+    const strength = positionRatio * ageFade;
+
+    const lineWidth = (0.9 + strength * 10.5) * dpr;
+    const alpha = Math.min(0.64, 0.06 + strength * 0.58);
+
+    ctx.globalAlpha = alpha;
+    ctx.lineWidth = lineWidth;
+    ctx.beginPath();
+    ctx.moveTo(previous.xPos, previous.yPos);
+    ctx.lineTo(current.xPos, current.yPos);
+    ctx.stroke();
+  }
+
+  // Kepala trail tetap biru, tapi dibuat sebagai sapuan pendek, bukan titik/glow.
+  const head = visiblePoints[visiblePoints.length - 1];
+  const beforeHead = visiblePoints[visiblePoints.length - 2];
+
+  ctx.globalAlpha = Math.min(0.68, head.life * 0.68);
+  ctx.lineCap = "round";
+  ctx.lineWidth = 9.5 * dpr;
+  ctx.beginPath();
+  ctx.moveTo(beforeHead.xPos, beforeHead.yPos);
+  ctx.lineTo(head.xPos, head.yPos);
+  ctx.stroke();
+
+  ctx.restore();
+}
+
 function calculateCircularity(data) {
   const filledBins = data.bins.filter((value) => value > 0);
   const coverage = (filledBins.length / CIRCULARITY_BINS) * 100;
@@ -997,20 +1430,108 @@ function calculateCircularity(data) {
 function renderStickTest() {
   document.body.classList.toggle("stick-mode-circularity", stickMode === "circularity");
   document.body.classList.toggle("stick-mode-path", stickMode === "path");
+  document.body.classList.toggle("stick-mode-drift", stickMode === "drift");
 
   clearCanvas(leftStickCanvas);
   clearCanvas(rightStickCanvas);
 
+  if (!getActiveGamepad()) {
+    resetStickReadoutsForEmptyState();
+  }
+
+  resetStickTestBtn.hidden = false;
+  resetStickTestBtn.disabled = false;
+
+  if (stickMode !== "drift") {
+    resetStickTestBtn.textContent = "Reset";
+  }
+
   if (stickMode === "off") {
+    resetStickTestBtn.textContent = "Nonaktif";
+    resetStickTestBtn.disabled = true;
+
     leftStickTestValue.textContent = "Off";
     rightStickTestValue.textContent = "Off";
-    leftStickTestInfo.textContent = "Stick test: Off";
-    rightStickTestInfo.textContent = "Stick test: Off";
+    leftStickTestInfo.textContent = "Mode: Off";
+    rightStickTestInfo.textContent = "Mode: Off";
 
     leftStickOverlayLabel.textContent = "STICK";
     rightStickOverlayLabel.textContent = "STICK";
     leftStickOverlayValue.textContent = "-";
     rightStickOverlayValue.textContent = "-";
+    return;
+  }
+
+  if (stickMode === "drift") {
+    leftStickOverlayLabel.textContent = "";
+    rightStickOverlayLabel.textContent = "";
+    leftStickOverlayValue.textContent = "";
+    rightStickOverlayValue.textContent = "";
+
+    if (driftTestState === "running") {
+      clearDriftZoneClasses();
+      const elapsed = performance.now() - driftTestStartedAt;
+      const remaining = Math.max(0, Math.ceil((DRIFT_TEST_DURATION - elapsed) / 1000));
+
+      leftStickTestValue.textContent = "Drift";
+      rightStickTestValue.textContent = "Drift";
+      leftStickTestInfo.textContent = `Memindai... ${remaining}s`;
+      rightStickTestInfo.textContent = `Memindai... ${remaining}s`;
+
+      setTextIfChanged(leftStickDrift, "Drift: memindai");
+      setTextIfChanged(rightStickDrift, "Drift: memindai");
+
+      leftStickDrift?.classList.remove("normal", "medium", "high");
+      rightStickDrift?.classList.remove("normal", "medium", "high");
+      leftStickDrift?.classList.add("pending");
+      rightStickDrift?.classList.add("pending");
+
+      resetStickTestBtn.textContent = "Memindai...";
+      resetStickTestBtn.disabled = true;
+      return;
+    }
+
+    if (driftTestState === "done" && driftTestResult) {
+      leftStickTestValue.textContent = "Drift";
+      rightStickTestValue.textContent = "Drift";
+      leftStickTestInfo.textContent = `Avg ${driftTestResult.left.averagePercent.toFixed(1)}% | Max ${driftTestResult.left.maxPercent.toFixed(1)}%`;
+      rightStickTestInfo.textContent = `Avg ${driftTestResult.right.averagePercent.toFixed(1)}% | Max ${driftTestResult.right.maxPercent.toFixed(1)}%`;
+
+      setTextIfChanged(leftStickDrift, `Drift: ${formatDriftTestResult(driftTestResult.left)}`);
+      setTextIfChanged(rightStickDrift, `Drift: ${formatDriftTestResult(driftTestResult.right)}`);
+
+      applyDriftResultClass(leftStickDrift, driftTestResult.left.status);
+      applyDriftResultClass(rightStickDrift, driftTestResult.right.status);
+      applyDriftZoneClass(leftStickZone, driftTestResult.left.status);
+      applyDriftZoneClass(rightStickZone, driftTestResult.right.status);
+
+      resetStickTestBtn.textContent = "Ulangi";
+      return;
+    }
+
+    clearDriftZoneClasses();
+
+    const hasGamepad = Boolean(getActiveGamepad());
+
+    leftStickTestValue.textContent = "Drift";
+    rightStickTestValue.textContent = "Drift";
+    leftStickTestInfo.textContent = hasGamepad
+      ? "Lepaskan stick, lalu tekan Mulai"
+      : "Hubungkan gamepad dulu";
+    rightStickTestInfo.textContent = hasGamepad
+      ? "Lepaskan stick, lalu tekan Mulai"
+      : "Hubungkan gamepad dulu";
+
+    setTextIfChanged(leftStickDrift, hasGamepad ? "Drift: siap" : "Drift: menunggu gamepad");
+    setTextIfChanged(rightStickDrift, hasGamepad ? "Drift: siap" : "Drift: menunggu gamepad");
+
+    leftStickDrift?.classList.remove("normal", "medium", "high");
+    rightStickDrift?.classList.remove("normal", "medium", "high");
+    leftStickDrift?.classList.add("pending");
+    rightStickDrift?.classList.add("pending");
+
+    resetStickTestBtn.textContent = "Mulai";
+    resetStickTestBtn.disabled = !hasGamepad;
     return;
   }
 
@@ -1068,7 +1589,7 @@ function renderCircularitySide(side, valueEl, infoEl, overlayLabelEl, overlayVal
     valueEl.textContent = "-";
     const filledBins = data.bins.filter((value) => value > 0).length;
     const coverage = (filledBins / CIRCULARITY_BINS) * 100;
-    infoEl.textContent = `Cov ${coverage.toFixed(0)}% | putar 360°`;
+    infoEl.textContent = `Cov ${coverage.toFixed(0)}% | Putar pelan 360°`;
 
     // Jangan tampilkan teks di dalam stick sebelum hasil valid.
     overlayLabelEl.textContent = "";
@@ -1087,7 +1608,7 @@ function renderPathSide(side, valueEl, infoEl, overlayLabelEl, overlayValueEl) {
   const data = pathData[side];
 
   valueEl.textContent = "Path";
-  infoEl.textContent = `${data.points.length} titik | reset untuk hapus`;
+  infoEl.textContent = `${data.points.length} titik | Reset untuk hapus`;
 
   overlayLabelEl.textContent = "PATH";
   overlayValueEl.textContent = `${data.points.length}`;
@@ -1357,8 +1878,9 @@ function resetCircularitySampleCache() {
 
 function setStickMode(mode) {
   stickMode = mode;
+  resetDriftTest();
 
-  modeTabs.forEach((tab) => {
+  getModeTabs().forEach((tab) => {
     tab.classList.toggle("active", tab.dataset.stickMode === mode);
   });
 
@@ -1373,6 +1895,8 @@ function resetStickTest() {
   pathData.right = createPathData();
 
   resetCircularitySampleCache();
+  resetStickTrail();
+  resetDriftTest();
   renderStickTest();
 }
 
@@ -1456,6 +1980,7 @@ function update(timestamp = 0) {
   updateRawButtons(pad);
   updateAxes(pad);
   updateTriggers(pad);
+  updateTriggerRumble(pad, timestamp);
 }
 
 async function runVibration(durationSeconds = 1, strong = 1.0, weak = 0.8) {
@@ -1467,7 +1992,7 @@ async function runVibration(durationSeconds = 1, strong = 1.0, weak = 0.8) {
   }
 
   if (!pad.vibrationActuator) {
-    alert("Browser atau gamepad ini tidak mendukung vibration test.");
+    alert("Browser atau gamepad ini tidak mendukung tes getar.");
     return;
   }
 
@@ -1487,13 +2012,37 @@ async function runVibration(durationSeconds = 1, strong = 1.0, weak = 0.8) {
   }
 }
 
+function renderInfiniteButton(active) {
+  infiniteVibrateBtn.textContent = active ? "Berhenti" : "Konstan";
+  infiniteVibrateBtn.setAttribute(
+    "aria-label",
+    active ? "Hentikan getar konstan" : "Getar konstan"
+  );
+  infiniteVibrateBtn.title = active
+    ? "Hentikan getar konstan"
+    : "Getar konstan, tekan lagi untuk berhenti";
+}
+
 function setInfiniteVibrationActive(active) {
   infiniteVibrateBtn.classList.toggle("active", active);
-  infiniteVibrateBtn.textContent = active ? "Infinite On" : "Infinite";
+  renderInfiniteButton(active);
+}
+
+function setVibrationAdvancedOpen(open) {
+  vibrationAdvancedPanel.hidden = !open;
+  toggleAdvancedVibrateBtn.classList.toggle("active", open);
+  toggleAdvancedVibrateBtn.setAttribute("aria-expanded", String(open));
+
+  if (!open) {
+    triggerRumbleToggle.checked = false;
+    stopTriggerRumble(true);
+    stopSingleMotorRumble(true);
+  }
 }
 
 function startInfiniteVibration(strong = 1.0, weak = 1.0) {
   stopInfiniteVibration(false);
+  stopSingleMotorRumble(false);
 
   setInfiniteVibrationActive(true);
 
@@ -1536,32 +2085,234 @@ async function stopVibration() {
   }
 }
 
+function resetTriggerRumbleState() {
+  triggerRumbleState.active = false;
+  triggerRumbleState.lastUpdate = 0;
+  triggerRumbleState.strong = 0;
+  triggerRumbleState.weak = 0;
+}
+
+function stopTriggerRumble(stopMotor = true) {
+  const wasActive = triggerRumbleState.active;
+  resetTriggerRumbleState();
+
+  if (stopMotor && wasActive) {
+    stopVibration();
+  }
+}
+
+function getButtonValue(button) {
+  if (!button) return 0;
+  return Math.max(0, Math.min(1, button.value || (button.pressed ? 1 : 0)));
+}
+
+function shouldUseTriggerRumble() {
+  return Boolean(
+    triggerRumbleToggle.checked &&
+    !vibrationAdvancedPanel.hidden &&
+    infiniteVibrationTimer === null &&
+    singleMotorRumbleState.timer === null
+  );
+}
+
+function updateTriggerRumble(pad, timestamp) {
+  if (!shouldUseTriggerRumble() || !pad?.vibrationActuator) {
+    stopTriggerRumble(true);
+    return;
+  }
+
+  const strong = getButtonValue(pad.buttons[6]) * (getMotorSliderValue(leftMotorSlider) / 100);
+  const weak = getButtonValue(pad.buttons[7]) * (getMotorSliderValue(rightMotorSlider) / 100);
+
+  if (strong < TRIGGER_RUMBLE_STOP_EPSILON && weak < TRIGGER_RUMBLE_STOP_EPSILON) {
+    stopTriggerRumble(true);
+    return;
+  }
+
+  const changedEnough =
+    Math.abs(strong - triggerRumbleState.strong) >= TRIGGER_RUMBLE_CHANGE_EPSILON ||
+    Math.abs(weak - triggerRumbleState.weak) >= TRIGGER_RUMBLE_CHANGE_EPSILON;
+
+  if (
+    triggerRumbleState.active &&
+    !changedEnough &&
+    timestamp - triggerRumbleState.lastUpdate < TRIGGER_RUMBLE_INTERVAL
+  ) {
+    return;
+  }
+
+  triggerRumbleState.active = true;
+  triggerRumbleState.lastUpdate = timestamp;
+  triggerRumbleState.strong = strong;
+  triggerRumbleState.weak = weak;
+
+  pad.vibrationActuator.playEffect("dual-rumble", {
+    duration: TRIGGER_RUMBLE_DURATION,
+    strongMagnitude: Math.max(0, Math.min(1, strong)),
+    weakMagnitude: Math.max(0, Math.min(1, weak))
+  }).catch((error) => {
+    console.error(error);
+    triggerRumbleToggle.checked = false;
+    stopTriggerRumble(false);
+  });
+}
+
+function getMotorSliderValue(slider) {
+  return Math.max(0, Math.min(100, Number(slider.value) || 0));
+}
+
+function updateMotorSliderLabel(slider, output) {
+  output.textContent = `${getMotorSliderValue(slider)}%`;
+}
+
+function renderSingleMotorButtons() {
+  const activeSide = singleMotorRumbleState.side;
+
+  leftMotorTestBtn.textContent = activeSide === "left" ? "Berhenti" : "Tes";
+  rightMotorTestBtn.textContent = activeSide === "right" ? "Berhenti" : "Tes";
+
+  leftMotorTestBtn.classList.toggle("active", activeSide === "left");
+  rightMotorTestBtn.classList.toggle("active", activeSide === "right");
+
+  leftMotorTestBtn.setAttribute(
+    "aria-label",
+    activeSide === "left" ? "Hentikan tes motor kiri" : "Tes motor kiri"
+  );
+  rightMotorTestBtn.setAttribute(
+    "aria-label",
+    activeSide === "right" ? "Hentikan tes motor kanan" : "Tes motor kanan"
+  );
+}
+
+function getSingleMotorStrength(side) {
+  return side === "left"
+    ? getMotorSliderValue(leftMotorSlider) / 100
+    : getMotorSliderValue(rightMotorSlider) / 100;
+}
+
+function runSingleMotorPulse(side) {
+  const strength = getSingleMotorStrength(side);
+
+  // Gamepad API memakai strong/weak magnitude, bukan label kiri/kanan eksplisit.
+  // Pada banyak gamepad, strong biasanya terasa sebagai motor kiri yang lebih berat,
+  // sedangkan weak biasanya terasa sebagai motor kanan yang lebih halus.
+  if (side === "left") {
+    runVibration(1.0, strength, 0);
+    return;
+  }
+
+  runVibration(1.0, 0, strength);
+}
+
+function startSingleMotorRumble(side) {
+  stopInfiniteVibration(false);
+  stopTriggerRumble(false);
+  stopSingleMotorRumble(false);
+
+  triggerRumbleToggle.checked = false;
+  singleMotorRumbleState.side = side;
+  renderSingleMotorButtons();
+
+  runSingleMotorPulse(side);
+  singleMotorRumbleState.timer = window.setInterval(() => {
+    runSingleMotorPulse(side);
+  }, SINGLE_MOTOR_INTERVAL);
+}
+
+function stopSingleMotorRumble(stopMotor = true) {
+  const wasActive = Boolean(singleMotorRumbleState.side);
+
+  if (singleMotorRumbleState.timer !== null) {
+    window.clearInterval(singleMotorRumbleState.timer);
+    singleMotorRumbleState.timer = null;
+  }
+
+  singleMotorRumbleState.side = null;
+  renderSingleMotorButtons();
+
+  if (stopMotor && wasActive) {
+    stopVibration();
+  }
+}
+
+function toggleSingleMotorRumble(side) {
+  if (singleMotorRumbleState.side === side) {
+    stopSingleMotorRumble(true);
+    return;
+  }
+
+  startSingleMotorRumble(side);
+}
+
 gamepadSelect.addEventListener("change", () => {
   if (gamepadSelect.value === "") return;
   switchGamepad(Number(gamepadSelect.value));
 });
 
-modeTabs.forEach((tab) => {
+getModeTabs().forEach((tab) => {
   tab.addEventListener("click", () => {
     setStickMode(tab.dataset.stickMode);
   });
 });
 
-resetStickTestBtn.addEventListener("click", resetStickTest);
+resetStickTestBtn.addEventListener("click", () => {
+  if (stickMode === "drift") {
+    startDriftTest();
+    return;
+  }
+
+  resetStickTest();
+});
 clearButtonHistoryBtn.addEventListener("click", clearButtonHistory);
+
+leftMotorSlider.addEventListener("input", () => {
+  updateMotorSliderLabel(leftMotorSlider, leftMotorValue);
+
+  if (singleMotorRumbleState.side === "left") {
+    runSingleMotorPulse("left");
+  }
+});
+
+rightMotorSlider.addEventListener("input", () => {
+  updateMotorSliderLabel(rightMotorSlider, rightMotorValue);
+
+  if (singleMotorRumbleState.side === "right") {
+    runSingleMotorPulse("right");
+  }
+});
+
+leftMotorTestBtn.addEventListener("click", () => {
+  toggleSingleMotorRumble("left");
+});
+
+rightMotorTestBtn.addEventListener("click", () => {
+  toggleSingleMotorRumble("right");
+});
+
+triggerRumbleToggle.addEventListener("change", () => {
+  stopInfiniteVibration(false);
+  stopSingleMotorRumble(true);
+  stopTriggerRumble(true);
+});
 
 lightVibrateBtn.addEventListener("click", () => {
   stopInfiniteVibration(false);
+  stopTriggerRumble(false);
+  stopSingleMotorRumble(false);
   runVibration(1.0, 0.15, 0.35);
 });
 
 heavyVibrateBtn.addEventListener("click", () => {
   stopInfiniteVibration(false);
+  stopTriggerRumble(false);
+  stopSingleMotorRumble(false);
   runVibration(1.0, 0.85, 0.15);
 });
 
 fullVibrateBtn.addEventListener("click", () => {
   stopInfiniteVibration(false);
+  stopTriggerRumble(false);
+  stopSingleMotorRumble(false);
   runVibration(1.0, 1.0, 1.0);
 });
 
@@ -1571,11 +2322,14 @@ infiniteVibrateBtn.addEventListener("click", () => {
     return;
   }
 
+  triggerRumbleToggle.checked = false;
+  stopTriggerRumble(false);
+  stopSingleMotorRumble(false);
   startInfiniteVibration(1.0, 1.0);
 });
 
-stopVibrateBtn.addEventListener("click", () => {
-  stopInfiniteVibration(true);
+toggleAdvancedVibrateBtn.addEventListener("click", () => {
+  setVibrationAdvancedOpen(vibrationAdvancedPanel.hidden);
 });
 
 window.addEventListener("gamepadconnected", (event) => {
@@ -1589,6 +2343,8 @@ window.addEventListener("gamepaddisconnected", (event) => {
   lastInfoSignature = "";
   if (activeGamepadIndex === event.gamepad.index) {
     stopInfiniteVibration(true);
+    stopTriggerRumble(true);
+    stopSingleMotorRumble(true);
     activeGamepadIndex = null;
   }
 
@@ -1601,6 +2357,8 @@ document.addEventListener("visibilitychange", () => {
 
   if (document.hidden) {
     stopInfiniteVibration(true);
+    stopTriggerRumble(true);
+    stopSingleMotorRumble(true);
     return;
   }
 
@@ -1613,8 +2371,13 @@ document.addEventListener("visibilitychange", () => {
 window.addEventListener("pagehide", () => {
   isPageVisible = false;
   stopInfiniteVibration(true);
+  stopTriggerRumble(true);
+  stopSingleMotorRumble(true);
 });
 
+renderInfiniteButton(false);
+renderSingleMotorButtons();
+setVibrationAdvancedOpen(false);
 setEmptyState();
 renderGamepadControls(true);
 setStickMode("off");
