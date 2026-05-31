@@ -1,4 +1,4 @@
-/* M2D Gamepad Tester v19.8i - samakan heading tes getar */
+/* M2D Gamepad Tester v19.8j - 31/05/206 */
 const statusEl = document.querySelector("#status");
 const gamepadNameEl = document.querySelector("#gamepadName");
 const mappingEl = document.querySelector("#mapping");
@@ -1264,6 +1264,12 @@ function updatePath(side, x, y) {
   };
 
   const last = data.points[data.points.length - 1];
+  const radius = Math.hypot(point.x, point.y);
+
+  // Setelah reset, jangan langsung tambahkan titik netral agar status benar-benar kosong.
+  if (!last && radius < PATH_MIN_DISTANCE) {
+    return;
+  }
 
   if (last) {
     const distance = Math.hypot(point.x - last.x, point.y - last.y);
@@ -1606,12 +1612,15 @@ function renderCircularitySide(side, valueEl, infoEl, overlayLabelEl, overlayVal
 
 function renderPathSide(side, valueEl, infoEl, overlayLabelEl, overlayValueEl) {
   const data = pathData[side];
+  const pointCount = data.points.length;
 
   valueEl.textContent = "Path";
-  infoEl.textContent = `${data.points.length} titik | Reset untuk hapus`;
+  infoEl.textContent = pointCount
+    ? `${pointCount} titik | Reset untuk hapus`
+    : "0 titik | Gerakkan stick";
 
   overlayLabelEl.textContent = "PATH";
-  overlayValueEl.textContent = `${data.points.length}`;
+  overlayValueEl.textContent = `${pointCount}`;
 }
 
 function clearCanvas(canvas) {
