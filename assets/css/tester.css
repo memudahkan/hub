@@ -1,4 +1,4 @@
-/* M2D Gamepad Tester CSS v19.8i - samakan heading tes getar */
+/* M2D Gamepad Tester CSS v19.8j1 - perbaikan toolbar stick mobile landscape */
 * {
   box-sizing: border-box;
 }
@@ -1186,13 +1186,13 @@ h3 {
 
 /* Mobile and mobile-landscape refinements */
 @media (max-width: 900px), (max-height: 520px) and (orientation: landscape) {
-  .tester-card > .section-head {
+  .stick-tester-section > .section-head {
     display: grid;
     grid-template-columns: 1fr;
     gap: 12px;
   }
 
-  .tester-card .stick-test-toolbar {
+  .stick-tester-section .stick-test-toolbar {
     width: 100%;
     display: flex;
     flex-wrap: wrap;
@@ -1200,19 +1200,19 @@ h3 {
     gap: 10px;
   }
 
-  .tester-card .mode-tabs {
+  .stick-tester-section .mode-tabs {
     width: 100%;
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 
-  .tester-card .mode-tab {
+  .stick-tester-section .mode-tab {
     width: 100%;
     justify-content: center;
     text-align: center;
   }
 
-  .tester-card #resetStickTest {
+  .stick-tester-section #resetStickTest {
     width: 100%;
   }
 }
