@@ -1,4 +1,4 @@
-/* M2D Gamepad Tester v19.3b - light stick press color */
+/* M2D Gamepad Tester CSS v19.8i - samakan heading tes getar */
 * {
   box-sizing: border-box;
 }
@@ -244,6 +244,11 @@ h3 {
 }
 
 .tester-card {
+  display: grid;
+  gap: 16px;
+}
+
+.stick-tester-section {
   display: grid;
   gap: 16px;
 }
@@ -577,8 +582,10 @@ h3 {
   margin-bottom: 14px;
 }
 
-.vibration-head h3 {
+.vibration-head h2 {
   margin-top: 0;
+  margin-bottom: 6px;
+  font-size: clamp(1.28rem, 2.2vw, 1.9rem);
 }
 
 .vibration-head p {
@@ -665,6 +672,13 @@ h3 {
 .mini-btn:hover {
   border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
   background: color-mix(in srgb, var(--accent) 10%, var(--card-soft));
+}
+
+
+.infinite-btn {
+  min-width: 94px;
+  padding-inline: 14px;
+  text-align: center;
 }
 
 .mini-btn:disabled {
@@ -1002,7 +1016,7 @@ h3 {
   transform: none;
 }
 
-/* Simpler vibration tester + common-style presets */
+/* Tes getar sederhana dengan preset umum */
 .support-status {
   display: grid;
   gap: 3px;
@@ -1044,7 +1058,12 @@ h3 {
     0 10px 22px color-mix(in srgb, var(--active) 16%, transparent);
 }
 
-/* Gamepad tab lights up while a button is pressed */
+#toggleAdvancedVibrateBtn.active {
+  border-color: color-mix(in srgb, var(--accent) 52%, var(--line));
+  background: color-mix(in srgb, var(--accent) 12%, var(--card-soft));
+}
+
+/* Tab gamepad menyala saat ada tombol ditekan */
 .gamepad-tab.input-active {
   background: color-mix(in srgb, var(--accent) 30%, var(--card-soft));
   border-color: color-mix(in srgb, var(--accent) 68%, var(--line));
@@ -1253,7 +1272,7 @@ h3 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  #stopVibrateBtn {
+  #toggleAdvancedVibrateBtn {
     grid-column: span 2;
   }
 }
@@ -1325,5 +1344,237 @@ h3 {
     box-shadow:
       0 0 0 4px color-mix(in srgb, var(--accent) 14%, transparent),
       0 0 22px color-mix(in srgb, var(--accent) 20%, transparent);
+  }
+}
+
+/* v19.5: stick drift readout */
+:root {
+  --drift-normal: #4ade80;
+  --drift-medium: #facc15;
+  --drift-high: #fb7185;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --drift-normal: #15803d;
+    --drift-medium: #a16207;
+    --drift-high: #be123c;
+  }
+}
+
+.drift-readout {
+  display: block;
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+}
+
+.drift-readout.normal {
+  color: var(--drift-normal);
+}
+
+.drift-readout.medium {
+  color: var(--drift-medium);
+}
+
+.drift-readout.high {
+  color: var(--drift-high);
+}
+
+.drift-readout.pending {
+  color: var(--muted);
+}
+
+/* v19.6: drift test mode */
+.stick-mode-drift .stick-overlay {
+  display: none !important;
+}
+
+@media (max-width: 900px), (max-height: 520px) and (orientation: landscape) {
+  .tester-card .mode-tabs {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* v19.6a: hide action button cleanly when not needed */
+#resetStickTest[hidden] {
+  display: none !important;
+}
+
+/* v19.6c: drift result colors on stick ring and axis */
+.stick-zone {
+  --stick-axis-color: color-mix(in srgb, var(--muted) 28%, transparent);
+}
+
+.stick-mode-circularity .stick-zone,
+.stick-mode-path .stick-zone,
+.stick-mode-drift .stick-zone {
+  --stick-axis-color: color-mix(in srgb, var(--muted) 22%, transparent);
+}
+
+.stick-zone {
+  background:
+    linear-gradient(90deg, transparent calc(50% - 1px), var(--stick-axis-color) calc(50% - 1px), var(--stick-axis-color) calc(50% + 1px), transparent calc(50% + 1px)),
+    linear-gradient(0deg, transparent calc(50% - 1px), var(--stick-axis-color) calc(50% - 1px), var(--stick-axis-color) calc(50% + 1px), transparent calc(50% + 1px)),
+    var(--card);
+}
+
+.stick-zone.drift-result-normal {
+  --stick-axis-color: color-mix(in srgb, var(--drift-normal) 46%, transparent);
+  border-color: color-mix(in srgb, var(--drift-normal) 70%, var(--line));
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--drift-normal) 10%, transparent),
+    0 0 20px color-mix(in srgb, var(--drift-normal) 14%, transparent);
+}
+
+.stick-zone.drift-result-medium {
+  --stick-axis-color: color-mix(in srgb, var(--drift-medium) 50%, transparent);
+  border-color: color-mix(in srgb, var(--drift-medium) 74%, var(--line));
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--drift-medium) 11%, transparent),
+    0 0 20px color-mix(in srgb, var(--drift-medium) 15%, transparent);
+}
+
+.stick-zone.drift-result-high {
+  --stick-axis-color: color-mix(in srgb, var(--drift-high) 54%, transparent);
+  border-color: color-mix(in srgb, var(--drift-high) 78%, var(--line));
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--drift-high) 12%, transparent),
+    0 0 22px color-mix(in srgb, var(--drift-high) 17%, transparent);
+}
+
+.stick-mode-circularity .stick-zone.drift-result-normal,
+.stick-mode-path .stick-zone.drift-result-normal,
+.stick-mode-drift .stick-zone.drift-result-normal,
+.stick-mode-circularity .stick-zone.drift-result-medium,
+.stick-mode-path .stick-zone.drift-result-medium,
+.stick-mode-drift .stick-zone.drift-result-medium,
+.stick-mode-circularity .stick-zone.drift-result-high,
+.stick-mode-path .stick-zone.drift-result-high,
+.stick-mode-drift .stick-zone.drift-result-high {
+  background:
+    linear-gradient(90deg, transparent calc(50% - 1px), var(--stick-axis-color) calc(50% - 1px), var(--stick-axis-color) calc(50% + 1px), transparent calc(50% + 1px)),
+    linear-gradient(0deg, transparent calc(50% - 1px), var(--stick-axis-color) calc(50% - 1px), var(--stick-axis-color) calc(50% + 1px), transparent calc(50% + 1px)),
+    var(--card);
+}
+
+/* v19.7a: stable action button width */
+@media (min-width: 901px) {
+  #resetStickTest {
+    width: 92px;
+    justify-content: center;
+  }
+}
+
+/* v19.7b: aksi riwayat tombol lebih jelas di mobile landscape */
+@media (max-width: 900px), (max-height: 520px) and (orientation: landscape) {
+  .action-head {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .action-head .mini-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+
+/* Panel getar lanjutan */
+.vibration-advanced {
+  margin-top: 10px;
+  padding: 10px 0 0;
+  border-top: 1px solid color-mix(in srgb, var(--line) 70%, transparent);
+}
+
+.vibration-advanced[hidden] {
+  display: none;
+}
+
+.rumble-row {
+  display: grid;
+  grid-template-columns: minmax(92px, 0.9fr) minmax(140px, 2fr) 46px 96px;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+}
+
+.rumble-row label {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.rumble-row input[type="range"] {
+  width: 100%;
+  accent-color: var(--accent);
+}
+
+.rumble-row output {
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.rumble-row .mini-btn {
+  min-width: 58px;
+  min-height: 36px;
+}
+
+.motor-test-btn {
+  width: 96px;
+  min-width: 96px;
+  justify-content: center;
+  text-align: center;
+}
+
+.trigger-rumble-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  margin-top: 8px;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  user-select: none;
+}
+
+.trigger-rumble-toggle input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--accent);
+}
+
+.trigger-rumble-toggle:has(input:disabled) {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.vibration-note {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+@media (max-width: 620px) {
+  .rumble-row {
+    grid-template-columns: 1fr auto;
+  }
+
+  .rumble-row label {
+    grid-column: 1 / -1;
+  }
+
+  .rumble-row input[type="range"] {
+    grid-column: 1 / -1;
   }
 }
