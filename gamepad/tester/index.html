@@ -24,7 +24,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/css/shared.css" />
-  <link rel="stylesheet" href="/assets/css/tester.css?v=19.3b">
+  <link rel="stylesheet" href="/assets/css/tester.css?v=19.8i">
 </head>
 <body>
   <main class="app">
@@ -80,7 +80,7 @@
         </div>
 
         <div>
-          <span class="meta-label">Vibration</span>
+          <span class="meta-label">Getar</span>
           <strong id="vibrationSupport">-</strong>
         </div>
       </div>
@@ -88,71 +88,73 @@
 
     <section class="tester-layout">
       <section class="card tester-card">
-        <div class="section-head">
-          <div>
-            <h2>Stick Tester</h2>
-            <p>Cek fungsi, circularity, dan path gerakan stick.</p>
+        <section class="tester-section stick-tester-section">
+          <div class="section-head">
+            <div>
+              <h2>Tes Stick</h2>
+              <p>Cek gerakan stick, circularity, path, dan drift.</p>
+            </div>
+
+            <div class="stick-test-toolbar">
+              <div class="mode-tabs" role="tablist" aria-label="Mode tes stick">
+                <button class="mode-tab active" type="button" data-stick-mode="off">Off</button>
+                <button class="mode-tab" type="button" data-stick-mode="circularity">Circularity</button>
+                <button class="mode-tab" type="button" data-stick-mode="path">Path</button>
+              </div>
+
+              <button id="resetStickTest" class="mini-btn" type="button">
+                Reset Test
+              </button>
+            </div>
           </div>
 
-          <div class="stick-test-toolbar">
-            <div class="mode-tabs" role="tablist" aria-label="Stick test mode">
-              <button class="mode-tab active" type="button" data-stick-mode="off">Off</button>
-              <button class="mode-tab" type="button" data-stick-mode="circularity">Circularity</button>
-              <button class="mode-tab" type="button" data-stick-mode="path">Path</button>
-            </div>
+          <div class="stick-stage">
+            <article class="stick-card">
+              <div class="stick-readout">
+                <span class="readout-label">Stick kiri</span>
+                <strong id="leftStickTestValue">Off</strong>
+                <small id="leftStickTestInfo">Mode: Off</small>
+              </div>
 
-            <button id="resetStickTest" class="mini-btn" type="button">
-              Reset Test
-            </button>
+              <div class="stick-zone">
+                <canvas id="leftStickCanvas" class="stick-canvas"></canvas>
+                <div id="leftStickDot" class="stick-dot"></div>
+
+                <div class="stick-overlay">
+                  <span id="leftStickOverlayLabel">AVG ERROR</span>
+                  <strong id="leftStickOverlayValue">-</strong>
+                </div>
+              </div>
+
+              <small id="leftStickValue" class="axis-readout">X: 0.00 / Y: 0.00</small>
+            </article>
+
+            <article class="stick-card">
+              <div class="stick-readout">
+                <span class="readout-label">Stick kanan</span>
+                <strong id="rightStickTestValue">Off</strong>
+                <small id="rightStickTestInfo">Mode: Off</small>
+              </div>
+
+              <div class="stick-zone">
+                <canvas id="rightStickCanvas" class="stick-canvas"></canvas>
+                <div id="rightStickDot" class="stick-dot"></div>
+
+                <div class="stick-overlay">
+                  <span id="rightStickOverlayLabel">AVG ERROR</span>
+                  <strong id="rightStickOverlayValue">-</strong>
+                </div>
+              </div>
+
+              <small id="rightStickValue" class="axis-readout">X: 0.00 / Y: 0.00</small>
+            </article>
           </div>
-        </div>
-
-        <div class="stick-stage">
-          <article class="stick-card">
-            <div class="stick-readout">
-              <span class="readout-label">Left Stick</span>
-              <strong id="leftStickTestValue">Off</strong>
-              <small id="leftStickTestInfo">Stick test: Off</small>
-            </div>
-
-            <div class="stick-zone">
-              <canvas id="leftStickCanvas" class="stick-canvas"></canvas>
-              <div id="leftStickDot" class="stick-dot"></div>
-
-              <div class="stick-overlay">
-                <span id="leftStickOverlayLabel">AVG ERROR</span>
-                <strong id="leftStickOverlayValue">-</strong>
-              </div>
-            </div>
-
-            <small id="leftStickValue" class="axis-readout">X: 0.00 / Y: 0.00</small>
-          </article>
-
-          <article class="stick-card">
-            <div class="stick-readout">
-              <span class="readout-label">Right Stick</span>
-              <strong id="rightStickTestValue">Off</strong>
-              <small id="rightStickTestInfo">Stick test: Off</small>
-            </div>
-
-            <div class="stick-zone">
-              <canvas id="rightStickCanvas" class="stick-canvas"></canvas>
-              <div id="rightStickDot" class="stick-dot"></div>
-
-              <div class="stick-overlay">
-                <span id="rightStickOverlayLabel">AVG ERROR</span>
-                <strong id="rightStickOverlayValue">-</strong>
-              </div>
-            </div>
-
-            <small id="rightStickValue" class="axis-readout">X: 0.00 / Y: 0.00</small>
-          </article>
-        </div>
+        </section>
 
         <section class="tester-section">
           <div class="section-head compact">
             <div>
-              <h2>Triggers</h2>
+              <h2>Trigger</h2>
               <p>Analog trigger dan nilai tekanannya.</p>
             </div>
           </div>
@@ -173,14 +175,15 @@
               </div>
               <small id="rtValue">0.00</small>
             </div>
+
           </div>
         </section>
 
         <section class="tester-section">
           <div class="section-head compact action-head">
             <div>
-              <h2>Buttons</h2>
-              <p>Tekan tombol gamepad untuk memastikan fungsionalitasnya.</p>
+              <h2>Tombol</h2>
+              <p>Tekan tombol gamepad untuk memastikan semuanya berfungsi.</p>
             </div>
 
             <button id="clearButtonHistory" class="mini-btn ghost-btn" type="button">
@@ -213,7 +216,7 @@
         <section class="vibration-panel">
           <div class="vibration-head">
             <div>
-              <h3>Vibration Test</h3>
+              <h2>Tes Getar</h2>
               <p>
                 Tergantung browser, sistem operasi,
                 mode koneksi, device, dan gamepadnya.
@@ -229,24 +232,50 @@
           <div class="vibration-controls">
             <div class="vibration-buttons">
               <button id="lightVibrateBtn" class="mini-btn" type="button" disabled>
-                Light
+                Ringan
               </button>
 
               <button id="heavyVibrateBtn" class="mini-btn" type="button" disabled>
-                Heavy
+                Berat
               </button>
 
               <button id="fullVibrateBtn" class="mini-btn" type="button" disabled>
-                Full
+                Penuh
               </button>
 
-              <button id="infiniteVibrateBtn" class="mini-btn" type="button" disabled>
-                Infinite
+              <button id="infiniteVibrateBtn" class="mini-btn infinite-btn" type="button" disabled aria-label="Getar konstan" title="Getar konstan, tekan lagi untuk berhenti">
+                Konstan
               </button>
 
-              <button id="stopVibrateBtn" class="mini-btn ghost-btn" type="button" disabled>
-                Stop
+              <button id="toggleAdvancedVibrateBtn" class="mini-btn ghost-btn" type="button" disabled aria-expanded="false" aria-controls="vibrationAdvancedPanel">
+                Lanjutan
               </button>
+            </div>
+            <div id="vibrationAdvancedPanel" class="vibration-advanced" hidden>
+              <div class="rumble-row">
+                <label for="leftMotorSlider">Motor kiri</label>
+                <input id="leftMotorSlider" type="range" min="0" max="100" value="60" step="5" disabled>
+                <output id="leftMotorValue" for="leftMotorSlider">60%</output>
+                <button id="leftMotorTestBtn" class="mini-btn motor-test-btn" type="button" disabled>Tes</button>
+              </div>
+
+              <div class="rumble-row">
+                <label for="rightMotorSlider">Motor kanan</label>
+                <input id="rightMotorSlider" type="range" min="0" max="100" value="60" step="5" disabled>
+                <output id="rightMotorValue" for="rightMotorSlider">60%</output>
+                <button id="rightMotorTestBtn" class="mini-btn motor-test-btn" type="button" disabled>Tes</button>
+              </div>
+
+              <label class="trigger-rumble-toggle">
+                <input id="triggerRumbleToggle" type="checkbox" disabled>
+                <span>Trigger mengatur getar</span>
+              </label>
+
+              <p class="vibration-note">
+                Kiri dan kanan bisa terasa berbeda karena desain motor getar dan mapping browser tiap gamepad tidak selalu sama.
+                Saat opsi trigger aktif, LT/RT mengontrol getar dengan slider sebagai batas maksimum.
+                Tes getar terlalu lama bisa menguras baterai 😆
+              </p>
             </div>
           </div>
         </section>
@@ -276,6 +305,6 @@
   </div>
   </footer>
 
-  <script src="/assets/js/tester.js?v=19.3a"></script>
+  <script src="/assets/js/tester.js?v=19.8i"></script>
 </body>
 </html>
