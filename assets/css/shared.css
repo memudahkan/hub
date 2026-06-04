@@ -1,3 +1,4 @@
+/* M2D Link Hub Shared v2 - 04/06/2026 */
 :root {
   --bg: #f5f7fb;
   --surface: #ffffff;
@@ -440,4 +441,40 @@ input, button { font: inherit; }
 
 .section-head p {
 margin-top:0;
+}
+
+.footer-inner p:first-child {
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+.footer-inner p:first-child a {
+  text-decoration: underline;
+  text-underline-offset: 5px;
+  position: relative;
+  color: inherit;
+  font-weight: inherit;
+  white-space: nowrap;
+  transition: text-decoration-color .2s ease;
+}
+
+.footer-inner p:first-child a:hover,
+.footer-inner p:first-child a:focus-visible {
+  color: var(--text);
+  text-decoration-color: transparent;
+}
+
+.footer-inner p:last-child a {
+  color: inherit;
+  text-decoration-line: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 5px;
+  transition: text-decoration-color .2s ease;
+}
+
+.footer-inner p:last-child a:hover,
+.footer-inner p:last-child a:focus-visible {
+  color: var(--text);
+  text-decoration-color: currentColor;
 }
