@@ -1,4 +1,4 @@
-/* Koleksi Gamepad M2D v2 - 29/05/2026 */
+/* Koleksi Gamepad M2D v2 - 04/06/2026 */
 :root {
       color-scheme: light dark;
       --bg: #f5f7fb;
@@ -928,25 +928,13 @@ body.desc-modal-open {
 }
 
 .footer-tool a {
+  text-decoration: underline;
+  text-underline-offset: 5px;
   position: relative;
   color: inherit;
   font-weight: inherit;
-  text-decoration: none;
   white-space: nowrap;
-}
-
-.footer-tool a::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -2px;
-  height: 1px;
-  background: currentColor;
-  opacity: 0.55;
-  transition:
-    bottom 0.16s ease,
-    opacity 0.16s ease;
+  transition: text-decoration-color .2s ease;
 }
 
 .footer-tool a:hover,
@@ -954,26 +942,28 @@ body.desc-modal-open {
   color: var(--text);
 }
 
-.footer-tool a:hover::after,
-.footer-tool a:focus-visible::after {
-  bottom: -4px;
-  opacity: 0.9;
+.footer-inner p:first-child a:hover,
+.footer-inner p:first-child a:focus-visible {
+  color: var(--text);
+  text-decoration-color: transparent;
+}
+
+.footer-inner p:last-child a {
+  color: inherit;
+  text-decoration-line: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 5px;
+  transition: text-decoration-color .2s ease;
+}
+
+.footer-inner p:last-child a:hover,
+.footer-inner p:last-child a:focus-visible {
+  color: var(--text);
+  text-decoration-color: currentColor;
 }
 
 .footer-tool a:focus-visible {
   outline: 2px solid color-mix(in srgb, var(--accent) 45%, transparent);
   outline-offset: 5px;
   border-radius: 4px;
-}
-
-.footer-inner p:last-child a {
-  color: inherit;
-  text-decoration: none;
-}
-
-.footer-inner p:last-child a:hover,
-.footer-inner p:last-child a:focus-visible {
-  color: var(--text);
-  text-decoration: underline;
-  text-underline-offset: 3px;
 }
