@@ -1,4 +1,4 @@
-/* M2D Gamepad Tester v20c - sweep beam lebih tebal */
+/* M2D Gamepad Tester v20d - 05/06/2026 */
 const statusEl = document.querySelector("#status");
 const gamepadNameEl = document.querySelector("#gamepadName");
 const mappingEl = document.querySelector("#mapping");
@@ -2087,7 +2087,7 @@ function drawCircularityCssLikeSweepBeam(
   if (fade <= 0) return;
 
   const { centerX, centerY, idealRadius, plotRadius, dpr } = metrics;
-  const radius = Math.min(Math.max(beamState.beamDistance * idealRadius, idealRadius * minRadius), plotRadius);
+  const radius = Math.min(Math.max(beamState.beamDistance * idealRadius, idealRadius * minRadius), idealRadius);
   const direction = beamState.direction || 1;
   const speed = Math.min(1, Math.max(0, beamState.speed || 0));
   const spread = Math.max(0.20, beamAngle) * (0.94 + speed * 0.12);
