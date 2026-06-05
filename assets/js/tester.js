@@ -1,4 +1,4 @@
-/* M2D Gamepad Tester v19.8j - 31/05/206 */
+/* M2D Gamepad Tester v20c - sweep beam lebih tebal */
 const statusEl = document.querySelector("#status");
 const gamepadNameEl = document.querySelector("#gamepadName");
 const mappingEl = document.querySelector("#mapping");
@@ -188,8 +188,14 @@ const lastCircularitySample = {
 };
 
 const CIRCULARITY_BINS = 32;
+const CIRCULARITY_RENDER_BINS = 48;
+const CIRCULARITY_RADIUS_TRAIL_LIFETIME = 520;
+const CIRCULARITY_RADIUS_TRAIL_MAX_POINTS = 7;
+const CIRCULARITY_RADIUS_TRAIL_MIN_DISTANCE = 0.22;
+const CIRCULARITY_RADIUS_TRAIL_MIN_ANGLE = 0.05;
 const CIRCULARITY_MIN_RADIUS = 0.2;
 const CIRCULARITY_ERROR_SAMPLE_MIN_RADIUS = 0.92;
+const CIRCULARITY_EDGE_TRACE_MIN_RADIUS = 0.92;
 const CIRCULARITY_ERROR_SAMPLE_MAX_RADIUS = 1.15;
 const CIRCULARITY_ERROR_SCALE = 1;
 const PATH_MIN_DISTANCE = 0.01;
@@ -497,7 +503,18 @@ function updateButtonLabels(pad) {
 function createCircularityData() {
   return {
     bins: Array(CIRCULARITY_BINS).fill(0),
-    samples: 0
+    samples: 0,
+    radiusTrail: [],
+    sweepBeam: {
+      lastAngle: null,
+      lastDistance: 0,
+      lastUpdate: 0,
+      direction: 1,
+      activeAngle: null,
+      activeDistance: 0,
+      activeAt: 0,
+      speed: 0
+    }
   };
 }
 
@@ -778,7 +795,8 @@ function updateInfo(pad) {
   setTextIfChanged(gamepadNameEl, gamepadName);
   gamepadNameEl.title = gamepadName;
 
-  setTextIfChanged(mappingEl, pad.mapping || "unknown");
+  const mappingText = pad.mapping === "standard" ? "Standar" : "Nonstandar";
+  setTextIfChanged(mappingEl, mappingText);
   setTextIfChanged(buttonCountEl, String(pad.buttons.length));
   setTextIfChanged(axisCountEl, String(pad.axes.length));
 
@@ -1494,6 +1512,9 @@ function renderStickTest() {
 
       resetStickTestBtn.textContent = "Memindai...";
       resetStickTestBtn.disabled = true;
+
+      drawDriftDeadzoneGuide(leftStickCanvas);
+      drawDriftDeadzoneGuide(rightStickCanvas);
       return;
     }
 
@@ -1512,6 +1533,9 @@ function renderStickTest() {
       applyDriftZoneClass(rightStickZone, driftTestResult.right.status);
 
       resetStickTestBtn.textContent = "Ulangi";
+
+      drawDriftDeadzoneGuide(leftStickCanvas);
+      drawDriftDeadzoneGuide(rightStickCanvas);
       return;
     }
 
@@ -1538,6 +1562,9 @@ function renderStickTest() {
 
     resetStickTestBtn.textContent = "Mulai";
     resetStickTestBtn.disabled = !hasGamepad;
+
+    drawDriftDeadzoneGuide(leftStickCanvas);
+    drawDriftDeadzoneGuide(rightStickCanvas);
     return;
   }
 
@@ -1558,8 +1585,8 @@ function renderStickTest() {
       rightStickOverlayValue
     );
 
-    drawCircularityFill(leftStickCanvas, circularityData.left);
-    drawCircularityFill(rightStickCanvas, circularityData.right);
+    drawCircularityFill(leftStickCanvas, circularityData.left, lastStickVisual.left);
+    drawCircularityFill(rightStickCanvas, circularityData.right, lastStickVisual.right);
     return;
   }
 
@@ -1685,9 +1712,512 @@ function getStickCanvasPlotMetrics(canvas) {
   };
 }
 
-function drawCircularityFill(canvas, data) {
+function getCircularityFilledSegments(bins) {
+  const segments = [];
+  let currentSegment = [];
+
+  bins.forEach((value, index) => {
+    if (value > 0) {
+      currentSegment.push(index);
+      return;
+    }
+
+    if (currentSegment.length) {
+      segments.push(currentSegment);
+      currentSegment = [];
+    }
+  });
+
+  if (currentSegment.length) {
+    segments.push(currentSegment);
+  }
+
+  if (segments.length > 1) {
+    const firstSegment = segments[0];
+    const lastSegment = segments[segments.length - 1];
+    const startsAtZero = firstSegment[0] === 0;
+    const endsAtLastBin = lastSegment[lastSegment.length - 1] === bins.length - 1;
+
+    if (startsAtZero && endsAtLastBin) {
+      segments[0] = [...lastSegment, ...firstSegment];
+      segments.pop();
+    }
+  }
+
+  return segments;
+}
+
+function createContinuousAngles(segment, step) {
+  const angles = [];
+  let turnOffset = 0;
+  let previousIndex = segment[0];
+
+  segment.forEach((index, position) => {
+    if (position > 0 && index < previousIndex) {
+      turnOffset += Math.PI * 2;
+    }
+
+    angles.push(index * step + turnOffset);
+    previousIndex = index;
+  });
+
+  return angles;
+}
+
+function getCircularitySegmentsByRadius(bins, minRadius) {
+  const segments = [];
+  let currentSegment = [];
+
+  bins.forEach((value, index) => {
+    if (value >= minRadius) {
+      currentSegment.push(index);
+      return;
+    }
+
+    if (currentSegment.length) {
+      segments.push(currentSegment);
+      currentSegment = [];
+    }
+  });
+
+  if (currentSegment.length) {
+    segments.push(currentSegment);
+  }
+
+  if (segments.length > 1) {
+    const firstSegment = segments[0];
+    const lastSegment = segments[segments.length - 1];
+    const startsAtZero = firstSegment[0] === 0;
+    const endsAtLastBin = lastSegment[lastSegment.length - 1] === bins.length - 1;
+
+    if (startsAtZero && endsAtLastBin) {
+      segments[0] = [...lastSegment, ...firstSegment];
+      segments.pop();
+    }
+  }
+
+  return segments;
+}
+
+function createCircularityRenderBins(sourceBins) {
+  if (sourceBins.length >= CIRCULARITY_RENDER_BINS) {
+    return [...sourceBins];
+  }
+
+  const renderBins = [];
+  const sourceLength = sourceBins.length;
+
+  for (let index = 0; index < CIRCULARITY_RENDER_BINS; index++) {
+    const sourcePosition = (index / CIRCULARITY_RENDER_BINS) * sourceLength;
+    const leftIndex = Math.floor(sourcePosition) % sourceLength;
+    const rightIndex = (leftIndex + 1) % sourceLength;
+    const mix = sourcePosition - Math.floor(sourcePosition);
+    const leftValue = sourceBins[leftIndex] || 0;
+    const rightValue = sourceBins[rightIndex] || 0;
+
+    // Visual boleh dibuat lebih halus, tapi jangan membuat coverage palsu
+    // di celah yang belum pernah disentuh. Jika salah satu sisi kosong,
+    // nilai render tetap mengikuti bin yang benar-benar terisi.
+    if (leftValue > 0 && rightValue > 0) {
+      renderBins.push(leftValue + (rightValue - leftValue) * mix);
+    } else if (mix < 0.5) {
+      renderBins.push(leftValue);
+    } else {
+      renderBins.push(rightValue);
+    }
+  }
+
+  return renderBins;
+}
+
+function drawCircularityEnvelopeFill(ctx, bins, metrics, fillColor) {
+  const { centerX, centerY, idealRadius, plotRadius } = metrics;
+  const step = (Math.PI * 2) / bins.length;
+  const segments = getCircularityFilledSegments(bins);
+
+  ctx.save();
+  ctx.fillStyle = fillColor;
+
+  segments.forEach((segment) => {
+    if (!segment.length) return;
+
+    const isFullShape = segment.length === bins.length;
+    const angles = createContinuousAngles(segment, step);
+    const firstIndex = segment[0];
+    const lastIndex = segment[segment.length - 1];
+    const startAngle = angles[0] - step * 0.55;
+    const endAngle = angles[angles.length - 1] + step * 0.55;
+    const startRadius = Math.min(bins[firstIndex] * idealRadius, plotRadius);
+    const endRadius = Math.min(bins[lastIndex] * idealRadius, plotRadius);
+
+    ctx.beginPath();
+
+    if (isFullShape) {
+      const startX = centerX + Math.cos(angles[0]) * startRadius;
+      const startY = centerY + Math.sin(angles[0]) * startRadius;
+      ctx.moveTo(startX, startY);
+    } else {
+      ctx.moveTo(centerX, centerY);
+      ctx.lineTo(
+        centerX + Math.cos(startAngle) * startRadius,
+        centerY + Math.sin(startAngle) * startRadius
+      );
+    }
+
+    segment.forEach((index, pointIndex) => {
+      const radius = Math.min(bins[index] * idealRadius, plotRadius);
+      const angle = angles[pointIndex];
+      ctx.lineTo(
+        centerX + Math.cos(angle) * radius,
+        centerY + Math.sin(angle) * radius
+      );
+    });
+
+    if (!isFullShape) {
+      ctx.lineTo(
+        centerX + Math.cos(endAngle) * endRadius,
+        centerY + Math.sin(endAngle) * endRadius
+      );
+      ctx.lineTo(centerX, centerY);
+    }
+
+    ctx.closePath();
+    ctx.fill();
+  });
+
+  ctx.restore();
+}
+
+function drawCircularityOvershootFill(ctx, bins, metrics, overshootColor) {
+  const { centerX, centerY, idealRadius, plotRadius } = metrics;
+  const step = (Math.PI * 2) / bins.length;
+  const segments = getCircularitySegmentsByRadius(bins, 1.001);
+
+  ctx.save();
+  ctx.fillStyle = overshootColor;
+  ctx.globalAlpha = 1;
+
+  segments.forEach((segment) => {
+    if (!segment.length) return;
+
+    const angles = createContinuousAngles(segment, step);
+    const firstIndex = segment[0];
+    const lastIndex = segment[segment.length - 1];
+    const startAngle = angles[0] - step * 0.55;
+    const endAngle = angles[angles.length - 1] + step * 0.55;
+    const startRadius = Math.min(bins[firstIndex] * idealRadius, plotRadius);
+    const endRadius = Math.min(bins[lastIndex] * idealRadius, plotRadius);
+
+    ctx.beginPath();
+    ctx.moveTo(
+      centerX + Math.cos(startAngle) * startRadius,
+      centerY + Math.sin(startAngle) * startRadius
+    );
+
+    segment.forEach((index, pointIndex) => {
+      const radius = Math.min(bins[index] * idealRadius, plotRadius);
+      const angle = angles[pointIndex];
+      ctx.lineTo(
+        centerX + Math.cos(angle) * radius,
+        centerY + Math.sin(angle) * radius
+      );
+    });
+
+    ctx.lineTo(
+      centerX + Math.cos(endAngle) * endRadius,
+      centerY + Math.sin(endAngle) * endRadius
+    );
+    ctx.lineTo(
+      centerX + Math.cos(endAngle) * idealRadius,
+      centerY + Math.sin(endAngle) * idealRadius
+    );
+
+    [...segment].reverse().forEach((index, reverseIndex) => {
+      const originalIndex = segment.length - 1 - reverseIndex;
+      const angle = angles[originalIndex];
+      ctx.lineTo(
+        centerX + Math.cos(angle) * idealRadius,
+        centerY + Math.sin(angle) * idealRadius
+      );
+    });
+
+    ctx.lineTo(
+      centerX + Math.cos(startAngle) * idealRadius,
+      centerY + Math.sin(startAngle) * idealRadius
+    );
+    ctx.closePath();
+    ctx.fill();
+  });
+
+  ctx.restore();
+}
+
+function drawCircularitySonarRings(ctx, metrics, sonarRingColor, ringWidth = 1.1, dashLength = 4) {
+  const { centerX, centerY, idealRadius, dpr } = metrics;
+  const ringRadii = [0.28, 0.52, 0.76];
+
+  ctx.save();
+  ctx.strokeStyle = sonarRingColor;
+  ctx.globalAlpha = 1;
+  ctx.lineWidth = ringWidth * dpr;
+  ctx.setLineDash(dashLength > 0 ? [dashLength * dpr, dashLength * 1.5 * dpr] : []);
+
+  ringRadii.forEach((scale) => {
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, idealRadius * scale, 0, Math.PI * 2);
+    ctx.stroke();
+  });
+
+  ctx.restore();
+}
+
+
+function getAngleDistance(a, b) {
+  const diff = Math.abs(a - b) % (Math.PI * 2);
+  return Math.min(diff, Math.PI * 2 - diff);
+}
+
+
+function getSignedAngleDelta(fromAngle, toAngle) {
+  let delta = toAngle - fromAngle;
+
+  while (delta > Math.PI) {
+    delta -= Math.PI * 2;
+  }
+
+  while (delta < -Math.PI) {
+    delta += Math.PI * 2;
+  }
+
+  return delta;
+}
+
+function updateCircularitySweepBeamState(
+  data,
+  currentStick,
+  minRadius = 0.90,
+  angleThreshold = 0.018
+) {
+  const currentX = Math.max(-1, Math.min(1, currentStick.x || 0));
+  const currentY = Math.max(-1, Math.min(1, currentStick.y || 0));
+  const distance = Math.hypot(currentX, currentY);
+  const angle = Math.atan2(currentY, currentX);
+  const now = performance.now();
+
+  if (!data.sweepBeam) {
+    data.sweepBeam = {
+      lastAngle: null,
+      lastDistance: 0,
+      lastUpdate: 0,
+      direction: 1,
+      activeAngle: null,
+      activeDistance: 0,
+      activeAt: 0,
+      speed: 0
+    };
+  }
+
+  const beam = data.sweepBeam;
+
+  if (distance < minRadius) {
+    beam.lastAngle = null;
+    beam.lastDistance = distance;
+    beam.lastUpdate = now;
+
+    return {
+      x: currentX,
+      y: currentY,
+      distance,
+      beamAngle: beam.activeAngle,
+      beamDistance: beam.activeDistance,
+      beamAge: now - beam.activeAt,
+      direction: beam.direction,
+      speed: beam.speed
+    };
+  }
+
+  if (beam.lastAngle !== null) {
+    const angleDelta = getSignedAngleDelta(beam.lastAngle, angle);
+    const distanceDelta = Math.abs(distance - beam.lastDistance);
+    const timeDelta = beam.lastUpdate ? Math.max(16, now - beam.lastUpdate) : 16;
+    const isAngularSweep = Math.abs(angleDelta) >= angleThreshold;
+
+    if (isAngularSweep) {
+      beam.direction = angleDelta > 0 ? 1 : -1;
+      beam.activeAngle = angle;
+      beam.activeDistance = distance;
+      beam.activeAt = now;
+      beam.speed = Math.min(1, Math.max(0.2, Math.abs(angleDelta) / timeDelta * 850 + distanceDelta / timeDelta * 55));
+    }
+  }
+
+  beam.lastAngle = angle;
+  beam.lastDistance = distance;
+  beam.lastUpdate = now;
+
+  return {
+    x: currentX,
+    y: currentY,
+    distance,
+    beamAngle: beam.activeAngle,
+    beamDistance: beam.activeDistance,
+    beamAge: now - beam.activeAt,
+    direction: beam.direction,
+    speed: beam.speed
+  };
+}
+
+function drawCircularityCssLikeSweepBeam(
+  ctx,
+  metrics,
+  beamState,
+  beamColor,
+  beamEdgeColor,
+  beamAlpha = 0.74,
+  beamAngle = 0.76,
+  minRadius = 0.90,
+  fadeMs = 260,
+  slices = 12
+) {
+  if (!beamState || beamState.beamAngle === null || beamState.beamDistance < minRadius) return;
+
+  const age = Math.max(0, beamState.beamAge || 0);
+  const fade = Math.max(0, 1 - age / Math.max(140, fadeMs));
+
+  if (fade <= 0) return;
+
+  const { centerX, centerY, idealRadius, plotRadius, dpr } = metrics;
+  const radius = Math.min(Math.max(beamState.beamDistance * idealRadius, idealRadius * minRadius), plotRadius);
+  const direction = beamState.direction || 1;
+  const speed = Math.min(1, Math.max(0, beamState.speed || 0));
+  const spread = Math.max(0.20, beamAngle) * (0.94 + speed * 0.12);
+  const leadingAngle = beamState.beamAngle;
+  const safeSlices = Math.max(6, Math.min(18, Math.round(slices)));
+  const sliceAngle = spread / safeSlices;
+
+  ctx.save();
+
+  // Simulasi gradient diagonal/arah-sapuan ala CSS sweep:
+  // irisan dekat leading edge lebih terang, belakang cepat memudar.
+  for (let i = 0; i < safeSlices; i += 1) {
+    const t0 = i / safeSlices;
+    const t1 = (i + 1) / safeSlices;
+    const startAngle = leadingAngle - direction * spread * t1;
+    const endAngle = leadingAngle - direction * spread * t0;
+    const localFade = Math.pow(1 - t0, 1.18);
+    const innerRadius = radius * (0.05 + 0.04 * t0);
+
+    if (localFade <= 0.015) continue;
+
+    ctx.globalAlpha = beamAlpha * fade * localFade;
+    ctx.fillStyle = colorMixFallback(beamColor, 0.48 * localFade);
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, radius, startAngle, endAngle, direction < 0);
+    ctx.arc(centerX, centerY, innerRadius, endAngle, startAngle, direction >= 0);
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  // Leading edge tipis agar arah sapuan terbaca, tanpa membuat sektor terlihat seperti kertas.
+  ctx.globalAlpha = Math.min(1, (beamAlpha + 0.16) * fade);
+  ctx.strokeStyle = colorMixFallback(beamEdgeColor, 0.62);
+  ctx.lineWidth = (1.05 + speed * 0.22) * dpr;
+  ctx.lineCap = "round";
+  ctx.beginPath();
+  ctx.moveTo(centerX, centerY);
+  ctx.lineTo(
+    centerX + Math.cos(leadingAngle) * radius,
+    centerY + Math.sin(leadingAngle) * radius
+  );
+  ctx.stroke();
+
+  // Rim arc sangat tipis untuk memberi rasa sweep, bukan blok solid.
+  ctx.globalAlpha = Math.min(1, (beamAlpha + 0.04) * fade);
+  ctx.strokeStyle = colorMixFallback(beamEdgeColor, 0.34);
+  ctx.lineWidth = 0.8 * dpr;
+  ctx.beginPath();
+  ctx.arc(centerX, centerY, radius, leadingAngle - direction * spread, leadingAngle, direction < 0);
+  ctx.stroke();
+
+  ctx.restore();
+}
+
+function updateCircularityRadiusTrail(data, currentStick) {
+  if (!data.radiusTrail) {
+    data.radiusTrail = [];
+  }
+
+  const now = performance.now();
+  const currentX = Math.max(-1, Math.min(1, currentStick.x || 0));
+  const currentY = Math.max(-1, Math.min(1, currentStick.y || 0));
+  const distance = Math.hypot(currentX, currentY);
+
+  data.radiusTrail = data.radiusTrail.filter(
+    (point) => now - point.t <= CIRCULARITY_RADIUS_TRAIL_LIFETIME
+  );
+
+  if (distance < CIRCULARITY_RADIUS_TRAIL_MIN_DISTANCE) {
+    return { x: currentX, y: currentY, distance };
+  }
+
+  const angle = Math.atan2(currentY, currentX);
+  const lastPoint = data.radiusTrail[data.radiusTrail.length - 1];
+  const shouldAdd =
+    !lastPoint ||
+    getAngleDistance(angle, lastPoint.angle) >= CIRCULARITY_RADIUS_TRAIL_MIN_ANGLE ||
+    now - lastPoint.t > 90;
+
+  if (shouldAdd) {
+    data.radiusTrail.push({ x: currentX, y: currentY, angle, t: now });
+  }
+
+  while (data.radiusTrail.length > CIRCULARITY_RADIUS_TRAIL_MAX_POINTS) {
+    data.radiusTrail.shift();
+  }
+
+  return { x: currentX, y: currentY, distance };
+}
+
+function drawCircularityRadiusTrail(ctx, metrics, data, trailColor, maxAlpha = 0.22) {
+  if (!data.radiusTrail?.length) return;
+
+  const { centerX, centerY, idealRadius, dpr } = metrics;
+  const now = performance.now();
+
+  ctx.save();
+  ctx.lineCap = "round";
+  ctx.strokeStyle = trailColor;
+
+  data.radiusTrail.forEach((point) => {
+    const age = Math.max(0, now - point.t);
+    const fade = Math.max(0, 1 - age / CIRCULARITY_RADIUS_TRAIL_LIFETIME);
+
+    if (fade <= 0) return;
+
+    ctx.globalAlpha = fade * maxAlpha;
+    ctx.lineWidth = (2.8 - fade * 0.7) * dpr;
+    ctx.beginPath();
+    ctx.moveTo(centerX, centerY);
+    ctx.lineTo(
+      centerX + point.x * idealRadius,
+      centerY + point.y * idealRadius
+    );
+    ctx.stroke();
+  });
+
+  ctx.restore();
+}
+
+
+function getCssNumber(rootStyle, name, fallback) {
+  const value = Number.parseFloat(rootStyle.getPropertyValue(name));
+  return Number.isFinite(value) ? value : fallback;
+}
+
+function drawCircularityFill(canvas, data, currentStick = { x: 0, y: 0 }) {
   if (!canvas) return;
 
+  const metrics = getStickCanvasPlotMetrics(canvas);
   const {
     ctx,
     width,
@@ -1695,100 +2225,111 @@ function drawCircularityFill(canvas, data) {
     dpr,
     centerX,
     centerY,
-    idealRadius,
-    plotRadius
-  } = getStickCanvasPlotMetrics(canvas);
+    idealRadius
+  } = metrics;
 
   const filledBins = data.bins.filter((value) => value > 0);
 
   ctx.clearRect(0, 0, width, height);
 
-  if (!filledBins.length) return;
-
-  const accentColor = getComputedStyle(document.documentElement)
+  const rootStyle = getComputedStyle(document.documentElement);
+  const accentColor = rootStyle
     .getPropertyValue("--accent")
     .trim();
 
-  const fillColor = getComputedStyle(document.documentElement)
+  const fillColor = rootStyle
+    .getPropertyValue("--circularity-fill")
+    .trim() || rootStyle
     .getPropertyValue("--accent-soft")
     .trim();
 
-  const step = (Math.PI * 2) / data.bins.length;
+  const overshootColor = rootStyle
+    .getPropertyValue("--circularity-overshoot")
+    .trim() || "rgba(255, 207, 51, 0.48)";
+
+  const sonarRingColor = rootStyle
+    .getPropertyValue("--circularity-sonar-ring")
+    .trim() || accentColor;
+
+  const radiusTrailColor = rootStyle
+    .getPropertyValue("--circularity-radius-trail")
+    .trim() || accentColor;
+
+  const radiusLineColor = rootStyle
+    .getPropertyValue("--circularity-radius-line")
+    .trim() || accentColor;
+
+  const radiusLineUnderColor = rootStyle
+    .getPropertyValue("--circularity-radius-line-under")
+    .trim() || accentColor;
+
+  const sweepBeamColor = rootStyle
+    .getPropertyValue("--circularity-sweep-beam")
+    .trim() || accentColor;
+
+  const sweepBeamEdgeColor = rootStyle
+    .getPropertyValue("--circularity-sweep-beam-edge")
+    .trim() || accentColor;
+
+  const sonarRingWidth = getCssNumber(rootStyle, "--circularity-sonar-ring-width", 1.1);
+  const sonarRingDash = getCssNumber(rootStyle, "--circularity-sonar-ring-dash", 4);
+  const radiusTrailAlpha = getCssNumber(rootStyle, "--circularity-radius-trail-alpha", 0.22);
+  const radiusLineAlpha = getCssNumber(rootStyle, "--circularity-radius-line-alpha", 0.82);
+  const radiusLineUnderAlpha = getCssNumber(rootStyle, "--circularity-radius-line-under-alpha", 0.22);
+  const sweepBeamAlpha = getCssNumber(rootStyle, "--circularity-sweep-beam-alpha", 0.74);
+  const sweepBeamAngle = getCssNumber(rootStyle, "--circularity-sweep-beam-angle", 0.76);
+  const sweepBeamMinRadius = getCssNumber(rootStyle, "--circularity-sweep-beam-min-radius", 0.90);
+  const sweepBeamAngleThreshold = getCssNumber(rootStyle, "--circularity-sweep-beam-angle-threshold", 0.018);
+  const sweepBeamFade = getCssNumber(rootStyle, "--circularity-sweep-beam-fade", 260);
+  const sweepBeamSlices = getCssNumber(rootStyle, "--circularity-sweep-beam-slices", 12);
+
+  if (!filledBins.length) {
+    ctx.save();
+    drawCircularitySonarRings(ctx, metrics, sonarRingColor, sonarRingWidth, sonarRingDash);
+    ctx.restore();
+    return;
+  }
+
+  const renderBins = createCircularityRenderBins(data.bins);
+  const renderStep = (Math.PI * 2) / renderBins.length;
+  const edgeStep = (Math.PI * 2) / data.bins.length;
+  const edgeOverlap = edgeStep * 0.58;
 
   ctx.save();
 
-  // v19.2: circularity memakai canvas kotak yang lebih besar.
-  // Lingkaran ideal tetap radius 1.000, sementara radius > 1.000
-  // boleh keluar menuju area kotak di sekelilingnya.
-  ctx.beginPath();
-  ctx.arc(centerX, centerY, idealRadius, 0, Math.PI * 2);
-  ctx.fillStyle = colorMixFallback(fillColor, 0.22);
-  ctx.fill();
+  // Fill coverage digambar sebagai envelope halus dari data bin.
+  // Bentuk asli jangkauan stick tetap dipertahankan, termasuk jika kotak
+  // atau melewati lingkaran ideal, tapi tanpa pecahan sektor yang kasar.
+  drawCircularityEnvelopeFill(ctx, renderBins, metrics, fillColor);
 
-  // Coverage aktual per sektor, tanpa normalisasi ke max radius.
-  ctx.globalAlpha = 1;
+  // Area overshoot di luar radius ideal tetap terlihat jika stick melewati
+  // batas lingkaran.
+  drawCircularityOvershootFill(ctx, renderBins, metrics, overshootColor);
+
+  // Ring sonar halus membantu area circularity terasa lebih berlapis
+  // tanpa mengubah data hitung atau menambah efek berat.
+  drawCircularitySonarRings(ctx, metrics, sonarRingColor, sonarRingWidth, sonarRingDash);
+
+  // Jejak circularity hanya digambar di tepi lingkaran ideal
+  // ketika stick benar-benar mendekati tepi luar.
+  ctx.globalAlpha = 0.96;
+  ctx.lineWidth = 1.7 * dpr;
+  ctx.strokeStyle = accentColor;
+  ctx.lineCap = "round";
 
   data.bins.forEach((radiusValue, index) => {
-    if (radiusValue <= 0) return;
+    if (radiusValue < CIRCULARITY_EDGE_TRACE_MIN_RADIUS) return;
 
-    const startAngle = index * step - step * 0.55;
-    const endAngle = index * step + step * 0.55;
-    const sectorRadius = Math.min(radiusValue * idealRadius, plotRadius);
+    const angle = index * edgeStep;
+    const startAngle = angle - edgeOverlap;
+    const endAngle = angle + edgeOverlap;
 
     ctx.beginPath();
-    ctx.moveTo(centerX, centerY);
-    ctx.arc(centerX, centerY, sectorRadius, startAngle, endAngle);
-    ctx.closePath();
-    ctx.fillStyle = fillColor;
-    ctx.fill();
-  });
-
-  // Area overshoot di luar radius ideal diberi warna lebih tegas.
-  data.bins.forEach((radiusValue, index) => {
-    if (radiusValue <= 1) return;
-
-    const startAngle = index * step - step * 0.55;
-    const endAngle = index * step + step * 0.55;
-    const outerRadius = Math.min(radiusValue * idealRadius, plotRadius);
-
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, outerRadius, startAngle, endAngle);
-    ctx.arc(centerX, centerY, idealRadius, endAngle, startAngle, true);
-    ctx.closePath();
-    ctx.fillStyle = accentColor;
-    ctx.globalAlpha = 0.30;
-    ctx.fill();
-    ctx.globalAlpha = 1;
-  });
-
-  // Outline actual range supaya bentuk square-ish terlihat saat diagonal overshoot.
-  ctx.beginPath();
-
-  let started = false;
-
-  data.bins.forEach((radiusValue, index) => {
-    if (radiusValue <= 0) return;
-
-    const angle = index * step;
-    const pointRadius = Math.min(radiusValue * idealRadius, plotRadius);
-    const x = centerX + Math.cos(angle) * pointRadius;
-    const y = centerY + Math.sin(angle) * pointRadius;
-
-    if (!started) {
-      ctx.moveTo(x, y);
-      started = true;
-    } else {
-      ctx.lineTo(x, y);
-    }
-  });
-
-  if (started) {
-    ctx.closePath();
-    ctx.globalAlpha = 0.96;
-    ctx.lineWidth = 1.6 * dpr;
-    ctx.strokeStyle = accentColor;
+    ctx.arc(centerX, centerY, idealRadius, startAngle, endAngle);
     ctx.stroke();
-  }
+  });
+
+  ctx.lineCap = "butt";
 
   // Garis ideal radius 1.000 tetap di atas fill.
   ctx.globalAlpha = 0.64;
@@ -1797,6 +2338,54 @@ function drawCircularityFill(canvas, data) {
   ctx.beginPath();
   ctx.arc(centerX, centerY, idealRadius, 0, Math.PI * 2);
   ctx.stroke();
+
+  // CSS-like sweep beam: aktif hanya saat stick diputar di tepi,
+  // dengan fade angular agar tidak terasa seperti bendera/kertas.
+  const currentRadius = updateCircularitySweepBeamState(
+    data,
+    currentStick,
+    sweepBeamMinRadius,
+    sweepBeamAngleThreshold
+  );
+  drawCircularityCssLikeSweepBeam(
+    ctx,
+    metrics,
+    currentRadius,
+    sweepBeamColor,
+    sweepBeamEdgeColor,
+    sweepBeamAlpha,
+    sweepBeamAngle,
+    sweepBeamMinRadius,
+    sweepBeamFade,
+    sweepBeamSlices
+  );
+
+  // Garis radius circularity tetap ditarik dari pusat lingkaran
+  // ke posisi stick saat ini agar arah putaran mudah dibaca.
+  if (currentRadius.distance > 0.025) {
+    const radiusEndX = centerX + currentRadius.x * idealRadius;
+    const radiusEndY = centerY + currentRadius.y * idealRadius;
+
+    // Lapis bawah menjaga garis tetap terbaca di light mode,
+    // lapis atas menjaga kesan radar tetap bersih.
+    ctx.lineCap = "round";
+    ctx.globalAlpha = radiusLineUnderAlpha;
+    ctx.lineWidth = 3.2 * dpr;
+    ctx.strokeStyle = radiusLineUnderColor;
+    ctx.beginPath();
+    ctx.moveTo(centerX, centerY);
+    ctx.lineTo(radiusEndX, radiusEndY);
+    ctx.stroke();
+
+    ctx.globalAlpha = radiusLineAlpha;
+    ctx.lineWidth = 1.35 * dpr;
+    ctx.strokeStyle = radiusLineColor;
+    ctx.beginPath();
+    ctx.moveTo(centerX, centerY);
+    ctx.lineTo(radiusEndX, radiusEndY);
+    ctx.stroke();
+    ctx.lineCap = "butt";
+  }
 
   ctx.restore();
 }
@@ -1811,6 +2400,31 @@ function colorMixFallback(color, alpha) {
   }
 
   return color;
+}
+
+function drawDriftDeadzoneGuide(canvas) {
+  if (!canvas) return;
+
+  const metrics = getStickCanvasPlotMetrics(canvas);
+  const { ctx, width, height, dpr, centerX, centerY, idealRadius } = metrics;
+  const rootStyle = getComputedStyle(document.documentElement);
+  const deadzoneColor = rootStyle
+    .getPropertyValue("--drift-deadzone-ring")
+    .trim() || rootStyle.getPropertyValue("--accent").trim();
+
+  ctx.clearRect(0, 0, width, height);
+
+  ctx.save();
+  const deadzoneDash = getCssNumber(rootStyle, "--drift-deadzone-dash", 0);
+
+  ctx.strokeStyle = deadzoneColor;
+  ctx.globalAlpha = 1;
+  ctx.lineWidth = 1.2 * dpr;
+  ctx.setLineDash(deadzoneDash > 0 ? [deadzoneDash * dpr, deadzoneDash * 1.35 * dpr] : []);
+  ctx.beginPath();
+  ctx.arc(centerX, centerY, idealRadius * 0.08, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.restore();
 }
 
 function drawPath(canvas, data) {
