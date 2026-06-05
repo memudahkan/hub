@@ -1,4 +1,4 @@
-/* M2D Gamepad Tester CSS v19.8j1 - perbaikan toolbar stick mobile landscape */
+/* M2D Gamepad Tester CSS v20c - sweep beam lebih tebal */
 * {
   box-sizing: border-box;
 }
@@ -16,6 +16,27 @@
   --active-text: #0f1316;
   --accent: #7dd3fc;
   --accent-soft: rgba(125, 211, 252, 0.34);
+  --circularity-fill: rgba(30, 58, 138, 0.78);
+  --circularity-sonar-ring: rgba(125, 211, 252, 0.34);
+  --circularity-sonar-ring-width: 1.1;
+  --circularity-sonar-ring-dash: 4;
+  --circularity-radius-trail: #7dd3fc;
+  --circularity-radius-trail-alpha: 0.32;
+  --circularity-radius-line: #7dd3fc;
+  --circularity-radius-line-alpha: 0.86;
+  --circularity-radius-line-under: rgba(125, 211, 252, 0.18);
+  --circularity-radius-line-under-alpha: 0.22;
+  --circularity-sweep-beam: rgba(125, 211, 252, 0.42);
+  --circularity-sweep-beam-edge: rgba(125, 211, 252, 0.72);
+  --circularity-sweep-beam-alpha: 0.92;
+  --circularity-sweep-beam-angle: 0.84;
+  --circularity-sweep-beam-min-radius: 0.90;
+  --circularity-sweep-beam-angle-threshold: 0.018;
+  --circularity-sweep-beam-fade: 320;
+  --circularity-sweep-beam-slices: 12;
+  --circularity-overshoot: rgba(125, 211, 252, 0.28);
+  --drift-deadzone-ring: rgba(125, 211, 252, 0.34);
+  --drift-deadzone-dash: 0;
   --shadow: rgba(0, 0, 0, 0.32);
 
   --radius-lg: 12px;
@@ -34,7 +55,28 @@
     --active: #101419;
     --active-text: #ffffff;
     --accent: #0284c7;
-    --accent-soft: rgba(2, 132, 199, 0.28);
+    --accent-soft: rgba(37, 99, 235, 0.36);
+    --circularity-fill: rgba(37, 99, 235, 0.44);
+    --circularity-sonar-ring: rgba(37, 99, 235, 0.50);
+    --circularity-sonar-ring-width: 1.15;
+    --circularity-sonar-ring-dash: 4;
+    --circularity-radius-trail: rgba(255, 255, 255, 0.88);
+    --circularity-radius-trail-alpha: 0.46;
+    --circularity-radius-line: rgba(255, 255, 255, 0.92);
+    --circularity-radius-line-alpha: 0.95;
+    --circularity-radius-line-under: rgba(7, 89, 133, 0.62);
+    --circularity-radius-line-under-alpha: 0.85;
+    --circularity-sweep-beam: rgba(2, 132, 199, 0.40);
+    --circularity-sweep-beam-edge: rgba(7, 89, 133, 0.72);
+    --circularity-sweep-beam-alpha: 0.88;
+    --circularity-sweep-beam-angle: 0.84;
+    --circularity-sweep-beam-min-radius: 0.90;
+    --circularity-sweep-beam-angle-threshold: 0.018;
+    --circularity-sweep-beam-fade: 320;
+    --circularity-sweep-beam-slices: 12;
+    --circularity-overshoot: rgba(2, 132, 199, 0.34);
+    --drift-deadzone-ring: rgba(7, 89, 133, 0.42);
+    --drift-deadzone-dash: 0;
     --shadow: rgba(15, 23, 42, 0.1);
   }
 }
@@ -394,9 +436,10 @@ h3 {
     linear-gradient(0deg, transparent calc(50% - 1px), color-mix(in srgb, var(--muted) 28%, transparent) calc(50% - 1px), color-mix(in srgb, var(--muted) 28%, transparent) calc(50% + 1px), transparent calc(50% + 1px)),
     var(--card);
   box-shadow:
-    inset 0 0 0 6px color-mix(in srgb, var(--card-soft) 80%, transparent),
     inset 0 0 24px color-mix(in srgb, var(--muted) 12%, transparent);
 }
+
+/* Crosshair dasar tidak ditutup inner ring agar garis sumbu tetap penuh di semua mode. */
 
 .stick-zone::after {
   content: "";
@@ -1577,4 +1620,11 @@ h3 {
   .rumble-row input[type="range"] {
     grid-column: 1 / -1;
   }
+}
+
+
+
+/* v19.9j: ring panduan Drift dibuat solid agar berbeda dari tampilan Off. */
+.stick-mode-drift .stick-zone::after {
+  border-style: solid;
 }
