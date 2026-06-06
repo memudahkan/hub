@@ -1,4 +1,4 @@
-/* M2D Gamepad Tester CSS v20d - 05/06/2026 */
+/* M2D Gamepad Tester CSS v20s - 06/06/2026 */
 * {
   box-sizing: border-box;
 }
@@ -17,9 +17,9 @@
   --accent: #7dd3fc;
   --accent-soft: rgba(125, 211, 252, 0.34);
   --circularity-fill: rgba(30, 58, 138, 0.78);
-  --circularity-sonar-ring: rgba(125, 211, 252, 0.34);
+  --circularity-sonar-ring: rgba(125, 211, 252, 0.22);
   --circularity-sonar-ring-width: 1.1;
-  --circularity-sonar-ring-dash: 4;
+  --circularity-sonar-ring-dash: 0;
   --circularity-radius-trail: #7dd3fc;
   --circularity-radius-trail-alpha: 0.32;
   --circularity-radius-line: #7dd3fc;
@@ -34,7 +34,18 @@
   --circularity-sweep-beam-angle-threshold: 0.018;
   --circularity-sweep-beam-fade: 320;
   --circularity-sweep-beam-slices: 12;
-  --circularity-overshoot: rgba(125, 211, 252, 0.28);
+  --circularity-overshoot: rgba(251, 113, 133, 0.16);
+  --circularity-overshoot-tick-1: rgba(249, 168, 212, 0.78);
+  --circularity-overshoot-tick-2: rgba(251, 113, 133, 0.82);
+  --circularity-overshoot-tick-3: rgba(249, 115, 22, 0.86);
+  --circularity-overshoot-tick-4: rgba(217, 70, 239, 0.86);
+  --circularity-overshoot-track: rgba(125, 211, 252, 0.20);
+  --circularity-overshoot-track-alpha: 0.72;
+  --circularity-overshoot-track-width: 1.05;
+  --circularity-overshoot-tick-alpha: 0.86;
+  --circularity-overshoot-tick-width: 1.65;
+  --circularity-overshoot-tick-offset: 5.0;
+  --circularity-overshoot-tick-threshold: 1.01;
   --drift-deadzone-ring: rgba(125, 211, 252, 0.34);
   --drift-deadzone-dash: 0;
   --shadow: rgba(0, 0, 0, 0.32);
@@ -57,9 +68,9 @@
     --accent: #0284c7;
     --accent-soft: rgba(37, 99, 235, 0.36);
     --circularity-fill: rgba(37, 99, 235, 0.44);
-    --circularity-sonar-ring: rgba(37, 99, 235, 0.50);
+    --circularity-sonar-ring: rgba(37, 99, 235, 0.28);
     --circularity-sonar-ring-width: 1.15;
-    --circularity-sonar-ring-dash: 4;
+    --circularity-sonar-ring-dash: 0;
     --circularity-radius-trail: rgba(255, 255, 255, 0.88);
     --circularity-radius-trail-alpha: 0.46;
     --circularity-radius-line: rgba(255, 255, 255, 0.92);
@@ -74,7 +85,18 @@
     --circularity-sweep-beam-angle-threshold: 0.018;
     --circularity-sweep-beam-fade: 320;
     --circularity-sweep-beam-slices: 12;
-    --circularity-overshoot: rgba(2, 132, 199, 0.34);
+    --circularity-overshoot: rgba(251, 113, 133, 0.14);
+    --circularity-overshoot-tick-1: rgba(236, 72, 153, 0.62);
+    --circularity-overshoot-tick-2: rgba(225, 29, 72, 0.66);
+    --circularity-overshoot-tick-3: rgba(234, 88, 12, 0.72);
+    --circularity-overshoot-tick-4: rgba(168, 85, 247, 0.74);
+    --circularity-overshoot-track: rgba(37, 99, 235, 0.20);
+    --circularity-overshoot-track-alpha: 0.70;
+    --circularity-overshoot-track-width: 1.05;
+    --circularity-overshoot-tick-alpha: 0.76;
+    --circularity-overshoot-tick-width: 1.65;
+    --circularity-overshoot-tick-offset: 5.0;
+    --circularity-overshoot-tick-threshold: 1.01;
     --drift-deadzone-ring: rgba(7, 89, 133, 0.42);
     --drift-deadzone-dash: 0;
     --shadow: rgba(15, 23, 42, 0.1);
