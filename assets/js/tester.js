@@ -1,4 +1,4 @@
-/* M2D Gamepad Tester v20d - 05/06/2026 */
+/* M2D Gamepad Tester v20s - 06/06/2026 */
 const statusEl = document.querySelector("#status");
 const gamepadNameEl = document.querySelector("#gamepadName");
 const mappingEl = document.querySelector("#mapping");
@@ -1888,6 +1888,68 @@ function drawCircularityEnvelopeFill(ctx, bins, metrics, fillColor) {
   ctx.restore();
 }
 
+
+function getCircularityOvershootTickColor(radiusValue, colors) {
+  if (radiusValue >= 1.05) return colors[3];
+  if (radiusValue >= 1.035) return colors[2];
+  if (radiusValue >= 1.02) return colors[1];
+  return colors[0];
+}
+
+function drawCircularityOvershootTicks(
+  ctx,
+  bins,
+  metrics,
+  colors,
+  alpha,
+  baseWidth,
+  offset,
+  threshold,
+  trackColor,
+  trackAlpha,
+  trackWidth
+) {
+  const { centerX, centerY, idealRadius, dpr } = metrics;
+  const step = (Math.PI * 2) / bins.length;
+  const tickRadius = idealRadius + offset * dpr;
+  const tickBaseArc = step * 0.38;
+  const hasOvershoot = bins.some((radiusValue) => radiusValue > threshold);
+
+  ctx.save();
+  ctx.lineCap = "round";
+
+  // v20s: jalur luar khusus overshoot.
+  // Track tipis ini membuat marker terasa sebagai layer informasi,
+  // bukan serpihan yang menempel di tepi fill.
+  if (hasOvershoot) {
+    ctx.globalAlpha = trackAlpha;
+    ctx.lineWidth = trackWidth * dpr;
+    ctx.strokeStyle = trackColor;
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, tickRadius, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+
+  bins.forEach((radiusValue, index) => {
+    if (radiusValue <= threshold) return;
+
+    const overshootAmount = Math.min(1, Math.max(0, (radiusValue - threshold) / 0.055));
+    const angle = index * step;
+    const arcHalf = tickBaseArc * (0.82 + overshootAmount * 0.42);
+    const startAngle = angle - arcHalf;
+    const endAngle = angle + arcHalf;
+
+    ctx.globalAlpha = alpha * (0.68 + overshootAmount * 0.32);
+    ctx.lineWidth = (baseWidth + overshootAmount * 0.50) * dpr;
+    ctx.strokeStyle = getCircularityOvershootTickColor(radiusValue, colors);
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, tickRadius, startAngle, endAngle);
+    ctx.stroke();
+  });
+
+  ctx.restore();
+}
+
 function drawCircularityOvershootFill(ctx, bins, metrics, overshootColor) {
   const { centerX, centerY, idealRadius, plotRadius } = metrics;
   const step = (Math.PI * 2) / bins.length;
@@ -2247,6 +2309,13 @@ function drawCircularityFill(canvas, data, currentStick = { x: 0, y: 0 }) {
     .getPropertyValue("--circularity-overshoot")
     .trim() || "rgba(255, 207, 51, 0.48)";
 
+  const overshootTickColors = [
+    rootStyle.getPropertyValue("--circularity-overshoot-tick-1").trim() || "rgba(249, 168, 212, 0.78)",
+    rootStyle.getPropertyValue("--circularity-overshoot-tick-2").trim() || "rgba(251, 113, 133, 0.82)",
+    rootStyle.getPropertyValue("--circularity-overshoot-tick-3").trim() || "rgba(249, 115, 22, 0.86)",
+    rootStyle.getPropertyValue("--circularity-overshoot-tick-4").trim() || "rgba(217, 70, 239, 0.86)"
+  ];
+
   const sonarRingColor = rootStyle
     .getPropertyValue("--circularity-sonar-ring")
     .trim() || accentColor;
@@ -2282,6 +2351,15 @@ function drawCircularityFill(canvas, data, currentStick = { x: 0, y: 0 }) {
   const sweepBeamAngleThreshold = getCssNumber(rootStyle, "--circularity-sweep-beam-angle-threshold", 0.018);
   const sweepBeamFade = getCssNumber(rootStyle, "--circularity-sweep-beam-fade", 260);
   const sweepBeamSlices = getCssNumber(rootStyle, "--circularity-sweep-beam-slices", 12);
+  const overshootTrackColor = rootStyle
+    .getPropertyValue("--circularity-overshoot-track")
+    .trim() || "rgba(125, 211, 252, 0.20)";
+  const overshootTrackAlpha = getCssNumber(rootStyle, "--circularity-overshoot-track-alpha", 0.72);
+  const overshootTrackWidth = getCssNumber(rootStyle, "--circularity-overshoot-track-width", 1.05);
+  const overshootTickAlpha = getCssNumber(rootStyle, "--circularity-overshoot-tick-alpha", 0.86);
+  const overshootTickWidth = getCssNumber(rootStyle, "--circularity-overshoot-tick-width", 1.65);
+  const overshootTickOffset = getCssNumber(rootStyle, "--circularity-overshoot-tick-offset", 5.0);
+  const overshootTickThreshold = getCssNumber(rootStyle, "--circularity-overshoot-tick-threshold", 1.01);
 
   if (!filledBins.length) {
     ctx.save();
@@ -2291,9 +2369,6 @@ function drawCircularityFill(canvas, data, currentStick = { x: 0, y: 0 }) {
   }
 
   const renderBins = createCircularityRenderBins(data.bins);
-  const renderStep = (Math.PI * 2) / renderBins.length;
-  const edgeStep = (Math.PI * 2) / data.bins.length;
-  const edgeOverlap = edgeStep * 0.58;
 
   ctx.save();
 
@@ -2310,26 +2385,21 @@ function drawCircularityFill(canvas, data, currentStick = { x: 0, y: 0 }) {
   // tanpa mengubah data hitung atau menambah efek berat.
   drawCircularitySonarRings(ctx, metrics, sonarRingColor, sonarRingWidth, sonarRingDash);
 
-  // Jejak circularity hanya digambar di tepi lingkaran ideal
-  // ketika stick benar-benar mendekati tepi luar.
-  ctx.globalAlpha = 0.96;
-  ctx.lineWidth = 1.7 * dpr;
-  ctx.strokeStyle = accentColor;
-  ctx.lineCap = "round";
-
-  data.bins.forEach((radiusValue, index) => {
-    if (radiusValue < CIRCULARITY_EDGE_TRACE_MIN_RADIUS) return;
-
-    const angle = index * edgeStep;
-    const startAngle = angle - edgeOverlap;
-    const endAngle = angle + edgeOverlap;
-
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, idealRadius, startAngle, endAngle);
-    ctx.stroke();
-  });
-
-  ctx.lineCap = "butt";
+  // v20m: marker overshoot di luar ring ideal.
+  // Warna bertingkat menunjukkan seberapa jauh radius melewati batas.
+  drawCircularityOvershootTicks(
+    ctx,
+    data.bins,
+    metrics,
+    overshootTickColors,
+    overshootTickAlpha,
+    overshootTickWidth,
+    overshootTickOffset,
+    overshootTickThreshold,
+    overshootTrackColor,
+    overshootTrackAlpha,
+    overshootTrackWidth
+  );
 
   // Garis ideal radius 1.000 tetap di atas fill.
   ctx.globalAlpha = 0.64;
